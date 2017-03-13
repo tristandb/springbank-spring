@@ -7,6 +7,8 @@ Implements Spring to form a simple bank.
 * Java 8.0
 
 ## Running the application
+Before running the application run `mvn install`.
+Run the application by running `mvn spring-boot:run`.
 
 ## Database
 The dialect for the database is MySQL. Table structure and sample data have been included in `/db/`.
