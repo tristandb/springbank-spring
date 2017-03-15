@@ -25,11 +25,26 @@ public class UserController {
     private UserDao userDao;
 
     /**
+     * Returns a list of users.
+     */
+    @ApiOperation(value = "Get Users")
+    @ResponseBody
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ResponseEntity<?> getUsers(){
+        try {
+            Iterable<UserBean> users = userDao.findAll();
+            return ResponseEntity.ok(users);
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    /**
      * Returns a <code>nl.springbank.bean.UserBean</code> having provided an userId.
      * @param userId The userId
      * @return
      */
-    @ApiOperation(value = "Get User",
+    @ApiOperation(value = "Get User by userId",
             notes = "Gets the user by id")
     @ResponseBody
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
@@ -72,5 +87,4 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
-
 }
