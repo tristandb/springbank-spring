@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import javax.transaction.Transactional;
 
 /**
- * UserDao. Communicates with the database and returns objects of type <code>nl.springbank.bean.</code>
+ * UserDao. Communicates with the database and returns objects of type <code>nl.springbank.bean.UserBean</code>
  *
  * @author Tristan de Boer.
  */

@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Tristan de Boer).
  */
-@Api(value = "user", description = "Used to handle users.")
+@Api(value = "user", description = "Used to manage users.")
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     /**
-     * Autowire userDao.
+     * Autowire <code>UserDao</code>.
      */
     @Autowired
     private UserDao userDao;
