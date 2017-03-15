@@ -29,7 +29,7 @@ public class BankAccountController {
             notes = "Returns a BankAccount given a bankAccountId")
     @ResponseBody
     @RequestMapping("")
-    public BankAccountBean getUser(Long bankAccountId){
+    public BankAccountBean getBankAccount(Long bankAccountId){
         try {
             return bankAccountDao.findOne(bankAccountId);
         } catch (Exception e){
