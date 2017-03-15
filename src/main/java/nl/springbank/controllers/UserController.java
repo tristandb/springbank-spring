@@ -25,11 +25,11 @@ public class UserController {
     private UserDao userDao;
 
     /**
-     * Returns a list of users.
+     * Returns a list of <code>nl.springbank.bean.UserBean</code>.
      */
     @ApiOperation(value = "Get Users")
     @ResponseBody
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getUsers(){
         try {
             Iterable<UserBean> users = userDao.findAll();
