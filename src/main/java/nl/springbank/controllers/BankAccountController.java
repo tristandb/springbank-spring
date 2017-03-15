@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(value = "bankaccount", description = "Used to manage bank accounts.")
 @RestController
-@RequestMapping
+@RequestMapping("/bankaccount")
 public class BankAccountController {
     /**
      * Autowire <code>BankAccountDao</code>
