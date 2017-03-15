@@ -1,9 +1,6 @@
 package nl.springbank.bean;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
@@ -12,6 +9,8 @@ import java.sql.Date;
  *
  * @author Tristan de Boer).
  */
+@Entity
+@Table(name = "card")
 public class CardBean {
     /*
         Private methods

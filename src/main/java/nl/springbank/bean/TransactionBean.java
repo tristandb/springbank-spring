@@ -1,9 +1,6 @@
 package nl.springbank.bean;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -11,6 +8,8 @@ import javax.validation.constraints.NotNull;
  *
  * @author Tristan de Boer).
  */
+@Entity
+@Table(name = "transaction")
 public class TransactionBean {
     /*
         Private methods
