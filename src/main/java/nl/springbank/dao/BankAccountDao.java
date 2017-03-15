@@ -12,5 +12,10 @@ import javax.transaction.Transactional;
  */
 @Transactional
 public interface BankAccountDao  extends CrudRepository<BankAccountBean, Long> {
-
+    /**
+     * Returns a user based on given IBAN.
+     * @param iban The IBAN.
+     * @return
+     */
+    BankAccountBean findByIban(String iban);
 }

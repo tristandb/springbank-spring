@@ -70,4 +70,22 @@ public class BankAccountController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    /**
+     * Returns a <code>nl.springbank.bean.BankAccountBean</code> having provided an IBAN.
+     * @param iban The IBAN
+     * @return
+     */
+    @ApiOperation(value = "Return BankAccount")
+    @ResponseBody
+    @RequestMapping(value = "/iban/{iban}", method = RequestMethod.GET)
+    public ResponseEntity<?> getBankAccountByIban(@PathVariable String iban){
+        try {
+            BankAccountBean bankAccountBean = bankAccountDao.findByIban(iban);
+            return ResponseEntity.ok(bankAccountBean);
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
