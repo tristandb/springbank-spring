@@ -6,16 +6,15 @@ import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.UserBean;
 import nl.springbank.dao.BankAccountDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * A class to get the interactions from the MySQL database using the BankAccountDao class.
  *
  * @author Tristan de Boer.
  */
-@Api(value = "bankaccount", description = "Used to manage bank accounts.")
+@Api(value = "bankaccount", description = "Manage BankAccount.")
 @RestController
 @RequestMapping("/bankaccount")
 public class BankAccountController {
@@ -25,15 +24,50 @@ public class BankAccountController {
     @Autowired
     private BankAccountDao bankAccountDao;
 
-    @ApiOperation(value = "Get BankAccount",
-            notes = "Returns a BankAccount given a bankAccountId")
+    /**
+     * Returns a <code>nl.springbank.bean.BankAccountBean</code> having provided an bankAccountId.
+     * @param bankAccountId The bankAccountId
+     * @return
+     */
+    @ApiOperation(value = "Return BankAccount")
     @ResponseBody
-    @RequestMapping("")
-    public BankAccountBean getBankAccount(Long bankAccountId){
+    @RequestMapping(value = "/{bankAccountId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getBankAccount(@PathVariable String bankAccountId){
         try {
-            return bankAccountDao.findOne(bankAccountId);
+            BankAccountBean bankAccountBean = bankAccountDao.findOne(Long.parseLong(bankAccountId));
+            return ResponseEntity.ok(bankAccountBean);
         } catch (Exception e){
-            return null;
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Creates a new entry for <code>nl.springbank.bean.BankAccountBean</code>.
+     */
+    @ApiOperation(value = "Create a new BankAccount")
+    @RequestMapping(method = RequestMethod.POST)
+    ResponseEntity<?> create(@RequestBody BankAccountBean bankAccountBean) {
+        try {
+            BankAccountBean savedBankAccount = bankAccountDao.save(bankAccountBean);
+            return ResponseEntity.ok(savedBankAccount.getBankAccountId());
+        } catch (Exception e){
+            // TODO: Catch duplicate IBAN.
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Deletes a entry of <code>nl.springbank.bean.BankAccountBean</code> given a bankAccountId.
+     */
+    @ApiOperation(value = "Delete BankAccount")
+    @RequestMapping(value = "/{bankAccountId}", method = RequestMethod.DELETE)
+    ResponseEntity<?> delete(@PathVariable String bankAccountId){
+        try {
+            this.bankAccountDao.delete(Long.parseLong(bankAccountId));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 }
