@@ -25,11 +25,28 @@ public class BankAccountController {
     private BankAccountDao bankAccountDao;
 
     /**
+     * Returns a list of <code>nl.springbank.bean.BankAccountBean</code>.
+     * @return
+     */
+    @ApiOperation(value = "Return BankAccounts")
+    @ResponseBody
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<?> getBankAccounts(){
+        try {
+            Iterable<BankAccountBean> bankAccountBean = bankAccountDao.findAll();
+            return ResponseEntity.ok(bankAccountBean);
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
      * Returns a <code>nl.springbank.bean.BankAccountBean</code> having provided an bankAccountId.
      * @param bankAccountId The bankAccountId
      * @return
      */
-    @ApiOperation(value = "Return BankAccount")
+    @ApiOperation(value = "Return BankAccount by bankAccountId")
     @ResponseBody
     @RequestMapping(value = "/{bankAccountId}", method = RequestMethod.GET)
     public ResponseEntity<?> getBankAccount(@PathVariable String bankAccountId){
