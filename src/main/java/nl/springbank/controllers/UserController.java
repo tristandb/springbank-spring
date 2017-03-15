@@ -29,7 +29,7 @@ public class UserController {
     private UserDao userDao;
 
     /**
-     * Returns a <code>UserBean</code> having provided an userId. Returns null if no user has been found.
+     * Returns a <code>nl.springbank.bean.UserBean</code> having provided an userId. Returns null if no user has been found.
      * @param userId The userId
      * @return
      */
