@@ -17,5 +17,5 @@ public interface BankAccountDao  extends CrudRepository<BankAccountBean, Long> {
      * @param iban The IBAN.
      * @return
      */
-    BankAccountBean findByIban(String iban);
+    // BankAccountBean findByIban(String iban);
 }

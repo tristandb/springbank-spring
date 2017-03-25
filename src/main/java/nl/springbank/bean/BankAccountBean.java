@@ -26,10 +26,6 @@ public class BankAccountBean {
     @Column(name = "holder_user_id")
     private int holderUserId;
 
-    // The IBAN of the account
-    @NotNull
-    private String iban;
-
     // The balance on the account
     @NotNull
     private double balance;
@@ -57,14 +53,6 @@ public class BankAccountBean {
         this.holderUserId = holderUserId;
     }
 
-    public String getIban() {
-        return iban;
-    }
-
-    public void setIban(String iban) {
-        this.iban = iban;
-    }
-
     public double getBalance() {
         return balance;
     }
@@ -78,7 +66,6 @@ public class BankAccountBean {
         return "BankAccountBean{" +
                 "bankAccountId=" + bankAccountId +
                 ", holderUserId=" + holderUserId +
-                ", iban='" + iban + '\'' +
                 ", balance=" + balance +
                 '}';
     }

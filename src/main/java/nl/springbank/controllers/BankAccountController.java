@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.UserBean;
 import nl.springbank.dao.BankAccountDao;
+import nl.springbank.services.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,23 +20,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/bankaccount")
 public class BankAccountController {
     /**
-     * Autowire <code>BankAccountDao</code>
+     * Autowire <code>BankAccountService</code>
      */
     @Autowired
-    private BankAccountDao bankAccountDao;
+    private BankAccountService bankAccountService;
 
     /**
      * Returns a list of <code>nl.springbank.bean.BankAccountBean</code>.
+     *
      * @return
      */
     @ApiOperation(value = "Return BankAccounts")
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> getBankAccounts(){
+    public ResponseEntity<?> getBankAccounts() {
         try {
-            Iterable<BankAccountBean> bankAccountBean = bankAccountDao.findAll();
+            Iterable<BankAccountBean> bankAccountBean = bankAccountService.getBankAccounts();
             return ResponseEntity.ok(bankAccountBean);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
@@ -43,17 +45,18 @@ public class BankAccountController {
 
     /**
      * Returns a <code>nl.springbank.bean.BankAccountBean</code> having provided an bankAccountId.
+     *
      * @param bankAccountId The bankAccountId
      * @return
      */
     @ApiOperation(value = "Return BankAccount by bankAccountId")
     @ResponseBody
     @RequestMapping(value = "/{bankAccountId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getBankAccount(@PathVariable String bankAccountId){
+    public ResponseEntity<?> getBankAccount(@PathVariable String bankAccountId) {
         try {
-            BankAccountBean bankAccountBean = bankAccountDao.findOne(Long.parseLong(bankAccountId));
+            BankAccountBean bankAccountBean = bankAccountService.getBankAccount(Long.parseLong(bankAccountId));
             return ResponseEntity.ok(bankAccountBean);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
@@ -66,9 +69,9 @@ public class BankAccountController {
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> create(@RequestBody BankAccountBean bankAccountBean) {
         try {
-            BankAccountBean savedBankAccount = bankAccountDao.save(bankAccountBean);
+            BankAccountBean savedBankAccount = bankAccountService.saveBankAccount(bankAccountBean);
             return ResponseEntity.ok(savedBankAccount.getBankAccountId());
-        } catch (Exception e){
+        } catch (Exception e) {
             // TODO: Catch duplicate IBAN.
             return ResponseEntity.badRequest().build();
         }
@@ -79,30 +82,25 @@ public class BankAccountController {
      */
     @ApiOperation(value = "Delete BankAccount")
     @RequestMapping(value = "/{bankAccountId}", method = RequestMethod.DELETE)
-    ResponseEntity<?> delete(@PathVariable String bankAccountId){
+    ResponseEntity<?> delete(@PathVariable String bankAccountId) {
         try {
-            this.bankAccountDao.delete(Long.parseLong(bankAccountId));
+            bankAccountService.deleteBankAccount(Long.parseLong(bankAccountId));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
-    /**
-     * Returns a <code>nl.springbank.bean.BankAccountBean</code> having provided an IBAN.
-     * @param iban The IBAN
-     * @return
-     */
-    @ApiOperation(value = "Return BankAccount")
+    /* @ApiOperation(value = "Return BankAccount")
     @ResponseBody
     @RequestMapping(value = "/iban/{iban}", method = RequestMethod.GET)
-    public ResponseEntity<?> getBankAccountByIban(@PathVariable String iban){
+    public ResponseEntity<?> getBankAccountByIban(@PathVariable String iban) {
         try {
             BankAccountBean bankAccountBean = bankAccountDao.findByIban(iban);
             return ResponseEntity.ok(bankAccountBean);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
-    }
+    }*/
 }
