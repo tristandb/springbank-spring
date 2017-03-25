@@ -15,4 +15,10 @@ import javax.transaction.Transactional;
 @Transactional
 public interface TransactionDao extends CrudRepository<TransactionBean, Long> {
 
+    /**
+     * Finds all TransactionBeans when a IBAN is provided.
+     * @param iban
+     * @return
+     */
+    Iterable<TransactionBean> findBySourceBankAccountIban(String iban);
 }
