@@ -3,13 +3,12 @@ package nl.springbank.services;
 import nl.springbank.bean.BankAccountBean;
 import nl.springbank.dao.BankAccountDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
- * Description
+ * Service that does all operation regarding BankAccounts.
  *
- * @author Tristan de Boer).
+ * @author Tristan de Boer.
  */
 @Service
 public class BankAccountService {
@@ -21,6 +20,7 @@ public class BankAccountService {
 
     /**
      * Returns a list of bank accounts
+     *
      * @return
      */
     public Iterable<BankAccountBean> getBankAccounts() throws Exception {
@@ -29,6 +29,7 @@ public class BankAccountService {
 
     /**
      * Return a bank account given a bankAccountId.
+     *
      * @param bankAccount The bankAccountId
      * @return
      */
@@ -38,6 +39,7 @@ public class BankAccountService {
 
     /**
      * Create a new BankAccount in the database.
+     *
      * @param bankAccountBean
      * @return
      */
@@ -47,9 +49,10 @@ public class BankAccountService {
 
     /**
      * Deletes a BankAccount.
+     *
      * @param bankAccountId The BankAccount to delete
      */
-    public void deleteBankAccount(long bankAccountId) {
+    public void deleteBankAccount(long bankAccountId) throws Exception {
         bankAccountDao.delete(bankAccountId);
     }
 }

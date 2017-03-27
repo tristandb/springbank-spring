@@ -1,8 +1,12 @@
 package nl.springbank.bean;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
+import java.util.Set;
 
 /**
  * UserBean.
@@ -56,6 +60,11 @@ public class UserBean {
     // The user's email
     @NotNull
     private String email;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonProperty("bankaccounts")
+    @JsonManagedReference
+    private Set<BankAccountBean> bankAccountBean;
 
     /*
         Public methods
@@ -150,5 +159,13 @@ public class UserBean {
                 ", telephoneNumber='" + telephoneNumber + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    public Set<BankAccountBean> getBankAccountBean() {
+        return bankAccountBean;
+    }
+
+    public void setBankAccountBean(Set<BankAccountBean> bankAccountBean) {
+        this.bankAccountBean = bankAccountBean;
     }
 }

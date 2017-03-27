@@ -7,17 +7,14 @@ import nl.springbank.dao.TransactionDao;
 import nl.springbank.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Description
  *
  * @author Tristan de Boer).
  */
-@Api(value = "transaction", description = "Manage Transaction")
+@Api(value = "transaction", description = "Manage Transaction.")
 @RestController
 @RequestMapping("/transaction")
 public class TransactionController {
@@ -27,14 +24,12 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-
-
     /**
      * Returns a list of <code>nl.springbank.bean.TransactionBean</code>
      */
     @ApiOperation(value = "Return Transactions")
     @ResponseBody
-    @RequestMapping
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getTransactions() {
         try {
             Iterable<TransactionBean> transactionBeans = transactionService.getAllTransactions();
@@ -49,7 +44,7 @@ public class TransactionController {
      */
     @ApiOperation(value = "Return Transactions given IBAN")
     @ResponseBody
-    @RequestMapping("/iban/{iban}")
+    @RequestMapping(value = "/iban/{iban}", method = RequestMethod.GET)
     public ResponseEntity<?> getTransactionByIban(@PathVariable String iban) {
         try {
             Iterable<TransactionBean> transactionBeans = transactionService.getTransactionsByIban(iban);

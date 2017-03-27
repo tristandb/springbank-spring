@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import nl.springbank.bean.UserBean;
 import nl.springbank.dao.UserDao;
+import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,10 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     /**
-     * Autowire <code>UserDao</code>.
+     * Autowire <code>UserService</code>.
      */
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
     /**
      * Returns a list of <code>nl.springbank.bean.UserBean</code>.
@@ -32,7 +33,7 @@ public class UserController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getUsers(){
         try {
-            Iterable<UserBean> users = userDao.findAll();
+            Iterable<UserBean> users = userService.getAllUsers();
             return ResponseEntity.ok(users);
         } catch (Exception e){
             e.printStackTrace();
@@ -51,7 +52,7 @@ public class UserController {
     public ResponseEntity<?> getUser(@PathVariable String userId){
         try {
             long userIdLong = Long.parseLong(userId);
-            UserBean user = userDao.findOne(userIdLong);
+            UserBean user = userService.getUser(userIdLong);
             return ResponseEntity.ok(user);
         } catch (Exception e){
             e.printStackTrace();
@@ -66,8 +67,8 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> create(@RequestBody UserBean userBean) {
             try {
-                userDao.save(userBean);
-                return ResponseEntity.ok().build();
+                UserBean userBeanResult = userService.saveUser(userBean);
+                return ResponseEntity.ok(userBeanResult);
             } catch (Exception e){
                 // TODO: Catch duplicate email.
                 return ResponseEntity.badRequest().build();
@@ -81,7 +82,7 @@ public class UserController {
     @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
     ResponseEntity<?> delete(@PathVariable String userId){
         try {
-            this.userDao.delete(Long.parseLong(userId));
+            userService.deleteUser(Long.parseLong(userId));
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
