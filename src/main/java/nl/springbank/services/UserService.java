@@ -45,4 +45,17 @@ public class UserService {
     public void deleteUser(long userId) throws Exception {
         userDao.delete(userId);
     }
+
+    /**
+     * Returns a user given an email.
+     * @param email The email to use.
+     */
+    public UserBean getUserByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+
+    public UserBean getUserByIban(String iban) {
+        return userDao.findByIban(iban);
+
+    }
 }

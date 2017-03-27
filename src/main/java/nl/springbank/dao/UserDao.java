@@ -19,4 +19,11 @@ public interface UserDao extends CrudRepository<UserBean, Long> {
      * @param email The user email
      */
     UserBean findByEmail(String email);
+
+    /**
+     * Return the user having the passed iban or null if no user is found.
+     *
+     * @param iban The user iban
+     */
+    // UserBean findByIban(String iban);
 }

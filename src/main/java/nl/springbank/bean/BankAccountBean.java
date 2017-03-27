@@ -72,6 +72,7 @@ public class BankAccountBean {
         this.balance = balance;
     }
 
+
     @OneToOne(cascade = CascadeType.ALL)
     public IbanBean getIbanBean() {
         return ibanBean;

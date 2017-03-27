@@ -4,6 +4,7 @@ import nl.springbank.bean.TransactionBean;
 import nl.springbank.dao.TransactionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Service that does all operation regarding Transactions.
@@ -31,6 +32,11 @@ public class TransactionService {
      * Returns a list of all transactions based on IBAN.
      */
     public Iterable<TransactionBean> getTransactionsByIban(String iban) {
-        return transactionDao.findBySourceBankAccountIban(iban);
+        // Todo: loop
+        // return transactionDao.findBySourceBankAccountIban(iban);
+        // UNION transactionDao.findByTargetBankAccountIban(iban);
+        // UNION transactionDao.findBySourceBankAcount(iban.getAccount)
+        // UNION transactionDao.findByTargetBankAcount(iban.getAccount)
+        throw new NotImplementedException();
     }
 }

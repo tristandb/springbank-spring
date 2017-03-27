@@ -8,6 +8,9 @@ import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import javax.xml.ws.Response;
 
 /**
  * A class to get the interactions from the MySQL database using the UserDao class.
@@ -88,4 +91,34 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    /**
+     * Identifies a user, given an email.
+     */
+    @ApiOperation(value = "Identify a user")
+    @RequestMapping(value = "/identify", method = RequestMethod.POST)
+    ResponseEntity<?> identify(@RequestBody String email){
+        try {
+            UserBean user =  userService.getUserByEmail(email);
+            return ResponseEntity.ok(user.getId());
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Authenticates a user, given an IBAN.
+     */
+    @ApiOperation(value = "Sends the user a key if the user enters correct identification for his bank account.")
+    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    ResponseEntity<?> authenticate(@RequestBody String iban){
+        throw new NotImplementedException();
+        /*try {
+            UserBean user =  userService.getUserByIban(iban);
+            return ResponseEntity.ok(user.getId());
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }*/
+    }
+
 }

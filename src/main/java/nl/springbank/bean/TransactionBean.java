@@ -29,11 +29,11 @@ public class TransactionBean {
     private String targetBankAccountIban;
 
     // source bank account
-    @Column(name = "source_bank_account")
+    @Column(name = "source_account_id")
     private int sourceBankAccount;
 
     // target bank account
-    @Column(name = "target_bank_account")
+    @Column(name = "target_account_id")
     private int targetBankAccount;
 
     // Amount transferred
