@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * Description
@@ -13,7 +14,7 @@ import javax.validation.constraints.NotNull;
  * @author Tristan de Boer).
  */
 @Entity
-@Table(name = "bank_account", uniqueConstraints = { @UniqueConstraint(columnNames = "account_id")})
+@Table(name = "bank_account", uniqueConstraints = {@UniqueConstraint(columnNames = "account_id")})
 public class BankAccountBean {
      /*
         Private methods
@@ -40,6 +41,13 @@ public class BankAccountBean {
     @JsonProperty("holder")
     private UserBean user;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_bank_account", joinColumns = @JoinColumn(name = "bank_account_id",
+            referencedColumnName = "account_id"), inverseJoinColumns = @JoinColumn(name = "user_id",
+            referencedColumnName = "user_id"))
+    @JsonBackReference
+    private Set<UserBean> users;
+
     /*
         Public methods
      */
@@ -47,11 +55,11 @@ public class BankAccountBean {
     public BankAccountBean() {
     }
 
-    public BankAccountBean(double balance){
+    public BankAccountBean(double balance) {
         this.balance = balance;
     }
 
-    public BankAccountBean(double balance, IbanBean ibanBean){
+    public BankAccountBean(double balance, IbanBean ibanBean) {
         this.balance = balance;
         this.ibanBean = ibanBean;
     }
@@ -98,5 +106,13 @@ public class BankAccountBean {
 
     public void setUser(UserBean userBean) {
         this.user = userBean;
+    }
+
+    public Set<UserBean> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<UserBean> users) {
+        this.users = users;
     }
 }

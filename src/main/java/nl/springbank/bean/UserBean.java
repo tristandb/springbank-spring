@@ -62,14 +62,18 @@ public class UserBean {
     private String email;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @JsonProperty("bankaccounts")
+    @JsonProperty("holderBankAccount")
     @JsonManagedReference
     private Set<BankAccountBean> bankAccountBean;
+
+    @ManyToMany(mappedBy = "user")
+    @JsonProperty("connectedBankAccount")
+    @JsonManagedReference
+    private Set<BankAccountBean> connectedBankAccounts;
 
     /*
         Public methods
      */
-
     public UserBean() {}
 
     // Getter and setter methods
