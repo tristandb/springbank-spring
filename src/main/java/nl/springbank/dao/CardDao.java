@@ -1,7 +1,6 @@
 package nl.springbank.dao;
 
 import nl.springbank.bean.CardBean;
-import nl.springbank.bean.UserBean;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.transaction.Transactional;
