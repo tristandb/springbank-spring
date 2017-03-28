@@ -1,9 +1,13 @@
 package nl.springbank.services;
 
+import javassist.NotFoundException;
+import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.UserBean;
+import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Service that does all operation regarding Users.
@@ -13,10 +17,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     /**
-     * Autowire <code>TransactionDao</code>
+     * Autowire <code>nl.springbank.bean.UserDao</code>
      */
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private IbanDao ibanDao;
+
+    private final String SUPER_SECRET_KEY = "kaas";
 
     /**
      * Returns a list of <code>nl.springbank.bean.UserBean</code>.
@@ -54,8 +63,18 @@ public class UserService {
         return userDao.findByEmail(email);
     }
 
-    public UserBean getUserByIban(String iban) {
-        return userDao.findByIban(iban);
-
+    /**
+     * Checks if the user exists in the database.
+     * Returns a key if the user exists.
+     * @param iban The IBAN to check for.
+     * @return
+     */
+    public String authenticateUser(String iban) throws NotFoundException{
+        IbanBean ibanBean = ibanDao.findByIban(iban);
+        if (ibanBean != null) {
+            return SUPER_SECRET_KEY;
+        } else {
+            throw new NotFoundException("IBAN not found");
+        }
     }
 }

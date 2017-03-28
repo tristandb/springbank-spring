@@ -2,6 +2,7 @@ package nl.springbank.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javassist.NotFoundException;
 import nl.springbank.bean.UserBean;
 import nl.springbank.dao.UserDao;
 import nl.springbank.services.UserService;
@@ -112,13 +113,12 @@ public class UserController {
     @ApiOperation(value = "Sends the user a key if the user enters correct identification for his bank account.")
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     ResponseEntity<?> authenticate(@RequestBody String iban){
-        throw new NotImplementedException();
-        /*try {
-            UserBean user =  userService.getUserByIban(iban);
-            return ResponseEntity.ok(user.getId());
-        } catch (Exception e){
-            return ResponseEntity.badRequest().build();
-        }*/
+        try {
+            String key =  userService.authenticateUser(iban);
+            return ResponseEntity.ok(key);
+        } catch (NotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

@@ -3,8 +3,8 @@ package nl.springbank.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import nl.springbank.bean.BankAccountBean;
-import nl.springbank.bean.UserBean;
-import nl.springbank.dao.BankAccountDao;
+import nl.springbank.bean.UserBankAccountBean;
+import nl.springbank.bean.UserIbanBean;
 import nl.springbank.services.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -90,6 +90,34 @@ public class BankAccountController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    /**
+     * Connects a user to a bankaccount.
+     *
+     * @return
+     */
+    @ApiOperation(value = "Connects a user to a bankaccount.")
+    @RequestMapping(value = "users/iban", method = RequestMethod.POST)
+    ResponseEntity<?> connectUserByIban(@RequestBody UserIbanBean userIbanBean) {
+        try {
+            UserBankAccountBean userBankAccountBean = bankAccountService.connectUserByIban(userIbanBean);
+            return ResponseEntity.ok(userBankAccountBean);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @ApiOperation(value = "Connects a user to a bankaccount.")
+    @RequestMapping(value = "users", method = RequestMethod.POST)
+    ResponseEntity<?> connectUser(@RequestBody UserBankAccountBean userBankAccountBean) {
+        try {
+            UserBankAccountBean savedUserBankAcountBean = bankAccountService.connectUser(userBankAccountBean);
+            return ResponseEntity.ok(savedUserBankAcountBean);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 
     /* @ApiOperation(value = "Return BankAccount")
     @ResponseBody
