@@ -30,11 +30,11 @@ public class TransactionBean {
 
     // source bank account
     @Column(name = "source_account_id")
-    private int sourceBankAccount;
+    private long sourceBankAccount;
 
     // target bank account
     @Column(name = "target_account_id")
-    private int targetBankAccount;
+    private long targetBankAccount;
 
     // Amount transferred
     @NotNull
@@ -74,19 +74,19 @@ public class TransactionBean {
         this.targetBankAccountIban = targetBankAccountIban;
     }
 
-    public int getSourceBankAccount() {
+    public long getSourceBankAccount() {
         return sourceBankAccount;
     }
 
-    public void setSourceBankAccount(int sourceBankAccount) {
+    public void setSourceBankAccount(long sourceBankAccount) {
         this.sourceBankAccount = sourceBankAccount;
     }
 
-    public int getTargetBankAccount() {
+    public long getTargetBankAccount() {
         return targetBankAccount;
     }
 
-    public void setTargetBankAccount(int targetBankAccount) {
+    public void setTargetBankAccount(long targetBankAccount) {
         this.targetBankAccount = targetBankAccount;
     }
 

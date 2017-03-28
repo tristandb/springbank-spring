@@ -1,6 +1,8 @@
 package nl.springbank.services;
 
+import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.TransactionBean;
+import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.TransactionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ public class TransactionService {
     @Autowired
     private TransactionDao transactionDao;
 
+    @Autowired
+    private IbanDao ibanDao;
+
     /**
      * Returns a list of all transactions.
      *
@@ -32,11 +37,16 @@ public class TransactionService {
      * Returns a list of all transactions based on IBAN.
      */
     public Iterable<TransactionBean> getTransactionsByIban(String iban) {
-        // Todo: loop
-        // return transactionDao.findBySourceBankAccountIban(iban);
-        // UNION transactionDao.findByTargetBankAccountIban(iban);
-        // UNION transactionDao.findBySourceBankAcount(iban.getAccount)
-        // UNION transactionDao.findByTargetBankAcount(iban.getAccount)
-        throw new NotImplementedException();
+        IbanBean ibanBeanByIban = ibanDao.findByIban(iban);
+        return transactionDao.findBySourceBankAccountOrTargetBankAccountOrSourceBankAccountIbanOrTargetBankAccountIban(
+                ibanBeanByIban.getBankAccountId(), ibanBeanByIban.getBankAccountId(), iban, iban
+        );
+    }
+
+    /**
+     * Returns a list of all transactions based on accountId.
+     */
+    public Iterable<TransactionBean> getTransactionsById(long accountId) {
+        return transactionDao.findBySourceBankAccountOrTargetBankAccount(accountId, accountId);
     }
 }
