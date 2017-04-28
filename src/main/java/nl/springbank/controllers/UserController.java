@@ -2,11 +2,14 @@ package nl.springbank.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import javassist.NotFoundException;
 import nl.springbank.bean.UserBean;
 import nl.springbank.dao.UserDao;
 import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -35,30 +38,40 @@ public class UserController {
     @ApiOperation(value = "Get Users")
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> getUsers(){
+    public ResponseEntity<?> getUsers() {
         try {
             Iterable<UserBean> users = userService.getAllUsers();
             return ResponseEntity.ok(users);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
+
     /**
      * Returns a <code>nl.springbank.bean.UserBean</code> having provided an userId.
+     *
      * @param userId The userId
      * @return
      */
     @ApiOperation(value = "Get User by userId",
             notes = "Gets the user by id")
     @ResponseBody
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User found"),
+            @ApiResponse(code = 404, message = "User not found"),
+    })
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@PathVariable String userId){
+    public ResponseEntity<?> getUser(@PathVariable String userId) {
         try {
             long userIdLong = Long.parseLong(userId);
             UserBean user = userService.getUser(userIdLong);
-            return ResponseEntity.ok(user);
-        } catch (Exception e){
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
@@ -70,13 +83,13 @@ public class UserController {
     @ApiOperation(value = "Create a new User")
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> create(@RequestBody UserBean userBean) {
-            try {
-                UserBean userBeanResult = userService.saveUser(userBean);
-                return ResponseEntity.ok(userBeanResult);
-            } catch (Exception e){
-                // TODO: Catch duplicate email.
-                return ResponseEntity.badRequest().build();
-            }
+        try {
+            UserBean userBeanResult = userService.saveUser(userBean);
+            return ResponseEntity.ok(userBeanResult);
+        } catch (Exception e) {
+            // TODO: Catch duplicate email.
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     /**
@@ -84,7 +97,7 @@ public class UserController {
      */
     @ApiOperation(value = "Delete User")
     @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
-    ResponseEntity<?> delete(@PathVariable String userId){
+    ResponseEntity<?> delete(@PathVariable String userId) {
         try {
             userService.deleteUser(Long.parseLong(userId));
             return ResponseEntity.ok().build();
@@ -98,11 +111,16 @@ public class UserController {
      */
     @ApiOperation(value = "Identify a user")
     @RequestMapping(value = "/identify", method = RequestMethod.POST)
-    ResponseEntity<?> identify(@RequestBody String email){
+    ResponseEntity<?> identify(@RequestBody String email) {
         try {
-            UserBean user =  userService.getUserByEmail(email);
-            return ResponseEntity.ok(user.getId());
-        } catch (Exception e){
+            UserBean user = userService.getUserByEmail(email);
+            if (user != null) {
+                return ResponseEntity.ok(user.getId());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
@@ -112,11 +130,11 @@ public class UserController {
      */
     @ApiOperation(value = "Sends the user a key if the user enters correct identification for his bank account.")
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    ResponseEntity<?> authenticate(@RequestBody String iban){
+    ResponseEntity<?> authenticate(@RequestBody String iban) {
         try {
-            String key =  userService.authenticateUser(iban);
+            String key = userService.authenticateUser(iban);
             return ResponseEntity.ok(key);
-        } catch (NotFoundException e){
+        } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
