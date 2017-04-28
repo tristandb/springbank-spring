@@ -4,14 +4,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
 import nl.springbank.bean.UserBean;
-import nl.springbank.dao.UserDao;
 import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import javax.xml.ws.Response;
 
 /**
  * A class to get the interactions from the MySQL database using the UserDao class.
@@ -23,11 +19,15 @@ import javax.xml.ws.Response;
 @RequestMapping("/user")
 public class UserController {
 
+    private final UserService userService;
+
     /**
      * Autowire <code>UserService</code>.
      */
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Returns a list of <code>nl.springbank.bean.UserBean</code>.
@@ -35,17 +35,19 @@ public class UserController {
     @ApiOperation(value = "Get Users")
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> getUsers(){
+    public ResponseEntity<?> getUsers() {
         try {
             Iterable<UserBean> users = userService.getAllUsers();
             return ResponseEntity.ok(users);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
+
     /**
      * Returns a <code>nl.springbank.bean.UserBean</code> having provided an userId.
+     *
      * @param userId The userId
      * @return
      */
@@ -53,12 +55,12 @@ public class UserController {
             notes = "Gets the user by id")
     @ResponseBody
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@PathVariable String userId){
+    public ResponseEntity<?> getUser(@PathVariable String userId) {
         try {
             long userIdLong = Long.parseLong(userId);
             UserBean user = userService.getUser(userIdLong);
             return ResponseEntity.ok(user);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
@@ -70,13 +72,13 @@ public class UserController {
     @ApiOperation(value = "Create a new User")
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> create(@RequestBody UserBean userBean) {
-            try {
-                UserBean userBeanResult = userService.saveUser(userBean);
-                return ResponseEntity.ok(userBeanResult);
-            } catch (Exception e){
-                // TODO: Catch duplicate email.
-                return ResponseEntity.badRequest().build();
-            }
+        try {
+            UserBean userBeanResult = userService.saveUser(userBean);
+            return ResponseEntity.ok(userBeanResult);
+        } catch (Exception e) {
+            // TODO: Catch duplicate email.
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     /**
@@ -84,7 +86,7 @@ public class UserController {
      */
     @ApiOperation(value = "Delete User")
     @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
-    ResponseEntity<?> delete(@PathVariable String userId){
+    ResponseEntity<?> delete(@PathVariable String userId) {
         try {
             userService.deleteUser(Long.parseLong(userId));
             return ResponseEntity.ok().build();
@@ -98,11 +100,11 @@ public class UserController {
      */
     @ApiOperation(value = "Identify a user")
     @RequestMapping(value = "/identify", method = RequestMethod.POST)
-    ResponseEntity<?> identify(@RequestBody String email){
+    ResponseEntity<?> identify(@RequestBody String email) {
         try {
-            UserBean user =  userService.getUserByEmail(email);
+            UserBean user = userService.getUserByEmail(email);
             return ResponseEntity.ok(user.getId());
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -112,11 +114,11 @@ public class UserController {
      */
     @ApiOperation(value = "Sends the user a key if the user enters correct identification for his bank account.")
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    ResponseEntity<?> authenticate(@RequestBody String iban){
+    ResponseEntity<?> authenticate(@RequestBody String iban) {
         try {
-            String key =  userService.authenticateUser(iban);
+            String key = userService.authenticateUser(iban);
             return ResponseEntity.ok(key);
-        } catch (NotFoundException e){
+        } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }

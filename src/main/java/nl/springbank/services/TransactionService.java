@@ -1,12 +1,14 @@
 package nl.springbank.services;
 
+import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.TransactionBean;
+import nl.springbank.dao.BankAccountDao;
 import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.TransactionDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.util.Arrays;
 
 /**
  * Service that does all operation regarding Transactions.
@@ -15,14 +17,18 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 @Service
 public class TransactionService {
+
+    private final TransactionDao transactionDao;
+
+    private final IbanDao ibanDao;
+
     /**
      * Autowire <code>TransactionDao</code>
      */
-    @Autowired
-    private TransactionDao transactionDao;
-
-    @Autowired
-    private IbanDao ibanDao;
+    public TransactionService(TransactionDao transactionDao, IbanDao ibanDao) {
+        this.transactionDao = transactionDao;
+        this.ibanDao = ibanDao;
+    }
 
     /**
      * Returns a list of all transactions.

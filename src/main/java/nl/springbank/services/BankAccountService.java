@@ -7,7 +7,6 @@ import nl.springbank.bean.UserIbanBean;
 import nl.springbank.dao.BankAccountDao;
 import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.UserBankAccountDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,17 +16,21 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BankAccountService {
+
+    private final BankAccountDao bankAccountDao;
+
+    private final IbanDao ibanDao;
+
+    private final UserBankAccountDao userBankAccountDao;
+
     /**
      * Autowire <code>BankAccountDao</code>
      */
-    @Autowired
-    private BankAccountDao bankAccountDao;
-
-    @Autowired
-    private IbanDao ibanDao;
-
-    @Autowired
-    private UserBankAccountDao userBankAccountDao;
+    public BankAccountService(BankAccountDao bankAccountDao, IbanDao ibanDao, UserBankAccountDao userBankAccountDao) {
+        this.bankAccountDao = bankAccountDao;
+        this.ibanDao = ibanDao;
+        this.userBankAccountDao = userBankAccountDao;
+    }
 
     /**
      * Returns a list of bank accounts
@@ -60,6 +63,7 @@ public class BankAccountService {
 
     /**
      * Deletes a BankAccount.
+     *
      * @param bankAccountId The BankAccount to delete
      */
     public void deleteBankAccount(long bankAccountId) throws Exception {
@@ -72,7 +76,7 @@ public class BankAccountService {
      * @param userBankAccountBean The object to save.
      * @return
      */
-    public UserBankAccountBean connectUser(UserBankAccountBean userBankAccountBean){
+    public UserBankAccountBean connectUser(UserBankAccountBean userBankAccountBean) {
         // Save the UserBankAccountBean
         return userBankAccountDao.save(userBankAccountBean);
     }

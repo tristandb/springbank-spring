@@ -7,7 +7,6 @@ import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Service that does all operation regarding Users.
@@ -16,16 +15,20 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 @Service
 public class UserService {
+
+    private final UserDao userDao;
+
+    private final IbanDao ibanDao;
+
+    private final String SUPER_SECRET_KEY = "kaas";
+
     /**
      * Autowire <code>nl.springbank.bean.UserDao</code>
      */
-    @Autowired
-    private UserDao userDao;
-
-    @Autowired
-    private IbanDao ibanDao;
-
-    private final String SUPER_SECRET_KEY = "kaas";
+    public UserService(UserDao userDao, IbanDao ibanDao) {
+        this.userDao = userDao;
+        this.ibanDao = ibanDao;
+    }
 
     /**
      * Returns a list of <code>nl.springbank.bean.UserBean</code>.
@@ -57,6 +60,7 @@ public class UserService {
 
     /**
      * Returns a user given an email.
+     *
      * @param email The email to use.
      */
     public UserBean getUserByEmail(String email) {
@@ -66,10 +70,11 @@ public class UserService {
     /**
      * Checks if the user exists in the database.
      * Returns a key if the user exists.
+     *
      * @param iban The IBAN to check for.
      * @return
      */
-    public String authenticateUser(String iban) throws NotFoundException{
+    public String authenticateUser(String iban) throws NotFoundException {
         IbanBean ibanBean = ibanDao.findByIban(iban);
         if (ibanBean != null) {
             return SUPER_SECRET_KEY;

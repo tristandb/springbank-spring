@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
-
 /**
  * A class to get the interactions from the MySQL database using the BankAccountDao class.
  *
@@ -21,11 +19,16 @@ import javax.xml.ws.Response;
 @RestController
 @RequestMapping("/bankaccount")
 public class BankAccountController {
+
+    private final BankAccountService bankAccountService;
+
     /**
      * Autowire <code>BankAccountService</code>
      */
     @Autowired
-    private BankAccountService bankAccountService;
+    public BankAccountController(BankAccountService bankAccountService) {
+        this.bankAccountService = bankAccountService;
+    }
 
     /**
      * Returns a list of <code>nl.springbank.bean.BankAccountBean</code>.
@@ -104,7 +107,7 @@ public class BankAccountController {
         try {
             UserBankAccountBean userBankAccountBean = bankAccountService.connectUserByIban(userIbanBean);
             return ResponseEntity.ok(userBankAccountBean);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -115,7 +118,7 @@ public class BankAccountController {
         try {
             UserBankAccountBean savedUserBankAcountBean = bankAccountService.connectUser(userBankAccountBean);
             return ResponseEntity.ok(savedUserBankAcountBean);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
