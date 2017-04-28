@@ -124,4 +124,13 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("NL17SPRI0466994145")).andExpect(status().is4xxClientError());
     }
+
+    /**
+     * Test user deletion
+     */
+    @Test
+    @Transactional
+    public void testUserDeletion() throws Exception {
+        this.mockMvc.perform(delete("/user/1")).andExpect(status().is2xxSuccessful());
+    }
 }
