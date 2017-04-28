@@ -7,7 +7,6 @@ import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Service that does all operation regarding Users.
