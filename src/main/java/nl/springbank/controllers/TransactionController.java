@@ -78,11 +78,15 @@ public class TransactionController {
     /**
      * Makes a new transaction
      */
-   /* public ResponseEntity<?> postTransaction(@RequestBody TransactionBean transactionBean) {
+    @ApiOperation(value = "Do a transaction")
+    @ResponseBody
+    @RequestMapping(value = "/transaction", method = RequestMethod.POST)
+    public ResponseEntity<?> postTransaction(@RequestBody TransactionBean transactionBean) {
         try {
-
+            boolean transactionResult = transactionService.doTransaction(transactionBean);
+            return ResponseEntity.ok(transactionResult);
         } catch (Exception e) {
-
+            return ResponseEntity.badRequest().build();
         }
-    }*/
+    }
 }

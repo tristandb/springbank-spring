@@ -22,12 +22,15 @@ public class TransactionService {
 
     private final IbanDao ibanDao;
 
+    private final BankAccountDao bankAccountDao;
+
     /**
      * Autowire <code>TransactionDao</code>
      */
-    public TransactionService(TransactionDao transactionDao, IbanDao ibanDao) {
+    public TransactionService(TransactionDao transactionDao, IbanDao ibanDao, BankAccountDao bankAccountDao) {
         this.transactionDao = transactionDao;
         this.ibanDao = ibanDao;
+        this.bankAccountDao = bankAccountDao;
     }
 
     /**
@@ -54,5 +57,19 @@ public class TransactionService {
      */
     public Iterable<TransactionBean> getTransactionsById(long accountId) {
         return transactionDao.findBySourceBankAccountOrTargetBankAccount(accountId, accountId);
+    }
+
+    public boolean doTransaction(TransactionBean transactionBean) {
+        BankAccountBean sourceAccount = bankAccountDao.findByIban(transactionBean.getSourceBankAccountIban());
+        BankAccountBean targetAccount = bankAccountDao.findByIban(transactionBean.getTargetBankAccountIban());
+        double amount = transactionBean.getAmount();
+        if (!(sourceAccount.getBalance() > amount)) {
+            return false;
+        }
+        sourceAccount.setBalance(sourceAccount.getBalance() - amount);
+        targetAccount.setBalance(targetAccount.getBalance() + amount);
+        bankAccountDao.save(Arrays.asList(sourceAccount, targetAccount));
+        transactionDao.save(transactionBean);
+        return true;
     }
 }
