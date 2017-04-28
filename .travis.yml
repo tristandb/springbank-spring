@@ -4,4 +4,5 @@ jdk:
   - oraclejdk8
 
 script:
-  mvn verify -B
+  - bash <(curl -s https://codecov.io/bash)
+  - mvn test
