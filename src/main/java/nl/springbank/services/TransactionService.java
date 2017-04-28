@@ -1,9 +1,11 @@
 package nl.springbank.services;
 
+import nl.springbank.bean.CreateTransaction;
 import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.TransactionBean;
 import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.TransactionDao;
+import nl.springbank.exceptions.NothAuthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -48,5 +50,18 @@ public class TransactionService {
      */
     public Iterable<TransactionBean> getTransactionsById(long accountId) {
         return transactionDao.findBySourceBankAccountOrTargetBankAccount(accountId, accountId);
+    }
+
+    public void createTransaction(CreateTransaction createTransaction) throws NothAuthorizedException {
+        // Check authentication
+        if (createTransaction.getAuthentication().equals("kaas")){
+
+            transactionDao.save(createTransaction.getTransactionBean());
+
+            // TODO: Update balance on accounts.
+        } else {
+            // Authenticating has not succeeded, throw error
+            throw new NothAuthorizedException();
+        }
     }
 }

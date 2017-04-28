@@ -2,7 +2,9 @@ package nl.springbank.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import nl.springbank.bean.CreateTransaction;
 import nl.springbank.bean.TransactionBean;
+import nl.springbank.exceptions.NothAuthorizedException;
 import nl.springbank.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +46,7 @@ public class TransactionController {
     @ApiOperation(value = "Return Transactions given BankAccountId")
     @ResponseBody
     @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getTransactionsByAccountId(@PathVariable String accountId){
+    public ResponseEntity<?> getTransactionsByAccountId(@PathVariable String accountId) {
         try {
             Iterable<TransactionBean> transactionBeans = transactionService.getTransactionsById(Long.parseLong(accountId));
             return ResponseEntity.ok(transactionBeans);
@@ -71,13 +73,20 @@ public class TransactionController {
     }
 
     /**
-     * Makes a new transaction
+     * Makes a new transaction.
      */
-   /* public ResponseEntity<?> postTransaction(@RequestBody TransactionBean transactionBean) {
+    @ApiOperation(value = "Makes a new transaction")
+    @ResponseBody
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public ResponseEntity<?> postTransaction(@RequestBody CreateTransaction createTransaction) {
         try {
-
+            transactionService.createTransaction(createTransaction);
+            return ResponseEntity.ok().build();
+        } catch (NothAuthorizedException e) {
+            // Returned when the user isn't authenticated
+            return ResponseEntity.status(403).build();
         } catch (Exception e) {
-
+            return ResponseEntity.badRequest().build();
         }
-    }*/
+    }
 }
