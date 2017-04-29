@@ -36,10 +36,14 @@ public class BankAccountBean {
     private IbanBean ibanBean;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "holder_user_id", nullable = false)
+    @JoinColumn(name = "holder_user_id", nullable = false, insertable = false, updatable = false)
     @JsonBackReference
     @JsonProperty("holder")
     private UserBean user;
+
+    @Column(name = "holder_user_id")
+    @JsonProperty("userId")
+    private long userId;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_bank_account", joinColumns = @JoinColumn(name = "bank_account_id",
@@ -114,5 +118,13 @@ public class BankAccountBean {
 
     public void setUsers(Set<UserBean> users) {
         this.users = users;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

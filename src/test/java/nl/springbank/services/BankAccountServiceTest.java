@@ -2,6 +2,8 @@ package nl.springbank.services;
 
 import com.google.common.collect.Iterators;
 import junit.framework.TestCase;
+import nl.springbank.bean.BankAccountBean;
+import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.UserBankAccountBean;
 import nl.springbank.bean.UserIbanBean;
 import org.junit.Assert;
@@ -10,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -166,6 +169,49 @@ public class BankAccountServiceTest extends TestCase {
             bankAccountService.connectUserByIban(userIbanBean1);
             fail();
         } catch (Exception ignored) {
+
+        }
+    }
+
+    /**
+     * Test saveBankAccount
+     */
+    @Test
+    @Transactional
+    public void testSaveBankAccount() throws Exception {
+        // Create bank account
+        BankAccountBean bankAccountBean = new BankAccountBean();
+        bankAccountBean.setUserId(1);
+        Assert.assertNotNull(bankAccountService.saveBankAccount(bankAccountBean));
+
+        // Create bank account
+        BankAccountBean bankAccountBean1 = new BankAccountBean();
+        bankAccountBean.setUserId(4);
+        Assert.assertNotNull(bankAccountService.saveBankAccount(bankAccountBean1));
+    }
+
+    /**
+     * Test saveBankAccount
+     */
+    @Test
+    @Transactional
+    public void testSaveInvalidBankAccount() throws Exception {
+        // Create bank account
+        try {
+            BankAccountBean bankAccountBean = new BankAccountBean();
+            bankAccountService.saveBankAccount(bankAccountBean);
+            fail();
+        } catch (DataIntegrityViolationException e) {
+
+        }
+
+        // Create bank account
+        try {
+            BankAccountBean bankAccountBean1 = new BankAccountBean();
+            bankAccountBean1.setUserId(5);
+            bankAccountService.saveBankAccount(bankAccountBean1);
+            fail();
+        } catch (DataIntegrityViolationException e) {
 
         }
     }
