@@ -35,7 +35,7 @@ public class BankAccountBean {
     @JsonProperty("iban")
     private IbanBean ibanBean;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "holder_user_id", nullable = false, insertable = false, updatable = false)
     @JsonBackReference
     @JsonProperty("holder")
@@ -45,7 +45,8 @@ public class BankAccountBean {
     @JsonProperty("userId")
     private long userId;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true, updatable = false, insertable = false)
     @JoinTable(name = "user_bank_account", joinColumns = @JoinColumn(name = "bank_account_id",
             referencedColumnName = "account_id"), inverseJoinColumns = @JoinColumn(name = "user_id",
             referencedColumnName = "user_id"))
