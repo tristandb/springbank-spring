@@ -182,11 +182,12 @@ public class BankAccountServiceTest extends TestCase {
         // Create bank account
         BankAccountBean bankAccountBean = new BankAccountBean();
         bankAccountBean.setUserId(1);
+        System.out.println(bankAccountBean);
         Assert.assertNotNull(bankAccountService.saveBankAccount(bankAccountBean));
 
         // Create bank account
         BankAccountBean bankAccountBean1 = new BankAccountBean();
-        bankAccountBean.setUserId(4);
+        bankAccountBean1.setUserId(4);
         Assert.assertNotNull(bankAccountService.saveBankAccount(bankAccountBean1));
     }
 
