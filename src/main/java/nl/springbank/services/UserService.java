@@ -5,7 +5,6 @@ import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.UserBean;
 import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.UserDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**

@@ -7,6 +7,7 @@ import nl.springbank.bean.UserIbanBean;
 import nl.springbank.dao.BankAccountDao;
 import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.UserBankAccountDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,20 +18,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class BankAccountService {
 
-    private final BankAccountDao bankAccountDao;
+    @Autowired
+    private BankAccountDao bankAccountDao;
 
-    private final IbanDao ibanDao;
+    @Autowired
+    private IbanDao ibanDao;
 
-    private final UserBankAccountDao userBankAccountDao;
-
-    /**
-     * Autowire <code>BankAccountDao</code>
-     */
-    public BankAccountService(BankAccountDao bankAccountDao, IbanDao ibanDao, UserBankAccountDao userBankAccountDao) {
-        this.bankAccountDao = bankAccountDao;
-        this.ibanDao = ibanDao;
-        this.userBankAccountDao = userBankAccountDao;
-    }
+    @Autowired
+    private UserBankAccountDao userBankAccountDao;
 
     /**
      * Returns a list of bank accounts

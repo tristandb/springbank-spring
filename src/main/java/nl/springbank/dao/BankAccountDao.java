@@ -17,5 +17,5 @@ public interface BankAccountDao extends JpaRepository<BankAccountBean, Long> {
      * @param iban The IBAN.
      * @return
      */
-     BankAccountBean findByIban(String iban);
+     BankAccountBean findByIbanBean_Iban(String iban);
 }

@@ -21,15 +21,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/bankaccount")
 public class BankAccountController {
 
-    private final BankAccountService bankAccountService;
-
-    /**
-     * Autowire <code>BankAccountService</code>
-     */
     @Autowired
-    public BankAccountController(BankAccountService bankAccountService) {
-        this.bankAccountService = bankAccountService;
-    }
+    private BankAccountService bankAccountService;
 
     /**
      * Returns a list of <code>nl.springbank.bean.BankAccountBean</code>.
@@ -125,7 +118,7 @@ public class BankAccountController {
     @RequestMapping(value = "/iban/{iban}", method = RequestMethod.GET)
     public ResponseEntity<?> getBankAccountByIban(@PathVariable String iban) {
         try {
-            BankAccountBean bankAccountBean = bankAccountDao.findByIban(iban);
+            BankAccountBean bankAccountBean = bankAccountDao.findByIbanBean_Iban(iban);
             return ResponseEntity.ok(bankAccountBean);
         } catch (Exception e) {
             e.printStackTrace();

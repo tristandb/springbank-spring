@@ -6,7 +6,9 @@ import nl.springbank.bean.TransactionBean;
 import nl.springbank.dao.BankAccountDao;
 import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.TransactionDao;
+import nl.springbank.exceptions.TransactionException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 
@@ -59,17 +61,22 @@ public class TransactionService {
         return transactionDao.findBySourceBankAccountOrTargetBankAccount(accountId, accountId);
     }
 
-    public boolean doTransaction(TransactionBean transactionBean) {
-        BankAccountBean sourceAccount = bankAccountDao.findByIban(transactionBean.getSourceBankAccountIban());
-        BankAccountBean targetAccount = bankAccountDao.findByIban(transactionBean.getTargetBankAccountIban());
+    /**
+     * Makes a transaction.
+     * @param transactionBean
+     * @return
+     */
+    @Transactional
+    public void makeTransaction(TransactionBean transactionBean) throws TransactionException {
+        BankAccountBean sourceAccount = bankAccountDao.findByIbanBean_Iban(transactionBean.getSourceBankAccountIban());
+        BankAccountBean targetAccount = bankAccountDao.findByIbanBean_Iban(transactionBean.getTargetBankAccountIban());
         double amount = transactionBean.getAmount();
         if (!(sourceAccount.getBalance() > amount)) {
-            return false;
+            throw new TransactionException();
         }
         sourceAccount.setBalance(sourceAccount.getBalance() - amount);
         targetAccount.setBalance(targetAccount.getBalance() + amount);
         bankAccountDao.save(Arrays.asList(sourceAccount, targetAccount));
         transactionDao.save(transactionBean);
-        return true;
     }
 }

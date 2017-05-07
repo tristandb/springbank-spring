@@ -3,6 +3,7 @@ package nl.springbank.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import nl.springbank.bean.TransactionBean;
+import nl.springbank.exceptions.TransactionException;
 import nl.springbank.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,15 +74,17 @@ public class TransactionController {
     /**
      * Makes a new transaction.
      */
-    @ApiOperation(value = "Do a transaction")
+    @ApiOperation(value = "Make a transaction")
     @ResponseBody
     @RequestMapping(value = "/transaction", method = RequestMethod.POST)
     public ResponseEntity<?> postTransaction(@RequestBody TransactionBean transactionBean) {
         try {
-            boolean transactionResult = transactionService.doTransaction(transactionBean);
-            return ResponseEntity.ok(transactionResult);
+            transactionService.makeTransaction(transactionBean);
+            return ResponseEntity.ok().build();
+        } catch (TransactionException e) {
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-
+            return ResponseEntity.badRequest().build();
         }
     }
 }

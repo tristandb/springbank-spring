@@ -25,5 +25,5 @@ public interface UserDao extends CrudRepository<UserBean, Long> {
      *
      * @param iban The user iban
      */
-    // UserBean findByIban(String iban);
+    // UserBean findByIbanBean_Iban(String iban);
 }
