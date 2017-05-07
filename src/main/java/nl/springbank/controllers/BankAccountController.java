@@ -7,6 +7,7 @@ import nl.springbank.bean.UserBankAccountBean;
 import nl.springbank.bean.UserIbanBean;
 import nl.springbank.services.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,14 +36,9 @@ public class BankAccountController {
     @ApiOperation(value = "Return BankAccounts")
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> getBankAccounts() {
-        try {
-            Iterable<BankAccountBean> bankAccountBean = bankAccountService.getBankAccounts();
-            return ResponseEntity.ok(bankAccountBean);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<?> getBankAccounts() throws Exception {
+        Iterable<BankAccountBean> bankAccountBean = bankAccountService.getBankAccounts();
+        return ResponseEntity.ok(bankAccountBean);
     }
 
     /**
@@ -54,13 +50,12 @@ public class BankAccountController {
     @ApiOperation(value = "Return BankAccount by bankAccountId")
     @ResponseBody
     @RequestMapping(value = "/{bankAccountId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getBankAccount(@PathVariable String bankAccountId) {
-        try {
-            BankAccountBean bankAccountBean = bankAccountService.getBankAccount(Long.parseLong(bankAccountId));
+    public ResponseEntity<?> getBankAccount(@PathVariable String bankAccountId) throws Exception {
+        BankAccountBean bankAccountBean = bankAccountService.getBankAccount(Long.parseLong(bankAccountId));
+        if (bankAccountBean != null) {
             return ResponseEntity.ok(bankAccountBean);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -74,6 +69,7 @@ public class BankAccountController {
             BankAccountBean savedBankAccount = bankAccountService.saveBankAccount(bankAccountBean);
             return ResponseEntity.ok(savedBankAccount.getBankAccountId());
         } catch (Exception e) {
+            e.printStackTrace();
             // TODO: Catch duplicate IBAN.
             return ResponseEntity.badRequest().build();
         }
@@ -104,7 +100,7 @@ public class BankAccountController {
         try {
             UserBankAccountBean userBankAccountBean = bankAccountService.connectUserByIban(userIbanBean);
             return ResponseEntity.ok(userBankAccountBean);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -115,7 +111,7 @@ public class BankAccountController {
         try {
             UserBankAccountBean savedUserBankAcountBean = bankAccountService.connectUser(userBankAccountBean);
             return ResponseEntity.ok(savedUserBankAcountBean);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }

@@ -38,14 +38,9 @@ public class UserController {
     @ApiOperation(value = "Get Users")
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> getUsers() {
-        try {
-            Iterable<UserBean> users = userService.getAllUsers();
-            return ResponseEntity.ok(users);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<?> getUsers() throws Exception {
+        Iterable<UserBean> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
     /**
@@ -62,18 +57,13 @@ public class UserController {
             @ApiResponse(code = 404, message = "User not found"),
     })
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@PathVariable String userId) {
-        try {
-            long userIdLong = Long.parseLong(userId);
-            UserBean user = userService.getUser(userIdLong);
-            if (user != null) {
-                return ResponseEntity.ok(user);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> getUser(@PathVariable String userId) throws Exception {
+        long userIdLong = Long.parseLong(userId);
+        UserBean user = userService.getUser(userIdLong);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -97,13 +87,9 @@ public class UserController {
      */
     @ApiOperation(value = "Delete User")
     @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
-    ResponseEntity<?> delete(@PathVariable String userId) {
-        try {
-            userService.deleteUser(Long.parseLong(userId));
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    ResponseEntity<?> delete(@PathVariable String userId) throws Exception {
+        userService.deleteUser(Long.parseLong(userId));
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -136,6 +122,8 @@ public class UserController {
             return ResponseEntity.ok(key);
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

@@ -3,6 +3,7 @@ package nl.springbank.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import junit.framework.TestCase;
 import nl.springbank.bean.UserBean;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,7 +42,7 @@ import static sun.misc.Version.print;
 @AutoConfigureMockMvc
 @Import(nl.springbank.config.TestConfiguration.class)
 @ActiveProfiles("test")
-public class UserControllerTest {
+public class UserControllerTest extends TestCase {
 
     @Autowired
     MockMvc mockMvc;
@@ -106,6 +107,17 @@ public class UserControllerTest {
     }
 
     /**
+     * Test user identification without any content
+     */
+    @Test
+    public void testNoIdentify() throws Exception {
+        this.mockMvc.perform(post("/user/identify")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).
+                andExpect(status().is4xxClientError());
+    }
+
+    /**
      * Test user authentication
      */
     @Test
@@ -123,6 +135,15 @@ public class UserControllerTest {
         this.mockMvc.perform(post("/user/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("NL17SPRI0466994145")).andExpect(status().is4xxClientError());
+    }
+
+    /**
+     * Test user authentication with no IBAN
+     */
+    @Test
+    public void testNoAuthentication() throws Exception {
+        this.mockMvc.perform(post("/user/authenticate")
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
     }
 
     /**
