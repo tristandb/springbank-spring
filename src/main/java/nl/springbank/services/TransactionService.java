@@ -7,6 +7,7 @@ import nl.springbank.dao.BankAccountDao;
 import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.TransactionDao;
 import nl.springbank.exceptions.TransactionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,9 @@ public class TransactionService {
     private final IbanDao ibanDao;
 
     private final BankAccountDao bankAccountDao;
+
+    @Autowired
+    private BankAccountService bankAccountService;
 
     /**
      * Autowire <code>TransactionDao</code>
@@ -67,7 +71,14 @@ public class TransactionService {
      * @return
      */
     @Transactional
-    public void makeTransaction(TransactionBean transactionBean) throws TransactionException {
+    public void makeTransaction(TransactionBean transactionBean) throws TransactionException, Exception {
+        if (transactionBean.getSourceBankAccountIban() == null){
+            transactionBean.setSourceBankAccountIban(bankAccountService.getBankAccount(transactionBean.getSourceBankAccount()).getIbanBean().getIban());
+        }
+
+        if (transactionBean.getTargetBankAccountIban() == null) {
+            transactionBean.setTargetBankAccountIban(bankAccountService.getBankAccount(transactionBean.getTargetBankAccount()).getIbanBean().getIban());
+        }
         BankAccountBean sourceAccount = bankAccountDao.findByIbanBean_Iban(transactionBean.getSourceBankAccountIban());
         BankAccountBean targetAccount = bankAccountDao.findByIbanBean_Iban(transactionBean.getTargetBankAccountIban());
         double amount = transactionBean.getAmount();
