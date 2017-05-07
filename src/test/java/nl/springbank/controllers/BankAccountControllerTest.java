@@ -209,7 +209,7 @@ public class BankAccountControllerTest extends TestCase {
         ).andExpect(status().is4xxClientError());
     }
 
-   /* *//**
+  /* *//**
      * Test saveBankAccount with invalid values.
      *//*
     @Test
@@ -218,6 +218,8 @@ public class BankAccountControllerTest extends TestCase {
         // Create bank account
         BankAccountBean bankAccountBean = new BankAccountBean();
         bankAccountBean.setUserId(1);
+
+        System.out.println(mapper.writeValueAsString(bankAccountBean));
         this.mockMvc.perform(
                 post("/bankaccount")
                         .contentType(MediaType.APPLICATION_JSON)
