@@ -34,9 +34,9 @@ public class UserController {
     @ApiOperation(value = "Get Users")
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> getUsers()throws Exception {
-            Iterable<UserBean> users = userService.getAllUsers();
-            return ResponseEntity.ok(users);
+    public ResponseEntity<?> getUsers() throws Exception {
+        Iterable<UserBean> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
 
     }
 
@@ -54,9 +54,10 @@ public class UserController {
             @ApiResponse(code = 404, message = "User not found"),
     })
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@PathVariable String userId)throws Exception {
-            long userIdLong = Long.parseLong(userId);
-            UserBean user = userService.getUser(userIdLong);if (user != null) {
+    public ResponseEntity<?> getUser(@PathVariable String userId) throws Exception {
+        long userIdLong = Long.parseLong(userId);
+        UserBean user = userService.getUser(userIdLong);
+        if (user != null) {
             return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -83,9 +84,9 @@ public class UserController {
      */
     @ApiOperation(value = "Delete User")
     @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
-    ResponseEntity<?> delete(@PathVariable String userId)throws Exception {
-            userService.deleteUser(Long.parseLong(userId));
-            return ResponseEntity.ok().build();
+    ResponseEntity<?> delete(@PathVariable String userId) throws Exception {
+        userService.deleteUser(Long.parseLong(userId));
+        return ResponseEntity.ok().build();
 
     }
 
@@ -95,16 +96,11 @@ public class UserController {
     @ApiOperation(value = "Identify a user")
     @RequestMapping(value = "/identify", method = RequestMethod.POST)
     ResponseEntity<?> identify(@RequestBody String email) {
-        try {
-            UserBean user = userService.getUserByEmail(email);
-            if (user != null) {
-                return ResponseEntity.ok(user.getId());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
+        UserBean user = userService.getUserByEmail(email);
+        if (user != null) {
+            return ResponseEntity.ok(user.getId());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
