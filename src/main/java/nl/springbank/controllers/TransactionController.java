@@ -17,16 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/transaction")
 public class TransactionController {
-
-    private final TransactionService transactionService;
-
     /**
      * Autowire <code>nl.springbank.services.TransactionService</code>
      */
     @Autowired
-    public TransactionController(TransactionService transactionService) {
-        this.transactionService = transactionService;
-    }
+    private TransactionService transactionService;
 
     /**
      * Returns a list of <code>nl.springbank.bean.TransactionBean</code>
@@ -76,7 +71,7 @@ public class TransactionController {
     }
 
     /**
-     * Makes a new transaction
+     * Makes a new transaction.
      */
     @ApiOperation(value = "Do a transaction")
     @ResponseBody
@@ -86,7 +81,7 @@ public class TransactionController {
             boolean transactionResult = transactionService.doTransaction(transactionBean);
             return ResponseEntity.ok(transactionResult);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+
         }
     }
 }
