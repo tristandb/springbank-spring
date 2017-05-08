@@ -3,6 +3,7 @@ package nl.springbank.controllers;
 import com.google.common.collect.Iterators;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import nl.springbank.bean.CreateTransaction;
 import nl.springbank.bean.TransactionBean;
 import nl.springbank.exceptions.TransactionException;
 import nl.springbank.services.TransactionService;
@@ -63,9 +64,14 @@ public class TransactionController {
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST)
     @Transactional(isolation = REPEATABLE_READ)
-    public ResponseEntity<?> postTransaction(@RequestBody TransactionBean transactionBean) {
+    public ResponseEntity<?> postTransaction(@RequestBody CreateTransaction createTransaction) {
         try {
-            transactionService.makeTransaction(transactionBean);
+            // Authentication
+            if (!createTransaction.getAuthentication().equals("kaas")){
+                return ResponseEntity.status(401).build();
+            }
+
+            transactionService.makeTransaction(createTransaction.getTransactionBean());
             return ResponseEntity.ok().build();
         } catch (TransactionException e) {
             return ResponseEntity.badRequest().build();

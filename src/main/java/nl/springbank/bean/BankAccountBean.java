@@ -25,7 +25,7 @@ public class BankAccountBean {
     @Id
     @Column(name = "account_id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long bankAccountId;
+    private Long bankAccountId;
 
     // The balance on the account
     @Column(name = "balance")
@@ -44,7 +44,7 @@ public class BankAccountBean {
 
     @Column(name = "holder_user_id")
     @JsonProperty("userId")
-    private long userId;
+    private Long userId;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(updatable = false, insertable = false)
@@ -61,11 +61,11 @@ public class BankAccountBean {
     public BankAccountBean() {
     }
 
-    public long getBankAccountId() {
+    public Long getBankAccountId() {
         return bankAccountId;
     }
 
-    public void setBankAccountId(long bankAccountId) {
+    public void setBankAccountId(Long bankAccountId) {
         this.bankAccountId = bankAccountId;
     }
 
@@ -113,11 +113,11 @@ public class BankAccountBean {
         this.users  = users;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 }

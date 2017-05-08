@@ -1,5 +1,8 @@
 package nl.springbank.bean;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -16,9 +19,9 @@ public class TransactionBean {
      */
     // Transaction identifier
     @Id
-    @Column(name = "transaction_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long transactionId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "transaction_id", nullable = false, unique = true)
+    private Long transactionId;
 
     // source bank account iban
     @Column(name = "source_bank_account_iban")
@@ -50,11 +53,11 @@ public class TransactionBean {
     public TransactionBean() {
     }
 
-    public long getTransactionId() {
+    public Long getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(long transactionId) {
+    public void setTransactionId(Long transactionId) {
         this.transactionId = transactionId;
     }
 

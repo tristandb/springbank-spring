@@ -181,13 +181,13 @@ public class BankAccountServiceTest extends TestCase {
     public void testSaveBankAccount() throws Exception {
         // Create bank account
         BankAccountBean bankAccountBean = new BankAccountBean();
-        bankAccountBean.setUserId(1);
+        bankAccountBean.setUserId((long) 1);
         System.out.println(bankAccountBean);
         Assert.assertNotNull(bankAccountService.saveBankAccount(bankAccountBean));
 
         // Create bank account
         BankAccountBean bankAccountBean1 = new BankAccountBean();
-        bankAccountBean1.setUserId(4);
+        bankAccountBean1.setUserId((long) 4);
         Assert.assertNotNull(bankAccountService.saveBankAccount(bankAccountBean1));
     }
 
@@ -209,7 +209,7 @@ public class BankAccountServiceTest extends TestCase {
         // Create bank account
         try {
             BankAccountBean bankAccountBean1 = new BankAccountBean();
-            bankAccountBean1.setUserId(5);
+            bankAccountBean1.setUserId((long) 5);
             bankAccountService.saveBankAccount(bankAccountBean1);
             fail();
         } catch (DataIntegrityViolationException e) {

@@ -70,7 +70,6 @@ public class BankAccountController {
             return ResponseEntity.ok(savedBankAccount.getBankAccountId());
         } catch (Exception e) {
             e.printStackTrace();
-            // TODO: Catch duplicate IBAN.
             return ResponseEntity.badRequest().build();
         }
     }

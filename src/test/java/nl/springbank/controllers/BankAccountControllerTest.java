@@ -3,6 +3,7 @@ package nl.springbank.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import junit.framework.TestCase;
 import nl.springbank.bean.BankAccountBean;
+import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.UserBankAccountBean;
 import nl.springbank.bean.UserIbanBean;
 import org.junit.Test;
@@ -208,8 +209,8 @@ public class BankAccountControllerTest extends TestCase {
                         .content(mapper.writeValueAsString(userIbanBean1))
         ).andExpect(status().is4xxClientError());
     }
-
-  /* *//**
+/*
+    *//**
      * Test saveBankAccount with invalid values.
      *//*
     @Test
@@ -217,7 +218,9 @@ public class BankAccountControllerTest extends TestCase {
     public void testSaveBankAccount() throws Exception {
         // Create bank account
         BankAccountBean bankAccountBean = new BankAccountBean();
-        bankAccountBean.setUserId(1);
+        IbanBean ibanBean = new IbanBean();
+        bankAccountBean.setUserId((long) 1);
+        bankAccountBean.setIbanBean(ibanBean);
 
         System.out.println(mapper.writeValueAsString(bankAccountBean));
         this.mockMvc.perform(
@@ -228,7 +231,7 @@ public class BankAccountControllerTest extends TestCase {
 
         // Create bank account
         BankAccountBean bankAccountBean1 = new BankAccountBean();
-        bankAccountBean1.setUserId(4);
+        bankAccountBean1.setUserId((long) 4);
         this.mockMvc.perform(
                 post("/bankaccount")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -238,7 +241,7 @@ public class BankAccountControllerTest extends TestCase {
 
     /**
      * Test saveBankAccount with invalid values.
-     *//*
+     */
     @Test
     @Transactional
     public void testSaveInvalidBankAccount() throws Exception {
@@ -252,11 +255,11 @@ public class BankAccountControllerTest extends TestCase {
 
         // Create bank account
         BankAccountBean bankAccountBean1 = new BankAccountBean();
-        bankAccountBean1.setUserId(5);
+        bankAccountBean1.setUserId((long) 5);
         this.mockMvc.perform(
                 post("/bankaccount")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(bankAccountBean1))
         ).andExpect(status().is4xxClientError());
-    }*/
+    }
 }

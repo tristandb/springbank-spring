@@ -1,11 +1,9 @@
 package nl.springbank.controllers;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import junit.framework.TestCase;
-import nl.springbank.bean.BankAccountBean;
-import nl.springbank.bean.TransactionBean;
-import nl.springbank.bean.UserBankAccountBean;
-import nl.springbank.bean.UserIbanBean;
+import nl.springbank.bean.*;
 import nl.springbank.exceptions.TransactionException;
 import nl.springbank.services.BankAccountService;
 import org.junit.Assert;
@@ -79,6 +77,8 @@ public class TransactionControllerTest extends TestCase {
     @Test
     @Transactional
     public void testPostTransaction() throws Exception {
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
         double balance1 = bankAccountService.getBankAccount(1).getBalance();
         double balance2 = bankAccountService.getBankAccount(2).getBalance();
         TransactionBean transactionBean = new TransactionBean();
@@ -86,10 +86,14 @@ public class TransactionControllerTest extends TestCase {
         transactionBean.setTargetBankAccount(2);
         transactionBean.setAmount(13.00);
         transactionBean.setMessage("[Test] Booking");
+        CreateTransaction createTransaction = new CreateTransaction();
+        createTransaction.setTransactionBean(transactionBean);
+        createTransaction.setAuthentication("kaas");
+        System.out.println(mapper.writeValueAsString(createTransaction));
         this.mockMvc.perform(
                 post("/transaction")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(transactionBean))
+                        .content(mapper.writeValueAsString(createTransaction))
         ).andExpect(status().is2xxSuccessful());
         Assert.assertEquals(balance1 - 13.00, bankAccountService.getBankAccount(1).getBalance(), 0);
         Assert.assertEquals(balance2 + 13.00, bankAccountService.getBankAccount(2).getBalance(), 0);
@@ -101,15 +105,20 @@ public class TransactionControllerTest extends TestCase {
     @Test
     @Transactional
     public void testPostHighTransaction() throws Exception {
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
         TransactionBean transactionBean = new TransactionBean();
         transactionBean.setSourceBankAccount(1);
         transactionBean.setTargetBankAccount(2);
         transactionBean.setAmount(2000000.00);
         transactionBean.setMessage("[Test] Booking");
+        CreateTransaction createTransaction = new CreateTransaction();
+        createTransaction.setTransactionBean(transactionBean);
+        createTransaction.setAuthentication("kaas");
         this.mockMvc.perform(
                 post("/transaction")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(transactionBean))
+                        .content(mapper.writeValueAsString(createTransaction))
         ).andExpect(status().is4xxClientError());
     }
 }

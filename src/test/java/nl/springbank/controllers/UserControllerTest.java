@@ -47,13 +47,6 @@ public class UserControllerTest extends TestCase {
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper mapper;
-
-
-    @Autowired
-    private UserController userController;
-
     /**
      * Get a list of users
      *

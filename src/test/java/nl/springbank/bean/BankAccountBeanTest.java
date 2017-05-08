@@ -25,7 +25,7 @@ public class BankAccountBeanTest {
     public void setBankAccountId() throws Exception {
         long bankAccountId = 2;
         bankAccountBean.setBankAccountId(bankAccountId);
-        assertEquals(bankAccountId, bankAccountBean.getBankAccountId());
+        assertEquals(bankAccountId, bankAccountBean.getBankAccountId().longValue());
     }
 
     @Test
@@ -62,8 +62,8 @@ public class BankAccountBeanTest {
 
     @Test
     public void setUserId() throws Exception {
-        int userId = 1;
+        long userId = 1;
         bankAccountBean.setUserId(userId);
-        assertEquals(userId, bankAccountBean.getUserId());
+        assertEquals(userId, bankAccountBean.getUserId().longValue());
     }
 }
