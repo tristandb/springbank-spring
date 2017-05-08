@@ -1,10 +1,8 @@
 package nl.springbank.dao;
 
 import nl.springbank.bean.IbanBean;
-import nl.springbank.bean.UserBean;
 import org.springframework.data.repository.CrudRepository;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * IbanDao. Communicates with the database and returns objects of type <code>nl.springbank.bean.IbanBean</code>

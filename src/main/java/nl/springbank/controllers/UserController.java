@@ -6,15 +6,11 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javassist.NotFoundException;
 import nl.springbank.bean.UserBean;
-import nl.springbank.dao.UserDao;
 import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import javax.xml.ws.Response;
 
 /**
  * A class to get the interactions from the MySQL database using the UserDao class.
@@ -29,8 +25,12 @@ public class UserController {
     /**
      * Autowire <code>UserService</code>.
      */
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Returns a list of <code>nl.springbank.bean.UserBean</code>.
@@ -41,6 +41,7 @@ public class UserController {
     public ResponseEntity<?> getUsers() throws Exception {
         Iterable<UserBean> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
+
     }
 
     /**
@@ -87,9 +88,10 @@ public class UserController {
      */
     @ApiOperation(value = "Delete User")
     @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
-    ResponseEntity<?> delete(@PathVariable String userId) throws Exception {
+    ResponseEntity<?> delete(@PathVariable String userId) {
         userService.deleteUser(Long.parseLong(userId));
         return ResponseEntity.ok().build();
+
     }
 
     /**
@@ -98,16 +100,11 @@ public class UserController {
     @ApiOperation(value = "Identify a user")
     @RequestMapping(value = "/identify", method = RequestMethod.POST)
     ResponseEntity<?> identify(@RequestBody String email) {
-        try {
-            UserBean user = userService.getUserByEmail(email);
-            if (user != null) {
-                return ResponseEntity.ok(user.getId());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
+        UserBean user = userService.getUserByEmail(email);
+        if (user != null) {
+            return ResponseEntity.ok(user.getId());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -122,8 +119,6 @@ public class UserController {
             return ResponseEntity.ok(key);
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
         }
     }
 

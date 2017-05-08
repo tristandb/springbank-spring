@@ -3,7 +3,7 @@ package nl.springbank.dao;
 import nl.springbank.bean.UserBean;
 import org.springframework.data.repository.CrudRepository;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * UserDao. Communicates with the database and returns objects of type <code>nl.springbank.bean.UserBean</code>
@@ -25,5 +25,5 @@ public interface UserDao extends CrudRepository<UserBean, Long> {
      *
      * @param iban The user iban
      */
-    // UserBean findByIban(String iban);
+    // UserBean findByIbanBean_Iban(String iban);
 }

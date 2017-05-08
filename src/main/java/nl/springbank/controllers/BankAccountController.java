@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
-
 /**
  * A class to get the interactions from the MySQL database using the BankAccountDao class.
  *
@@ -22,11 +20,13 @@ import javax.xml.ws.Response;
 @RestController
 @RequestMapping("/bankaccount")
 public class BankAccountController {
-    /**
-     * Autowire <code>BankAccountService</code>
-     */
+
+    private final BankAccountService bankAccountService;
+
     @Autowired
-    private BankAccountService bankAccountService;
+    public BankAccountController(BankAccountService bankAccountService) {
+        this.bankAccountService = bankAccountService;
+    }
 
     /**
      * Returns a list of <code>nl.springbank.bean.BankAccountBean</code>.
@@ -115,18 +115,4 @@ public class BankAccountController {
             return ResponseEntity.badRequest().build();
         }
     }
-
-
-    /* @ApiOperation(value = "Return BankAccount")
-    @ResponseBody
-    @RequestMapping(value = "/iban/{iban}", method = RequestMethod.GET)
-    public ResponseEntity<?> getBankAccountByIban(@PathVariable String iban) {
-        try {
-            BankAccountBean bankAccountBean = bankAccountDao.findByIban(iban);
-            return ResponseEntity.ok(bankAccountBean);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
-    }*/
 }
