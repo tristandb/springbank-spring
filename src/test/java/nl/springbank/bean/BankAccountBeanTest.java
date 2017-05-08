@@ -18,7 +18,7 @@ public class BankAccountBeanTest {
 
     @Test
     public void testToString() throws Exception {
-        assertEquals("BankAccountBean{bankAccountId=0, balance=0.0, ibanBean=null, user=null}", bankAccountBean.toString());
+        assertEquals("BankAccountBean{bankAccountId=null, balance=0.0, ibanBean=null, user=null}", bankAccountBean.toString());
     }
 
     @Test

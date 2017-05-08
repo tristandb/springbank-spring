@@ -12,5 +12,8 @@ Run the application by running `mvn spring-boot:run`.
 
 ## Database
 The dialect for the database is MySQL. Table structure and sample data have been included in `/db/`.
+The configuration for MySQL can be found in `src/main/resources`
 
+## Testing
+Testing can be done easily by running `mvn test`.
 
