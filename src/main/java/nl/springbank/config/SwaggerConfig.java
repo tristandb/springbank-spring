@@ -25,11 +25,11 @@ public class SwaggerConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())
-                .useDefaultResponseMessages(false) ;
+                .useDefaultResponseMessages(false);
     }
 
     private ApiInfo apiInfo() {
-        ApiInfo apiInfo = new ApiInfo(
+        return new ApiInfo(
                 "SprINGBank",
                 "Documention of the SprINGBank endpoints.",
                 "",
@@ -37,6 +37,5 @@ public class SwaggerConfig {
                 "",
                 "",
                 "");
-        return apiInfo;
     }
 }

@@ -17,24 +17,26 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BankAccountService {
-    /**
-     * Autowire <code>BankAccountDao</code>
-     */
-    @Autowired
-    private BankAccountDao bankAccountDao;
+
+    private final BankAccountDao bankAccountDao;
+
+    private final IbanDao ibanDao;
+
+    private final UserBankAccountDao userBankAccountDao;
 
     @Autowired
-    private IbanDao ibanDao;
-
-    @Autowired
-    private UserBankAccountDao userBankAccountDao;
+    public BankAccountService(BankAccountDao bankAccountDao, IbanDao ibanDao, UserBankAccountDao userBankAccountDao) {
+        this.bankAccountDao = bankAccountDao;
+        this.ibanDao = ibanDao;
+        this.userBankAccountDao = userBankAccountDao;
+    }
 
     /**
      * Returns a list of bank accounts
      *
      * @return
      */
-    public Iterable<BankAccountBean> getBankAccounts() throws Exception {
+    public Iterable<BankAccountBean> getBankAccounts() {
         return bankAccountDao.findAll();
     }
 
@@ -44,7 +46,7 @@ public class BankAccountService {
      * @param bankAccount The bankAccountId
      * @return
      */
-    public BankAccountBean getBankAccount(long bankAccount) throws Exception {
+    public BankAccountBean getBankAccount(long bankAccount) {
         return bankAccountDao.findOne(bankAccount);
     }
 
@@ -54,15 +56,16 @@ public class BankAccountService {
      * @param bankAccountBean
      * @return
      */
-    public BankAccountBean saveBankAccount(BankAccountBean bankAccountBean) throws Exception {
+    public BankAccountBean saveBankAccount(BankAccountBean bankAccountBean) {
         return bankAccountDao.save(bankAccountBean);
     }
 
     /**
      * Deletes a BankAccount.
+     *
      * @param bankAccountId The BankAccount to delete
      */
-    public void deleteBankAccount(long bankAccountId) throws Exception {
+    public void deleteBankAccount(long bankAccountId) {
         bankAccountDao.delete(bankAccountId);
     }
 
@@ -72,7 +75,7 @@ public class BankAccountService {
      * @param userBankAccountBean The object to save.
      * @return
      */
-    public UserBankAccountBean connectUser(UserBankAccountBean userBankAccountBean){
+    public UserBankAccountBean connectUser(UserBankAccountBean userBankAccountBean) {
         // Save the UserBankAccountBean
         return userBankAccountDao.save(userBankAccountBean);
     }

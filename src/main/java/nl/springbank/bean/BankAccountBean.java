@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
@@ -48,7 +47,7 @@ public class BankAccountBean {
     private long userId;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = true, updatable = false, insertable = false)
+    @JoinColumn(updatable = false, insertable = false)
     @JoinTable(name = "user_bank_account", joinColumns = @JoinColumn(name = "bank_account_id",
             referencedColumnName = "account_id"), inverseJoinColumns = @JoinColumn(name = "user_id",
             referencedColumnName = "user_id"))
@@ -60,15 +59,6 @@ public class BankAccountBean {
      */
 
     public BankAccountBean() {
-    }
-
-    public BankAccountBean(double balance) {
-        this.balance = balance;
-    }
-
-    public BankAccountBean(double balance, IbanBean ibanBean) {
-        this.balance = balance;
-        this.ibanBean = ibanBean;
     }
 
     public long getBankAccountId() {
