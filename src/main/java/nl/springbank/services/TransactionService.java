@@ -9,9 +9,9 @@ import nl.springbank.dao.TransactionDao;
 import nl.springbank.exceptions.TransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Service that does all operation regarding Transactions.
@@ -27,16 +27,20 @@ public class TransactionService {
 
     private final BankAccountDao bankAccountDao;
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final ReentrantLock lock;
+
+    private final BankAccountService bankAccountService;
 
     /**
      * Autowire <code>TransactionDao</code>
      */
-    public TransactionService(TransactionDao transactionDao, IbanDao ibanDao, BankAccountDao bankAccountDao) {
+    @Autowired
+    public TransactionService(TransactionDao transactionDao, IbanDao ibanDao, BankAccountDao bankAccountDao, BankAccountService bankAccountService) {
         this.transactionDao = transactionDao;
         this.ibanDao = ibanDao;
         this.bankAccountDao = bankAccountDao;
+        this.lock = new ReentrantLock(true);
+        this.bankAccountService = bankAccountService;
     }
 
     /**
@@ -70,24 +74,28 @@ public class TransactionService {
      * @param transactionBean
      * @return
      */
-    @Transactional
-    public void makeTransaction(TransactionBean transactionBean) throws TransactionException, Exception {
-        if (transactionBean.getSourceBankAccountIban() == null){
-            transactionBean.setSourceBankAccountIban(bankAccountService.getBankAccount(transactionBean.getSourceBankAccount()).getIbanBean().getIban());
-        }
+    public void makeTransaction(TransactionBean transactionBean) throws TransactionException {
+        this.lock.lock();
+        try {
+            if (transactionBean.getSourceBankAccountIban() == null) {
+                transactionBean.setSourceBankAccountIban(bankAccountService.getBankAccount(transactionBean.getSourceBankAccount()).getIbanBean().getIban());
+            }
 
-        if (transactionBean.getTargetBankAccountIban() == null) {
-            transactionBean.setTargetBankAccountIban(bankAccountService.getBankAccount(transactionBean.getTargetBankAccount()).getIbanBean().getIban());
+            if (transactionBean.getTargetBankAccountIban() == null) {
+                transactionBean.setTargetBankAccountIban(bankAccountService.getBankAccount(transactionBean.getTargetBankAccount()).getIbanBean().getIban());
+            }
+            BankAccountBean sourceAccount = bankAccountDao.findByIbanBean_Iban(transactionBean.getSourceBankAccountIban());
+            BankAccountBean targetAccount = bankAccountDao.findByIbanBean_Iban(transactionBean.getTargetBankAccountIban());
+            double amount = transactionBean.getAmount();
+            if (!(sourceAccount.getBalance() > amount)) {
+                throw new TransactionException();
+            }
+            sourceAccount.setBalance(sourceAccount.getBalance() - amount);
+            targetAccount.setBalance(targetAccount.getBalance() + amount);
+            bankAccountDao.save(Arrays.asList(sourceAccount, targetAccount));
+            transactionDao.save(transactionBean);
+        } finally {
+            this.lock.unlock();
         }
-        BankAccountBean sourceAccount = bankAccountDao.findByIbanBean_Iban(transactionBean.getSourceBankAccountIban());
-        BankAccountBean targetAccount = bankAccountDao.findByIbanBean_Iban(transactionBean.getTargetBankAccountIban());
-        double amount = transactionBean.getAmount();
-        if (!(sourceAccount.getBalance() > amount)) {
-            throw new TransactionException();
-        }
-        sourceAccount.setBalance(sourceAccount.getBalance() - amount);
-        targetAccount.setBalance(targetAccount.getBalance() + amount);
-        bankAccountDao.save(Arrays.asList(sourceAccount, targetAccount));
-        transactionDao.save(transactionBean);
     }
 }

@@ -32,28 +32,28 @@ public class UserService {
     /**
      * Returns a list of <code>nl.springbank.bean.UserBean</code>.
      */
-    public Iterable<UserBean> getAllUsers() throws Exception {
+    public Iterable<UserBean> getAllUsers() {
         return userDao.findAll();
     }
 
     /**
      * Returns a <code>nl.springbank.bean.UserBean</code> having provided an userId.
      */
-    public UserBean getUser(long userId) throws Exception {
+    public UserBean getUser(long userId) {
         return userDao.findOne(userId);
     }
 
     /**
      * Creates a new entry for <code>nl.springbank.bean.UserBean</code>.
      */
-    public UserBean saveUser(UserBean userBean) throws Exception {
+    public UserBean saveUser(UserBean userBean) {
         return userDao.save(userBean);
     }
 
     /**
      * Deletes a entry of <code>nl.springbank.bean.UserBean</code> given a userId.
      */
-    public void deleteUser(long userId) throws Exception {
+    public void deleteUser(long userId) {
         userDao.delete(userId);
     }
 

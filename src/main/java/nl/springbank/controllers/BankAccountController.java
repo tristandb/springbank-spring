@@ -21,8 +21,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/bankaccount")
 public class BankAccountController {
 
+    private final BankAccountService bankAccountService;
+
     @Autowired
-    private BankAccountService bankAccountService;
+    public BankAccountController(BankAccountService bankAccountService) {
+        this.bankAccountService = bankAccountService;
+    }
 
     /**
      * Returns a list of <code>nl.springbank.bean.BankAccountBean</code>.

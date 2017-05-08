@@ -29,7 +29,7 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        ApiInfo apiInfo = new ApiInfo(
+        return new ApiInfo(
                 "SprINGBank",
                 "Documention of the SprINGBank endpoints.",
                 "",
@@ -37,6 +37,5 @@ public class SwaggerConfig {
                 "",
                 "",
                 "");
-        return apiInfo;
     }
 }

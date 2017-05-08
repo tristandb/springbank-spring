@@ -3,7 +3,7 @@ package nl.springbank.dao;
 import nl.springbank.bean.TransactionBean;
 import org.springframework.data.repository.CrudRepository;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * TransactionDao.

@@ -25,8 +25,12 @@ public class UserController {
     /**
      * Autowire <code>UserService</code>.
      */
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Returns a list of <code>nl.springbank.bean.UserBean</code>.
@@ -84,7 +88,7 @@ public class UserController {
      */
     @ApiOperation(value = "Delete User")
     @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
-    ResponseEntity<?> delete(@PathVariable String userId) throws Exception {
+    ResponseEntity<?> delete(@PathVariable String userId) {
         userService.deleteUser(Long.parseLong(userId));
         return ResponseEntity.ok().build();
 
