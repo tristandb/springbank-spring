@@ -35,11 +35,6 @@ public class IbanBean {
     public IbanBean() {
     }
 
-    public IbanBean(String iban, BankAccountBean bankAccountBean) {
-        this.iban = iban;
-        this.bankAccountBean = bankAccountBean;
-    }
-
     public BankAccountBean getBankAccountBean() {
         return bankAccountBean;
     }

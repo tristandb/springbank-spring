@@ -110,7 +110,7 @@ public class BankAccountBean {
     }
 
     public void setUsers(Set<UserBean> users) {
-        this.users = users;
+        this.users  = users;
     }
 
     public long getUserId() {

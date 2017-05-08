@@ -94,4 +94,22 @@ public class TransactionControllerTest extends TestCase {
         Assert.assertEquals(balance1 - 13.00, bankAccountService.getBankAccount(1).getBalance(), 0);
         Assert.assertEquals(balance2 + 13.00, bankAccountService.getBankAccount(2).getBalance(), 0);
     }
+
+    /**
+     * Test postTransaction.
+     */
+    @Test
+    @Transactional
+    public void testPostHighTransaction() throws Exception {
+        TransactionBean transactionBean = new TransactionBean();
+        transactionBean.setSourceBankAccount(1);
+        transactionBean.setTargetBankAccount(2);
+        transactionBean.setAmount(2000000.00);
+        transactionBean.setMessage("[Test] Booking");
+        this.mockMvc.perform(
+                post("/transaction")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(transactionBean))
+        ).andExpect(status().is4xxClientError());
+    }
 }

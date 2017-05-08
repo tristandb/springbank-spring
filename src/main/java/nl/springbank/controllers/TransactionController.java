@@ -37,12 +37,8 @@ public class TransactionController {
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getTransactions() {
-        try {
-            Iterable<TransactionBean> transactionBeans = transactionService.getAllTransactions();
-            return ResponseEntity.ok(transactionBeans);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Iterable<TransactionBean> transactionBeans = transactionService.getAllTransactions();
+        return ResponseEntity.ok(transactionBeans);
     }
 
     /**
@@ -52,35 +48,11 @@ public class TransactionController {
     @ResponseBody
     @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)
     public ResponseEntity<?> getTransactionsByAccountId(@PathVariable String accountId) {
-        try {
-            Iterable<TransactionBean> transactionBeans = transactionService.getTransactionsById(Long.parseLong(accountId));
-            if (Iterators.size(transactionBeans.iterator()) > 0) {
-                return ResponseEntity.ok(transactionBeans);
-            } else {
-                return ResponseEntity.status(404).build();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    /**
-     * Returns a lis of outgoing transactions <code>nl.springbank.bean.TransactionBean</code>.
-     */
-    @ApiOperation(value = "Return Transactions given IBAN")
-    @ResponseBody
-    @RequestMapping(value = "/iban/{iban}", method = RequestMethod.GET)
-    public ResponseEntity<?> getTransactionByIban(@PathVariable String iban) {
-        try {
-            Iterable<TransactionBean> transactionBeans = transactionService.getTransactionsByIban(iban);
-            if (Iterators.size(transactionBeans.iterator()) > 0) {
-                return ResponseEntity.ok(transactionBeans);
-            } else {
-                return ResponseEntity.status(404).build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+        Iterable<TransactionBean> transactionBeans = transactionService.getTransactionsById(Long.parseLong(accountId));
+        if (Iterators.size(transactionBeans.iterator()) > 0) {
+            return ResponseEntity.ok(transactionBeans);
+        } else {
+            return ResponseEntity.status(404).build();
         }
     }
 
@@ -90,14 +62,12 @@ public class TransactionController {
     @ApiOperation(value = "Make a transaction")
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST)
-    @Transactional(isolation=REPEATABLE_READ)
+    @Transactional(isolation = REPEATABLE_READ)
     public ResponseEntity<?> postTransaction(@RequestBody TransactionBean transactionBean) {
         try {
             transactionService.makeTransaction(transactionBean);
             return ResponseEntity.ok().build();
         } catch (TransactionException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
