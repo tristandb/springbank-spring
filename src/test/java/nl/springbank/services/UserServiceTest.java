@@ -137,7 +137,7 @@ public class UserServiceTest extends TestCase {
         userBean.setBsn(bsn);
         userBean.setStreetAddress(streetAddress);
         userBean.setTelephoneNumber(telephoneNumber);
-        userBean.setEmail(email);
+        userBean.setUsername(email);
         userBean.setDateOfBirth(dateOfBirth);
 
         // Save the UserBean
@@ -152,7 +152,7 @@ public class UserServiceTest extends TestCase {
         Assert.assertEquals(userBean.getBsn(), savedUserBean.getBsn());
         Assert.assertEquals(userBean.getStreetAddress(), savedUserBean.getStreetAddress());
         Assert.assertEquals(userBean.getTelephoneNumber(), savedUserBean.getTelephoneNumber());
-        Assert.assertEquals(userBean.getEmail(), savedUserBean.getEmail());
+        Assert.assertEquals(userBean.getUsername(), savedUserBean.getUsername());
         Assert.assertEquals(userBean.getDateOfBirth().toLocalDate(), savedUserBean.getDateOfBirth().toLocalDate());
     }
 
@@ -180,7 +180,7 @@ public class UserServiceTest extends TestCase {
         userBean.setBsn(bsn);
         userBean.setStreetAddress(streetAddress);
         userBean.setTelephoneNumber(telephoneNumber);
-        userBean.setEmail(email);
+        userBean.setUsername(email);
         userBean.setDateOfBirth(dateOfBirth);
 
         // Save the UserBean
@@ -190,24 +190,6 @@ public class UserServiceTest extends TestCase {
         } catch (DataIntegrityViolationException e){
             Assert.assertNotNull(e);
         }
-    }
-
-    /**
-     * Test getUserByEmail
-     */
-    @Test
-    public void testGetUserByEmail() throws Exception {
-        String email = "ban@aan.nl";
-        Assert.assertEquals(1, userService.getUserByEmail(email).getId());
-    }
-
-    /**
-     * Test getUserByEmail with an invalid email address.
-     */
-    @Test
-    public void testGetUserByInvalidEmail() throws Exception {
-        String invalidEmail = "invalid@email.com";
-        Assert.assertEquals(null, userService.getUserByEmail(invalidEmail));
     }
 
     /**

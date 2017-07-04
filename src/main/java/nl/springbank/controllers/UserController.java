@@ -94,19 +94,6 @@ public class UserController {
 
     }
 
-    /**
-     * Identifies a user, given an email.
-     */
-    @ApiOperation(value = "Identify a user")
-    @RequestMapping(value = "/identify", method = RequestMethod.POST)
-    ResponseEntity<?> identify(@RequestBody String email) {
-        UserBean user = userService.getUserByEmail(email);
-        if (user != null) {
-            return ResponseEntity.ok(user.getId());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
 
     /**
      * Authenticates a user, given an IBAN.

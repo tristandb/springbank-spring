@@ -57,13 +57,15 @@ public class UserService {
         userDao.delete(userId);
     }
 
+
     /**
-     * Returns a user given an email.
-     *
-     * @param email The email to use.
+     * Checks if password is correct.
+     * @param username The username of a user.
+     * @param password The password of a user.
+     * @return
      */
-    public UserBean getUserByEmail(String email) {
-        return userDao.findByEmail(email);
+    public boolean isCorrectPassword(String username, String password) {
+        return userDao.findByUsernameAndPassword(username, password) != null;
     }
 
     /**

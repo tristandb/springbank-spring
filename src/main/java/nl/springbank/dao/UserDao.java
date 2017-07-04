@@ -13,17 +13,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface UserDao extends CrudRepository<UserBean, Long> {
 
-    /**
-     * Return the user having the passed email or null if no user is found.
-     *
-     * @param email The user email
-     */
-    UserBean findByEmail(String email);
-
-    /**
-     * Return the user having the passed iban or null if no user is found.
-     *
-     * @param iban The user iban
-     */
-    // UserBean findByIbanBean_Iban(String iban);
+    UserBean findByUsernameAndPassword(String username, String password);
 }

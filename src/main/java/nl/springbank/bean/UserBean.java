@@ -57,9 +57,13 @@ public class UserBean {
     @Column(name = "telephone_number")
     private String telephoneNumber;
 
-    // The user's email
+    // The user's username
     @NotNull
-    private String email;
+    private String username;
+
+    // The user's password
+    @NotNull
+    private String password;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonProperty("holderBankAccount")
@@ -77,6 +81,15 @@ public class UserBean {
     public UserBean() {}
 
     // Getter and setter methods
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public long getId() {
         return id;
@@ -142,12 +155,12 @@ public class UserBean {
         this.telephoneNumber = telephoneNumber;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -161,7 +174,7 @@ public class UserBean {
                 ", bsn='" + bsn + '\'' +
                 ", streetAddress='" + streetAddress + '\'' +
                 ", telephoneNumber='" + telephoneNumber + '\'' +
-                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
                 '}';
     }
 

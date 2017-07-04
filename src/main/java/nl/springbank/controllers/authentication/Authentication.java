@@ -2,6 +2,7 @@ package nl.springbank.controllers.authentication;
 
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.JsonRpcService;
+import nl.springbank.exceptions.AuthenticationError;
 import nl.springbank.objects.AuthenticationObject;
 
 /**
@@ -11,5 +12,5 @@ import nl.springbank.objects.AuthenticationObject;
  */
 @JsonRpcService("/api/authentication")
 public interface Authentication {
-    AuthenticationObject getAuthToken (@JsonRpcParam(value = "username") String username, @JsonRpcParam(value = "password") String password);
+    AuthenticationObject getAuthToken(@JsonRpcParam(value = "username") String username, @JsonRpcParam(value = "password") String password) throws AuthenticationError;
 }
