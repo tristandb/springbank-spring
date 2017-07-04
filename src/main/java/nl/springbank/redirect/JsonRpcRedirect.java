@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.googlecode.jsonrpc4j.JsonRpcService;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import nl.springbank.controllers.TestController;
+import nl.springbank.controllers.authentication.Authentication;
 import nl.springbank.helper.JsonRpcRequest;
 import org.apache.hc.client5.http.impl.sync.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.sync.HttpClients;
@@ -44,6 +45,9 @@ public class JsonRpcRedirect {
     @Autowired
     private TestController testController;
 
+    @Autowired
+    private Authentication authentication;
+
     @RequestMapping(value = "/api", method = RequestMethod.POST)
     @ResponseBody
     public String redirect(@RequestBody String json) {
@@ -66,7 +70,6 @@ public class JsonRpcRedirect {
             for (Method method : bean.getMethods()) {
                 if (method.getName().equals(jsonRequest.getMethod())) {
                     // Method found in bd
-                    System.out.println(getClass().getDeclaredFields());
                     for (Field field : getClass().getDeclaredFields()) {
                         if (field.getType().isAssignableFrom(bean)) {
                             // Found the service belonging to bd

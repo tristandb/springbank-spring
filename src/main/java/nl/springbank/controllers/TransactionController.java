@@ -52,7 +52,7 @@ public class TransactionController {
 
     /**
      * Retrieves the balance of a bank account.
-     * @param authToken The authentication token, obtained with getAuthToken
+     * @param authToken The access token, obtained with getAuthToken
      * @param iBAN The number of the bank account
      * @return Balance of the bank account
      * @throws InvalidParamValueError: One or more parameter has an invalid value. See message.

@@ -111,7 +111,7 @@ public class UserControllerTest extends TestCase {
     }
 
     /**
-     * Test user authentication
+     * Test user access
      */
     @Test
     public void testAuthentication() throws Exception {
@@ -121,7 +121,7 @@ public class UserControllerTest extends TestCase {
     }
 
     /**
-     * Test user authentication with wrong IBAN
+     * Test user access with wrong IBAN
      */
     @Test
     public void testWrongAuthentication() throws Exception {
@@ -131,7 +131,7 @@ public class UserControllerTest extends TestCase {
     }
 
     /**
-     * Test user authentication with no IBAN
+     * Test user access with no IBAN
      */
     @Test
     public void testNoAuthentication() throws Exception {
