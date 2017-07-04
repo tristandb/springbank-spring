@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import junit.framework.TestCase;
 import nl.springbank.bean.*;
 import nl.springbank.exceptions.TransactionException;
+import nl.springbank.helper.AuthObject;
+import nl.springbank.helper.GetBalanceObject;
+import nl.springbank.helper.JsonRpcRequest;
 import nl.springbank.services.BankAccountService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -97,6 +100,20 @@ public class TransactionControllerTest extends TestCase {
         ).andExpect(status().is2xxSuccessful());
         Assert.assertEquals(balance1 - 13.00, bankAccountService.getBankAccount(1).getBalance(), 0);
         Assert.assertEquals(balance2 + 13.00, bankAccountService.getBankAccount(2).getBalance(), 0);
+    }
+
+    @Test
+    public void testGetBalance() throws Exception {
+        // Object to send with as params
+        GetBalanceObject getBalanceObject = new GetBalanceObject("authToken", "NL17SPRI0466994144");
+
+        JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("getBalance", getBalanceObject);
+        this.mockMvc.perform(
+                post("/api")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(jsonRpcRequest))
+        ).andExpect(status().isOk());
+        // .andDo(mvcResult -> {System.out.println(mvcResult.getResponse());});
     }
 
     /**

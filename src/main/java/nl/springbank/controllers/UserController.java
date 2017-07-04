@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Api(value = "user", description = "Manage users.")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     /**

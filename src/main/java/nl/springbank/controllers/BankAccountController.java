@@ -1,5 +1,6 @@
 package nl.springbank.controllers;
 
+import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import nl.springbank.bean.BankAccountBean;
@@ -9,6 +10,7 @@ import nl.springbank.services.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -16,9 +18,8 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author Tristan de Boer.
  */
-@Api(value = "bankaccount", description = "Manage BankAccount.")
 @RestController
-@RequestMapping("/bankaccount")
+@RequestMapping("/api/bankaccount")
 public class BankAccountController {
 
     private final BankAccountService bankAccountService;
@@ -34,8 +35,6 @@ public class BankAccountController {
      * @return
      */
     @ApiOperation(value = "Return BankAccounts")
-    @ResponseBody
-    @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getBankAccounts() throws Exception {
         Iterable<BankAccountBean> bankAccountBean = bankAccountService.getBankAccounts();
         return ResponseEntity.ok(bankAccountBean);
@@ -48,8 +47,6 @@ public class BankAccountController {
      * @return
      */
     @ApiOperation(value = "Return BankAccount by bankAccountId")
-    @ResponseBody
-    @RequestMapping(value = "/{bankAccountId}", method = RequestMethod.GET)
     public ResponseEntity<?> getBankAccount(@PathVariable String bankAccountId) throws Exception {
         BankAccountBean bankAccountBean = bankAccountService.getBankAccount(Long.parseLong(bankAccountId));
         if (bankAccountBean != null) {
@@ -63,7 +60,6 @@ public class BankAccountController {
      * Creates a new entry for <code>nl.springbank.bean.BankAccountBean</code>.
      */
     @ApiOperation(value = "Create a new BankAccount")
-    @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> create(@RequestBody BankAccountBean bankAccountBean) {
         try {
             BankAccountBean savedBankAccount = bankAccountService.saveBankAccount(bankAccountBean);
@@ -78,7 +74,6 @@ public class BankAccountController {
      * Deletes a entry of <code>nl.springbank.bean.BankAccountBean</code> given a bankAccountId.
      */
     @ApiOperation(value = "Delete BankAccount")
-    @RequestMapping(value = "/{bankAccountId}", method = RequestMethod.DELETE)
     ResponseEntity<?> delete(@PathVariable String bankAccountId) {
         try {
             bankAccountService.deleteBankAccount(Long.parseLong(bankAccountId));
@@ -94,7 +89,6 @@ public class BankAccountController {
      * @return
      */
     @ApiOperation(value = "Connects a user to a bankaccount.")
-    @RequestMapping(value = "users/iban", method = RequestMethod.POST)
     ResponseEntity<?> connectUserByIban(@RequestBody UserIbanBean userIbanBean) {
         try {
             UserBankAccountBean userBankAccountBean = bankAccountService.connectUserByIban(userIbanBean);
@@ -105,7 +99,6 @@ public class BankAccountController {
     }
 
     @ApiOperation(value = "Connects a user to a bankaccount.")
-    @RequestMapping(value = "users", method = RequestMethod.POST)
     ResponseEntity<?> connectUser(@RequestBody UserBankAccountBean userBankAccountBean) {
         try {
             UserBankAccountBean savedUserBankAcountBean = bankAccountService.connectUser(userBankAccountBean);

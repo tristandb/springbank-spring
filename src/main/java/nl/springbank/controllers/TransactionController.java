@@ -1,27 +1,20 @@
 package nl.springbank.controllers;
 
-import com.google.common.collect.Iterators;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import nl.springbank.bean.CreateTransaction;
-import nl.springbank.bean.TransactionBean;
-import nl.springbank.exceptions.TransactionException;
+import com.googlecode.jsonrpc4j.JsonRpcParam;
+import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import nl.springbank.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
-import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Description
  *
  * @author Tristan de Boer).
  */
-@Api(value = "transaction", description = "Manage Transaction.")
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/api/transaction")
 public class TransactionController {
 
     private final TransactionService transactionService;
@@ -33,18 +26,18 @@ public class TransactionController {
 
     /**
      * Returns a list of <code>nl.springbank.bean.TransactionBean</code>
-     */
+     *//*
     @ApiOperation(value = "Return Transactions")
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getTransactions() {
         Iterable<TransactionBean> transactionBeans = transactionService.getAllTransactions();
         return ResponseEntity.ok(transactionBeans);
-    }
+    }*/
 
     /**
      * Returns a list of <code>nl.sprinbank.bean.TransactionBean</code> given a bankAccount.
-     */
+     *//*
     @ApiOperation(value = "Return Transactions given BankAccountId")
     @ResponseBody
     @RequestMapping(value = "/{accountId}", method = RequestMethod.GET)
@@ -55,11 +48,23 @@ public class TransactionController {
         } else {
             return ResponseEntity.status(404).build();
         }
+    }*/
+
+    /**
+     * Retrieves the balance of a bank account.
+     * @param authToken The authentication token, obtained with getAuthToken
+     * @param iBAN The number of the bank account
+     * @return Balance of the bank account
+     * @throws InvalidParamValueError: One or more parameter has an invalid value. See message.
+     * @throws NotAuthorizedError: The authenticated user is not authorized to perform this action.
+     */
+    public String getBalance(@JsonRpcParam(value = "authToken") String authToken, @JsonRpcParam(value = "iBAN") String iBAN){
+        return "aondsf";
     }
 
     /**
      * Makes a new transaction.
-     */
+     *//*
     @ApiOperation(value = "Make a transaction")
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -76,5 +81,5 @@ public class TransactionController {
         } catch (TransactionException e) {
             return ResponseEntity.badRequest().build();
         }
-    }
+    }*/
 }

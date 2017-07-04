@@ -47,7 +47,7 @@ public class JsonRpcTest {
 
         // Perform the request
         this.mockMvc.perform(
-                post("/test")
+                post("/api")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(jsonRpcRequest))
         ).andExpect(status().isOk())
@@ -64,7 +64,7 @@ public class JsonRpcTest {
 
         // Perform the request
         this.mockMvc.perform(
-                post("/test")
+                post("/api")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(jsonRpcRequest))
         ).andExpect(status().isOk())

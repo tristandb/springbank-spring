@@ -1,11 +1,13 @@
 package nl.springbank.controllers;
 
 import com.googlecode.jsonrpc4j.JsonRpcParam;
-import com.googlecode.jsonrpc4j.JsonRpcService;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 
@@ -14,9 +16,8 @@ import java.util.Date;
  *
  * @author Tristan de Boer.
  */
-@Service
-@JsonRpcService("/api")
-@AutoJsonRpcServiceImpl
+@RestController
+@RequestMapping("/api/authentication")
 public class AuthenticationController {
 
     /**

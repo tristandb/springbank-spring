@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  * Main application of Spring. This file starts all other files.
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  */
 
 @SpringBootApplication
+@ImportResource("classpath:rpc-config.xml")
 public class Main {
 
     /**
