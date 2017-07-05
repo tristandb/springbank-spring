@@ -8,6 +8,7 @@ import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.UserBean;
 import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NotAuthorizedError;
+import nl.springbank.helper.AuthenticationHelper;
 import nl.springbank.helper.CardHelper;
 import nl.springbank.helper.DateHelper;
 import nl.springbank.helper.IbanHelper;
@@ -19,9 +20,7 @@ import nl.springbank.services.iBANService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -77,14 +76,31 @@ public class AccountControllerImpl implements AccountController {
             throw new InvalidParamValueError();
         }
 
+        return this.openBankAccountandCard(userId);
+    }
+
+    /**
+     * Open an additional account for an existing customer. Also creates a PIN card for this account.
+     *
+     * @param authToken The authentication token, obtained with getAuthToken.
+     * @return A dictionary containing details about the new account.
+     */
+    @Override
+    public OpenedAccount openAdditionalAccount(@JsonRpcParam("authToken") String authToken) throws NotAuthorizedError {
+        long userId = AuthenticationHelper.getUserId(authToken);
+        return this.openBankAccountandCard(userId);
+    }
+
+    /**
+     * Opens a bank account given a userId, creates an iBAN and adds a card.
+     * @param userId
+     * @return
+     */
+    private OpenedAccount openBankAccountandCard(long userId){
         // Create BankAccount
         BankAccountBean bankAccountBean = new BankAccountBean();
         bankAccountBean.setUserId(userId);
-        try {
-            bankAccountBean = bankAccountService.saveBankAccount(bankAccountBean);
-        } catch (DataIntegrityViolationException e) {
-            throw new InvalidParamValueError();
-        }
+        bankAccountBean = bankAccountService.saveBankAccount(bankAccountBean);
 
         IbanBean ibanBean = new IbanBean();
         try {
@@ -97,8 +113,6 @@ public class AccountControllerImpl implements AccountController {
             ibanBean.setIban(iBAN);
             ibanBean.setBankAccountId(bankAccountBean.getBankAccountId());
             iBANService.saveIbanBean(ibanBean);
-        } catch (Exception e) {
-            throw new InvalidParamValueError();
         } finally {
             // Unlock iBAN
             iBANlock.unlock();
@@ -120,16 +134,5 @@ public class AccountControllerImpl implements AccountController {
         }
 
         return new OpenedAccount(ibanBean.getIban(), cardBean.getCardNumber(), cardBean.getPin());
-    }
-
-    /**
-     * Open an additional account for an existing customer. Also creates a PIN card for this account.
-     *
-     * @param authToken The authentication token, obtained with getAuthToken.
-     * @return A dictionary containing details about the new account.
-     */
-    @Override
-    public OpenedAccount openAdditionalAccount(@JsonRpcParam("authToken") String authToken) throws NotAuthorizedError {
-        throw new NotImplementedException();
     }
 }

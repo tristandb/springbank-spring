@@ -18,7 +18,6 @@ public class IbanBean {
      */
     @Id
     @Column(name = "bank_account_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long bankAccountId;
 
     // The IBAN of the account

@@ -4,7 +4,9 @@ import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import nl.springbank.bean.UserBean;
 import nl.springbank.exceptions.AuthenticationError;
+import nl.springbank.helper.AuthenticationHelper;
 import nl.springbank.objects.AuthenticationObject;
 import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +40,10 @@ public class AuthenticationImpl implements Authentication {
      */
     @Override
     public AuthenticationObject getAuthToken(@JsonRpcParam(value = "username") String username, @JsonRpcParam(value = "password") String password) throws AuthenticationError {
-        if (userService.isCorrectPassword(username, password)) {
-            String authToken = Jwts.builder().setSubject(username).claim("roles", username).setIssuedAt(new Date())
-                    .signWith(SignatureAlgorithm.HS512, "test").compact();
+        UserBean user = userService.isCorrectPassword(username, password);
+        if (user != null) {
+            String authToken = Jwts.builder().setSubject(String.valueOf(user.getId())).setIssuedAt(new Date())
+                    .signWith(SignatureAlgorithm.HS512, AuthenticationHelper.PRIVATE_KEY).compact();
             return new AuthenticationObject(authToken);
         } else {
             throw new AuthenticationError();

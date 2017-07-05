@@ -64,8 +64,8 @@ public class UserService {
      * @param password The password of a user.
      * @return
      */
-    public boolean isCorrectPassword(String username, String password) {
-        return userDao.findByUsernameAndPassword(username, password) != null;
+    public UserBean isCorrectPassword(String username, String password) {
+        return userDao.findByUsernameAndPassword(username, password) ;
     }
 
     /**
