@@ -27,7 +27,11 @@ public class CardBean {
 
     // The cards corresponding bank_account_id
     @Column(name = "bank_account_id")
-    private int bankAccountId;
+    private long bankAccountId;
+
+    // The cards pin
+    @Column(name = "pin")
+    private int pin;
 
     // The cards expiration date
     @Column(name = "expiration_date")
@@ -57,11 +61,11 @@ public class CardBean {
         this.cardNumber = cardNumber;
     }
 
-    public int getBankAccountId() {
+    public long getBankAccountId() {
         return bankAccountId;
     }
 
-    public void setBankAccountId(int bankAccountId) {
+    public void setBankAccountId(long bankAccountId) {
         this.bankAccountId = bankAccountId;
     }
 
@@ -81,5 +85,13 @@ public class CardBean {
                 ", bankAccountId=" + bankAccountId +
                 ", expirationDate=" + expirationDate +
                 '}';
+    }
+
+    public int getPin() {
+        return pin;
+    }
+
+    public void setPin(int pin) {
+        this.pin = pin;
     }
 }

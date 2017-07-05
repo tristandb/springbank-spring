@@ -12,10 +12,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface BankAccountDao extends JpaRepository<BankAccountBean, Long> {
-    /**
-     * Returns a user based on given IBAN.
-     * @param iban The IBAN.
-     * @return
-     */
-     BankAccountBean findByIbanBean_Iban(String iban);
+
 }

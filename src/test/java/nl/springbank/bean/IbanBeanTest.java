@@ -20,13 +20,6 @@ public class IbanBeanTest {
     }
 
     @Test
-    public void setBankAccountBean() throws Exception {
-        BankAccountBean bankAccountBean = new BankAccountBean();
-        ibanBean.setBankAccountBean(bankAccountBean);
-        assertEquals(bankAccountBean, ibanBean.getBankAccountBean());
-    }
-
-    @Test
     public void setIban() throws Exception {
         String iban = "STRING";
         ibanBean.setIban(iban);

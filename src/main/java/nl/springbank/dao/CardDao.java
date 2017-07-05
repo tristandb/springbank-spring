@@ -5,6 +5,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * CardDao. Communicates with the database and returns objects of type <code>nl.springbank.bean.CardBean</code>
  *
@@ -12,5 +14,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface CardDao extends CrudRepository<CardBean, Long> {
-
+    Iterable<CardBean> findByBankAccountId(long bankAccountId);
 }

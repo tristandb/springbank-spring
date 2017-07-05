@@ -65,6 +65,10 @@ public class UserBean {
     @NotNull
     private String password;
 
+    // The user's email
+    @NotNull
+    private String email;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonProperty("holderBankAccount")
     @JsonManagedReference
@@ -175,6 +179,7 @@ public class UserBean {
                 ", streetAddress='" + streetAddress + '\'' +
                 ", telephoneNumber='" + telephoneNumber + '\'' +
                 ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 
@@ -184,5 +189,13 @@ public class UserBean {
 
     public void setBankAccountBean(Set<BankAccountBean> bankAccountBean) {
         this.bankAccountBean = bankAccountBean;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

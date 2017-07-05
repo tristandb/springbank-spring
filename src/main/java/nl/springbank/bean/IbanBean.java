@@ -26,17 +26,7 @@ public class IbanBean {
     private String iban;
 
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
-    @JsonBackReference
-    private BankAccountBean bankAccountBean;
-
-
     public IbanBean() {
-    }
-
-    public BankAccountBean getBankAccountBean() {
-        return bankAccountBean;
     }
 
     public long getBankAccountId() {
@@ -45,10 +35,6 @@ public class IbanBean {
 
     public void setBankAccountId(long bankAccountId) {
         this.bankAccountId = bankAccountId;
-    }
-
-    public void setBankAccountBean(BankAccountBean bankAccountBean) {
-        this.bankAccountBean = bankAccountBean;
     }
 
     public String getIban() {
@@ -64,7 +50,6 @@ public class IbanBean {
         return "IbanBean{" +
                 "bankAccountId=" + bankAccountId +
                 ", iban='" + iban + '\'' +
-                ", bankAccountBean=" + bankAccountBean +
                 '}';
     }
 }

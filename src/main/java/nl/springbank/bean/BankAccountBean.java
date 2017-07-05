@@ -31,11 +31,6 @@ public class BankAccountBean {
     @Column(name = "balance")
     private double balance;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "bankAccountBean")
-    @JsonManagedReference
-    @JsonProperty("iban")
-    private IbanBean ibanBean;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "holder_user_id", nullable = false, insertable = false, updatable = false)
     @JsonBackReference
@@ -78,21 +73,11 @@ public class BankAccountBean {
     }
 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    public IbanBean getIbanBean() {
-        return ibanBean;
-    }
-
-    public void setIbanBean(IbanBean ibanBean) {
-        this.ibanBean = ibanBean;
-    }
-
     @Override
     public String toString() {
         return "BankAccountBean{" +
                 "bankAccountId=" + bankAccountId +
                 ", balance=" + balance +
-                ", ibanBean=" + ibanBean +
                 ", user=" + user +
                 '}';
     }

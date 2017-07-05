@@ -106,5 +106,6 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents.core5:httpcore5:5.0-alpha1" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
+    <orderEntry type="library" name="Maven: org.iban4j:iban4j:3.2.1" level="project" />
   </component>
 </module>

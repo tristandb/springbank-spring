@@ -9,6 +9,7 @@ import nl.springbank.dao.TransactionDao;
 import nl.springbank.exceptions.TransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
@@ -77,23 +78,7 @@ public class TransactionService {
     public void makeTransaction(TransactionBean transactionBean) throws TransactionException {
         this.lock.lock();
         try {
-            if (transactionBean.getSourceBankAccountIban() == null) {
-                transactionBean.setSourceBankAccountIban(bankAccountService.getBankAccount(transactionBean.getSourceBankAccount()).getIbanBean().getIban());
-            }
-
-            if (transactionBean.getTargetBankAccountIban() == null) {
-                transactionBean.setTargetBankAccountIban(bankAccountService.getBankAccount(transactionBean.getTargetBankAccount()).getIbanBean().getIban());
-            }
-            BankAccountBean sourceAccount = bankAccountDao.findByIbanBean_Iban(transactionBean.getSourceBankAccountIban());
-            BankAccountBean targetAccount = bankAccountDao.findByIbanBean_Iban(transactionBean.getTargetBankAccountIban());
-            double amount = transactionBean.getAmount();
-            if (!(sourceAccount.getBalance() > amount)) {
-                throw new TransactionException();
-            }
-            sourceAccount.setBalance(sourceAccount.getBalance() - amount);
-            targetAccount.setBalance(targetAccount.getBalance() + amount);
-            bankAccountDao.save(Arrays.asList(sourceAccount, targetAccount));
-            transactionDao.save(transactionBean);
+            throw new NotImplementedException();
         } finally {
             this.lock.unlock();
         }

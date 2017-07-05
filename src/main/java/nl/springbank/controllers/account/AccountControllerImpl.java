@@ -1,19 +1,125 @@
 package nl.springbank.controllers.account;
 
 import com.googlecode.jsonrpc4j.JsonRpcParam;
+import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
+import nl.springbank.bean.BankAccountBean;
+import nl.springbank.bean.CardBean;
+import nl.springbank.bean.IbanBean;
+import nl.springbank.bean.UserBean;
+import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NotAuthorizedError;
+import nl.springbank.helper.CardHelper;
+import nl.springbank.helper.DateHelper;
+import nl.springbank.helper.IbanHelper;
 import nl.springbank.objects.OpenedAccount;
+import nl.springbank.services.BankAccountService;
+import nl.springbank.services.CardService;
+import nl.springbank.services.UserService;
+import nl.springbank.services.iBANService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.sql.Date;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Description
  *
- * @author Tristan de Boer).
+ * @author Tristan de Boer.
  */
+@Service
+@AutoJsonRpcServiceImpl
 public class AccountControllerImpl implements AccountController {
+
+    private final ReentrantLock iBANlock;
+
+    private final ReentrantLock cardLock;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private iBANService iBANService;
+
+    @Autowired
+    private BankAccountService bankAccountService;
+    
+    @Autowired
+    private CardService cardService;
+
+    public AccountControllerImpl() {
+        this.cardLock = new ReentrantLock();
+        this.iBANlock = new ReentrantLock();
+    }
+
     @Override
-    public OpenedAccount openAccount(@JsonRpcParam("name") String name, @JsonRpcParam("surname") String surname, @JsonRpcParam("initials") String initials, @JsonRpcParam("dob") String dob, @JsonRpcParam("ssn") String ssn, @JsonRpcParam("address") String address, @JsonRpcParam("telephoneNumber") String telephoneNumber, @JsonRpcParam("email") String email, @JsonRpcParam("username") String username, @JsonRpcParam("password") String password) {
-        throw new NotImplementedException();
+    public OpenedAccount openAccount(@JsonRpcParam("name") String name, @JsonRpcParam("surname") String surname, @JsonRpcParam("initials") String initials, @JsonRpcParam("dob") String dob, @JsonRpcParam("ssn") String ssn, @JsonRpcParam("address") String address, @JsonRpcParam("telephoneNumber") String telephoneNumber, @JsonRpcParam("email") String email, @JsonRpcParam("username") String username, @JsonRpcParam("password") String password) throws InvalidParamValueError {
+
+        // Create a user account
+        UserBean userBean = new UserBean();
+        userBean.setEmail(email);
+        userBean.setDateOfBirth(new java.sql.Date(DateHelper.getDateFromString(dob).getTime()));
+        userBean.setName(name);
+        userBean.setSurname(surname);
+        userBean.setBsn(ssn);
+        userBean.setInitials(initials);
+        userBean.setPassword(password);
+        userBean.setStreetAddress(address);
+        userBean.setTelephoneNumber(telephoneNumber);
+        userBean.setUsername(username);
+        long userId;
+        try {
+            userId = userService.saveUser(userBean).getId();
+        } catch (DataIntegrityViolationException e) {
+            throw new InvalidParamValueError();
+        }
+
+        // Create BankAccount
+        BankAccountBean bankAccountBean = new BankAccountBean();
+        bankAccountBean.setUserId(userId);
+        try {
+            bankAccountBean = bankAccountService.saveBankAccount(bankAccountBean);
+        } catch (DataIntegrityViolationException e) {
+            throw new InvalidParamValueError();
+        }
+
+        IbanBean ibanBean = new IbanBean();
+        try {
+            // Lock to avoid duplicate iBAN
+            iBANlock.lock();
+            // Generate iBAN
+            String iBAN = IbanHelper.generateIban(iBANService.getAllIBAN());
+
+            // Connect BankAccount to iBAN
+            ibanBean.setIban(iBAN);
+            ibanBean.setBankAccountId(bankAccountBean.getBankAccountId());
+            iBANService.saveIbanBean(ibanBean);
+        } catch (Exception e) {
+            throw new InvalidParamValueError();
+        } finally {
+            // Unlock iBAN
+            iBANlock.unlock();
+        }
+
+        // Create Card
+        CardBean cardBean = new CardBean();
+        try {
+            cardLock.lock();
+            List<Integer> cardList = cardService.getCardNumbers(bankAccountBean.getBankAccountId());
+            Integer cardId = CardHelper.getRandomCardNumber(cardList);
+            cardBean.setBankAccountId(bankAccountBean.getBankAccountId());
+            cardBean.setCardNumber(cardId);
+            cardBean.setExpirationDate(CardHelper.getExpirationDate());
+            cardBean.setPin(CardHelper.getRandomPin());
+            cardService.saveCardBean(cardBean);
+        } finally {
+            cardLock.unlock();
+        }
+
+        return new OpenedAccount(ibanBean.getIban(), cardBean.getCardNumber(), cardBean.getPin());
     }
 
     /**

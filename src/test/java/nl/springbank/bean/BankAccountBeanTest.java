@@ -36,13 +36,6 @@ public class BankAccountBeanTest {
     }
 
     @Test
-    public void setIbanBean() throws Exception {
-        IbanBean ibanBean = new IbanBean();
-        bankAccountBean.setIbanBean(ibanBean);
-        assertEquals(ibanBean, bankAccountBean.getIbanBean());
-    }
-
-    @Test
     public void setUser() throws Exception {
         UserBean userBean = new UserBean();
         bankAccountBean.setUser(userBean);
