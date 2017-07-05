@@ -6,11 +6,11 @@ package nl.springbank.objects;
 public class OpenedAccount {
     private String iBAN;
 
-    private int pinCard;
+    private String pinCard;
 
-    private int pinCode;
+    private String pinCode;
 
-    public OpenedAccount(String iBAN, int pinCard, int pinCode) {
+    public OpenedAccount(String iBAN, String pinCard, String pinCode) {
         this.iBAN = iBAN;
         this.pinCard = pinCard;
         this.pinCode = pinCode;
@@ -24,19 +24,19 @@ public class OpenedAccount {
         this.iBAN = iBAN;
     }
 
-    public int getPinCard() {
+    public String getPinCard() {
         return pinCard;
     }
 
-    public void setPinCard(int pinCard) {
+    public void setPinCard(String pinCard) {
         this.pinCard = pinCard;
     }
 
-    public int getPinCode() {
+    public String getPinCode() {
         return pinCode;
     }
 
-    public void setPinCode(int pinCode) {
+    public void setPinCode(String pinCode) {
         this.pinCode = pinCode;
     }
 }

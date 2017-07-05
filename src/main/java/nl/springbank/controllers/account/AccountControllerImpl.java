@@ -133,6 +133,6 @@ public class AccountControllerImpl implements AccountController {
             cardLock.unlock();
         }
 
-        return new OpenedAccount(ibanBean.getIban(), cardBean.getCardNumber(), cardBean.getPin());
+        return new OpenedAccount(ibanBean.getIban(), CardHelper.convertToString(cardBean.getCardNumber()), CardHelper.convertToString(cardBean.getPin()));
     }
 }
