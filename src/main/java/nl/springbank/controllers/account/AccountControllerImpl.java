@@ -73,7 +73,7 @@ public class AccountControllerImpl implements AccountController {
         try {
             userId = userService.saveUser(userBean).getId();
         } catch (DataIntegrityViolationException e) {
-            throw new InvalidParamValueError();
+            throw new InvalidParamValueError("Invalid parameters given");
         }
 
         return this.openBankAccountandCard(userId);
@@ -89,6 +89,48 @@ public class AccountControllerImpl implements AccountController {
     public OpenedAccount openAdditionalAccount(@JsonRpcParam("authToken") String authToken) throws NotAuthorizedError {
         long userId = AuthenticationHelper.getUserId(authToken);
         return this.openBankAccountandCard(userId);
+    }
+
+    /**
+     * Close a bank account. Also invalidates the corresponding pin card. If this is the customers
+     * last bank account, it also closes the customer account.
+     * @param authToken The authentication token, obtained with getAuthToken
+     * @param iBAN (String) The number of the bank account
+     * @return An empty dictionary if successful
+     * @throws InvalidParamValueError One or more parameter has an invalid value. See message
+     * @throws NotAuthorizedError The authenticated user is not authorized to perform this action.
+     */
+    @Override
+    public void closeAccount(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws InvalidParamValueError, NotAuthorizedError {
+        long userId = AuthenticationHelper.getUserId(authToken);
+
+        IbanBean ibanBean = iBANService.getIbanBean(iBAN);
+
+        // Check if iBAN exists
+        if (ibanBean == null){
+            throw new InvalidParamValueError("iBAN does not exist");
+        }
+
+        List<BankAccountBean> userBankAccounts = bankAccountService.getUserBankAccounts(userId);
+        boolean userMayDeleteAccount = false;
+        for (BankAccountBean userBankAccount: userBankAccounts) {
+            if (userBankAccount.getBankAccountId() == ibanBean.getBankAccountId()){
+                userMayDeleteAccount = true;
+                break;
+            }
+        }
+
+        if (userMayDeleteAccount) {
+            // Delete bank account
+            bankAccountService.deleteBankAccount(ibanBean.getBankAccountId());
+
+            // Delete user if last bank account
+            if (userBankAccounts.size() == 1) {
+                userService.deleteUser(userId);
+            }
+        } else {
+            throw new NotAuthorizedError();
+        }
     }
 
     /**

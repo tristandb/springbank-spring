@@ -6,4 +6,7 @@ package nl.springbank.exceptions;
  * @author Tristan de Boer).
  */
 public class InvalidParamValueError extends Throwable {
+    public InvalidParamValueError(String message){
+        super(message);
+    }
 }

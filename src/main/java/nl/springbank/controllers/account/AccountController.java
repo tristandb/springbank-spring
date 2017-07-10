@@ -20,4 +20,6 @@ public interface AccountController {
                                @JsonRpcParam("username") String username, @JsonRpcParam("password") String password) throws InvalidParamValueError;
 
     OpenedAccount openAdditionalAccount (@JsonRpcParam("authToken") String authToken) throws NotAuthorizedError;
+
+    void closeAccount (@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws InvalidParamValueError, NotAuthorizedError;
 }

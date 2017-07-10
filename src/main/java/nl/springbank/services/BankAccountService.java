@@ -1,5 +1,6 @@
 package nl.springbank.services;
 
+import com.google.common.collect.Lists;
 import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.UserBankAccountBean;
@@ -9,6 +10,8 @@ import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.UserBankAccountDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Service that does all operation regarding BankAccounts.
@@ -76,7 +79,6 @@ public class BankAccountService {
      * @return
      */
     public UserBankAccountBean connectUser(UserBankAccountBean userBankAccountBean) {
-        // Save the UserBankAccountBean
         return userBankAccountDao.save(userBankAccountBean);
     }
 
@@ -96,5 +98,14 @@ public class BankAccountService {
 
         // Call a function to save the relationship to the database
         return this.connectUser(userBankAccountBean);
+    }
+
+    /**
+     * Return a list of BankAccounts that the user is owner of.
+     * @param userId
+     * @return
+     */
+    public List<BankAccountBean> getUserBankAccounts(long userId) {
+        return Lists.newArrayList(bankAccountDao.findByUserId(userId));
     }
 }

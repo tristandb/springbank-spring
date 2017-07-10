@@ -33,4 +33,8 @@ public class iBANService {
     public IbanBean saveIbanBean(IbanBean ibanBean) {
         return ibanDao.save(ibanBean);
     }
+
+    public IbanBean getIbanBean(String iBAN){
+        return ibanDao.findByIban(iBAN);
+    }
 }

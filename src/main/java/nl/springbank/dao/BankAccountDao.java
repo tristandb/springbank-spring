@@ -12,5 +12,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface BankAccountDao extends JpaRepository<BankAccountBean, Long> {
-
+    Iterable<BankAccountBean> findByUserId(long userId);
 }
