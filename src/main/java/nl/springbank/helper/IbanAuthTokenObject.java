@@ -3,10 +3,10 @@ package nl.springbank.helper;
 /**
  * @author Tristan de Boer.
  */
-public class CloseAccount extends AuthTokenObject {
+public class IbanAuthTokenObject extends AuthTokenObject {
     private String iBAN;
 
-    public CloseAccount(String authToken, String iBAN) {
+    public IbanAuthTokenObject(String authToken, String iBAN) {
         super(authToken);
         this.iBAN = iBAN;
     }

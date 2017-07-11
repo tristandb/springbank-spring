@@ -15,13 +15,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 
 import java.util.Date;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,7 +75,7 @@ public class AccountControllerImplTest {
     @Test
     @Transactional
     public void closeAccount() throws Exception {
-        CloseAccount closeAccount = new CloseAccount(authTokenObject.getAuthToken(), "NL58INGB8290060132");
+        IbanAuthTokenObject closeAccount = new IbanAuthTokenObject(authTokenObject.getAuthToken(), "NL58INGB8290060132");
         JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("closeAccount", closeAccount);
         this.mockMvc.perform(
                 post("/api/account")
