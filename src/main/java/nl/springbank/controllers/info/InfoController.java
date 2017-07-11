@@ -3,12 +3,14 @@ package nl.springbank.controllers.info;
 import com.googlecode.jsonrpc4j.JsonRpcError;
 import com.googlecode.jsonrpc4j.JsonRpcErrors;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
+import com.googlecode.jsonrpc4j.JsonRpcService;
 import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NotAuthorizedError;
 
 /**
  * @author Sven Konings.
  */
+@JsonRpcService("/api/info")
 public interface InfoController {
 
     @JsonRpcErrors({

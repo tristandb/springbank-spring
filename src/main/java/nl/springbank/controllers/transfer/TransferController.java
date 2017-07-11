@@ -3,6 +3,7 @@ package nl.springbank.controllers.transfer;
 import com.googlecode.jsonrpc4j.JsonRpcError;
 import com.googlecode.jsonrpc4j.JsonRpcErrors;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
+import com.googlecode.jsonrpc4j.JsonRpcService;
 import nl.springbank.exceptions.InvalidPINError;
 import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NotAuthorizedError;
@@ -10,6 +11,7 @@ import nl.springbank.exceptions.NotAuthorizedError;
 /**
  * @author Sven Konings.
  */
+@JsonRpcService("/api/transfer")
 public interface TransferController {
 
     @JsonRpcErrors({
