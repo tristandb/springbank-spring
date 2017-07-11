@@ -5,6 +5,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * UserBankAccountDao. Communicates with the database and returns objects of type
  * <code>nl.springbank.bean.UserBankAccountBean</code>
@@ -13,5 +15,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface UserBankAccountDao extends CrudRepository<UserBankAccountBean, Long> {
-
+    Iterable<UserBankAccountBean> findByBankAccountId(long bankAccountId);
 }

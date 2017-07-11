@@ -11,6 +11,7 @@ import nl.springbank.dao.UserBankAccountDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -102,10 +103,25 @@ public class BankAccountService {
 
     /**
      * Return a list of BankAccounts that the user is owner of.
+     *
      * @param userId
      * @return
      */
     public List<BankAccountBean> getUserBankAccounts(long userId) {
         return Lists.newArrayList(bankAccountDao.findByUserId(userId));
+    }
+
+    /**
+     * Returns a list of Users that is connected to the BankAccount.
+     *
+     * @param bankAccountId The bankAccount id
+     */
+    public List<Long> getAuthorizedUsers(long bankAccountId) {
+        List<UserBankAccountBean> userBankAccountBeans = Lists.newArrayList(userBankAccountDao.findByBankAccountId(bankAccountId).iterator());
+        List<Long> result = new ArrayList<>();
+        for (UserBankAccountBean userBankAccountBean: userBankAccountBeans) {
+            result.add(userBankAccountBean.getUserId());
+        }
+        return result;
     }
 }

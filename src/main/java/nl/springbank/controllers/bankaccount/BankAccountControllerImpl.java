@@ -30,13 +30,14 @@ public class BankAccountControllerImpl implements BankAccountController {
     public BalanceObject getBalance(String authToken, String iBAN) throws NotAuthorizedError, InvalidParamValueError {
         long userId = AuthenticationHelper.getUserId(authToken);
         BankAccountBean bankAccountBean;
+        long bankAccountId;
         try {
-            long bankAccountId = iBANService.getIbanBean(iBAN).getBankAccountId();
+            bankAccountId = iBANService.getIbanBean(iBAN).getBankAccountId();
             bankAccountBean = bankAccountService.getBankAccount(bankAccountId);
         } catch (Exception e) {
             throw new InvalidParamValueError("");
         }
-        if (bankAccountBean.getUserId() != userId) {
+        if (bankAccountBean.getUserId() != userId && !bankAccountService.getAuthorizedUsers(bankAccountId).contains(userId)) {
             throw new NotAuthorizedError();
         }
         return new BalanceObject(bankAccountBean.getBalance());

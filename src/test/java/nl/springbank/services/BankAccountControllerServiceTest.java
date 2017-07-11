@@ -216,4 +216,10 @@ public class BankAccountControllerServiceTest extends TestCase {
 
         }
     }
+
+    @Test
+    @Transactional
+    public void testGetAuthorizedUsers() throws Exception {
+        Assert.assertEquals(bankAccountService.getAuthorizedUsers(14).size(), 1);
+    }
 }

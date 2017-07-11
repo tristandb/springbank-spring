@@ -43,6 +43,7 @@ public class BankAccountControllerImplTest {
 
     private AuthTokenObject authTokenObject1;
     private AuthTokenObject authTokenObject2;
+    private AuthTokenObject authTokenObject14;
 
     @Before
     public void authenticate() throws Exception {
@@ -50,12 +51,26 @@ public class BankAccountControllerImplTest {
                 .signWith(SignatureAlgorithm.HS512, AuthenticationHelper.PRIVATE_KEY).compact());
         authTokenObject2 = new AuthTokenObject(Jwts.builder().setSubject(String.valueOf(2)).setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS512, AuthenticationHelper.PRIVATE_KEY).compact());
+        authTokenObject14 = new AuthTokenObject(Jwts.builder().setSubject(String.valueOf(14)).setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS512, AuthenticationHelper.PRIVATE_KEY).compact());
     }
 
     @Test
     @Transactional
     public void getBalance() throws Exception {
         IbanAuthTokenObject ibanAuthTokenObject = new IbanAuthTokenObject(authTokenObject1.getAuthToken(), "NL58INGB8290060132");
+        JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("getBalance", ibanAuthTokenObject);
+        this.mockMvc.perform(
+                post("/api/bankaccount")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(jsonRpcRequest))
+        ).andExpect(status().isOk()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("{\"balance\":20.0}"));
+    }
+
+    @Test
+    @Transactional
+    public void getBalanceAuthorizedAccount() throws Exception {
+        IbanAuthTokenObject ibanAuthTokenObject = new IbanAuthTokenObject(authTokenObject14.getAuthToken(), "NL58INGB8290060132");
         JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("getBalance", ibanAuthTokenObject);
         this.mockMvc.perform(
                 post("/api/bankaccount")
