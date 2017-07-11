@@ -1,9 +1,10 @@
 package nl.springbank.controllers.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.springbank.helper.AuthObject;
-import nl.springbank.helper.JsonRpcRequest;
-import nl.springbank.helper.OpenAccountObject;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import nl.springbank.helper.*;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
+
+import java.util.Date;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,6 +40,14 @@ public class AccountControllerImplTest {
     @Autowired
     private ObjectMapper mapper;
 
+    private AuthTokenObject authTokenObject;
+
+    @Before
+    public void authenticate() throws Exception {
+        authTokenObject = new AuthTokenObject(Jwts.builder().setSubject(String.valueOf(1)).setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS512, AuthenticationHelper.PRIVATE_KEY).compact());
+    }
+
     @Test
     @Transactional
     public void openAccount() throws Exception {
@@ -52,13 +64,25 @@ public class AccountControllerImplTest {
     }
 
     @Test
+    @Transactional
     public void openAdditionalAccount() throws Exception {
-
+        JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("openAdditionalAccount", authTokenObject);
+        this.mockMvc.perform(
+                post("/api/account")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(jsonRpcRequest))
+        ).andExpect(status().isOk()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("iBAN"));
     }
 
     @Test
+    @Transactional
     public void closeAccount() throws Exception {
-
+        CloseAccount closeAccount = new CloseAccount(authTokenObject.getAuthToken(), "NL58INGB8290060132");
+        JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("closeAccount", closeAccount);
+        this.mockMvc.perform(
+                post("/api/account")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(jsonRpcRequest))
+        ).andExpect(status().isOk()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("{}"));
     }
-
 }
