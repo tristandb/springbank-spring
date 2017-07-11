@@ -10,10 +10,10 @@ import nl.springbank.objects.AuthenticationObject;
 /**
  * Description
  *
- * @author Tristan de Boer).
+ * @author Tristan de Boer.
  */
 @JsonRpcService("/api/authentication")
-public interface Authentication {
+public interface AuthenticationController {
     @JsonRpcErrors({@JsonRpcError(exception = AuthenticationError.class, code = 422)})
     AuthenticationObject getAuthToken(
             @JsonRpcParam(value = "username") String username,

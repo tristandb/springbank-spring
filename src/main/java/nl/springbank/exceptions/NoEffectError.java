@@ -1,7 +1,7 @@
 package nl.springbank.exceptions;
 
 /**
- * A method has no effect.
+ * The action has no effect.
  *
  * @author Sven Konings.
  */

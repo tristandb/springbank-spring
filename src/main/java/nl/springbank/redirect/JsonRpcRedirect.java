@@ -5,7 +5,7 @@ import com.googlecode.jsonrpc4j.JsonRpcService;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import nl.springbank.controllers.TestController;
 import nl.springbank.controllers.account.AccountController;
-import nl.springbank.controllers.authentication.Authentication;
+import nl.springbank.controllers.authentication.AuthenticationController;
 import nl.springbank.helper.JsonRpcRequest;
 import org.apache.hc.client5.http.impl.sync.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.sync.HttpClients;
@@ -47,7 +47,7 @@ public class JsonRpcRedirect {
     private TestController testController;
 
     @Autowired
-    private Authentication authentication;
+    private AuthenticationController authentication;
 
     @Autowired
     private AccountController accountController;

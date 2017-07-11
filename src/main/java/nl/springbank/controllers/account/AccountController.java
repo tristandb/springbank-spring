@@ -11,7 +11,7 @@ import nl.springbank.objects.OpenedAccount;
 /**
  * Description
  *
- * @author Tristan de Boer).
+ * @author Tristan de Boer.
  */
 @JsonRpcService("/api/account")
 public interface AccountController {

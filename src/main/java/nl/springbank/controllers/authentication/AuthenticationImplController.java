@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
- * @author Tristan de Boer).
+ * @author Tristan de Boer.
  */
 @Service
 @AutoJsonRpcServiceImpl
-public class AuthenticationImpl implements Authentication {
+public class AuthenticationImplController implements AuthenticationController {
 
     /**
      * Autowire <code>UserService</code>.
@@ -26,7 +26,7 @@ public class AuthenticationImpl implements Authentication {
     private final UserService userService;
 
     @Autowired
-    public AuthenticationImpl(UserService userService) {
+    public AuthenticationImplController(UserService userService) {
         this.userService = userService;
     }
 
