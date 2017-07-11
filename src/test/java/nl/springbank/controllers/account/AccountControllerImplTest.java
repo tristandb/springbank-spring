@@ -48,7 +48,7 @@ public class AccountControllerImplTest {
                 post("/api/account")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(jsonRpcRequest))
-        ).andExpect(status().isOk()).andDo(mvcResult -> {System.out.println(mvcResult.getResponse().getContentAsString());});
+        ).andExpect(status().isOk()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("iBAN"));
     }
 
     @Test

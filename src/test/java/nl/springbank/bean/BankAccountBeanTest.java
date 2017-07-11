@@ -42,16 +42,6 @@ public class BankAccountBeanTest {
         assertEquals(userBean, bankAccountBean.getUser());
     }
 
-    @Test
-    public void setUsers() throws Exception {
-        UserBean userBean = new UserBean();
-        UserBean userBean1 = new UserBean();
-        Set<UserBean> userSet = new HashSet<>();
-        userSet.add(userBean);
-        userSet.add(userBean1);
-        bankAccountBean.setUsers(userSet);
-        assertEquals(userSet, bankAccountBean.getUsers());
-    }
 
     @Test
     public void setUserId() throws Exception {

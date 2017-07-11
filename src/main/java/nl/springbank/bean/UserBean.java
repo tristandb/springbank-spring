@@ -69,16 +69,6 @@ public class UserBean {
     @NotNull
     private String email;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @JsonProperty("holderBankAccount")
-    @JsonManagedReference
-    private Set<BankAccountBean> bankAccountBean;
-
-    @ManyToMany(mappedBy = "user")
-    @JsonProperty("connectedBankAccount")
-    @JsonManagedReference
-    private Set<BankAccountBean> connectedBankAccounts;
-
     /*
         Public methods
      */
@@ -181,14 +171,6 @@ public class UserBean {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 '}';
-    }
-
-    public Set<BankAccountBean> getBankAccountBean() {
-        return bankAccountBean;
-    }
-
-    public void setBankAccountBean(Set<BankAccountBean> bankAccountBean) {
-        this.bankAccountBean = bankAccountBean;
     }
 
     public String getEmail() {
