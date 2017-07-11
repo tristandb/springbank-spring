@@ -1,6 +1,5 @@
 package nl.springbank.controllers.account;
 
-import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.CardBean;
@@ -41,11 +40,11 @@ public class AccountControllerImpl implements AccountController {
     private UserService userService;
 
     @Autowired
-    private IBANService IBANService;
+    private IBANService ibanService;
 
     @Autowired
     private BankAccountService bankAccountService;
-    
+
     @Autowired
     private CardService cardService;
 
@@ -55,7 +54,9 @@ public class AccountControllerImpl implements AccountController {
     }
 
     @Override
-    public OpenedAccount openAccount(@JsonRpcParam("name") String name, @JsonRpcParam("surname") String surname, @JsonRpcParam("initials") String initials, @JsonRpcParam("dob") String dob, @JsonRpcParam("ssn") String ssn, @JsonRpcParam("address") String address, @JsonRpcParam("telephoneNumber") String telephoneNumber, @JsonRpcParam("email") String email, @JsonRpcParam("username") String username, @JsonRpcParam("password") String password) throws InvalidParamValueError {
+    public OpenedAccount openAccount(String name, String surname, String initials, String dob, String ssn,
+                                     String address, String telephoneNumber, String email, String username,
+                                     String password) throws InvalidParamValueError {
 
         // Create a user account
         UserBean userBean = new UserBean();
@@ -87,7 +88,7 @@ public class AccountControllerImpl implements AccountController {
      * @return A dictionary containing details about the new account.
      */
     @Override
-    public OpenedAccount openAdditionalAccount(@JsonRpcParam("authToken") String authToken) throws NotAuthorizedError {
+    public OpenedAccount openAdditionalAccount(String authToken) throws NotAuthorizedError {
         long userId = AuthenticationHelper.getUserId(authToken);
         return this.openBankAccountandCard(userId);
     }
@@ -95,27 +96,28 @@ public class AccountControllerImpl implements AccountController {
     /**
      * Close a bank account. Also invalidates the corresponding pin card. If this is the customers
      * last bank account, it also closes the customer account.
+     *
      * @param authToken The authentication token, obtained with getAuthToken
-     * @param iBAN (String) The number of the bank account
+     * @param iBAN      (String) The number of the bank account
      * @return An empty dictionary if successful
      * @throws InvalidParamValueError One or more parameter has an invalid value. See message
-     * @throws NotAuthorizedError The authenticated user is not authorized to perform this action.
+     * @throws NotAuthorizedError     The authenticated user is not authorized to perform this action.
      */
     @Override
-    public void closeAccount(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws InvalidParamValueError, NotAuthorizedError {
+    public void closeAccount(String authToken, String iBAN) throws InvalidParamValueError, NotAuthorizedError {
         long userId = AuthenticationHelper.getUserId(authToken);
 
-        IbanBean ibanBean = IBANService.getIbanBean(iBAN);
+        IbanBean ibanBean = ibanService.getIbanBean(iBAN);
 
         // Check if iBAN exists
-        if (ibanBean == null){
+        if (ibanBean == null) {
             throw new InvalidParamValueError("iBAN does not exist");
         }
 
         List<BankAccountBean> userBankAccounts = bankAccountService.getUserBankAccounts(userId);
         boolean userMayDeleteAccount = false;
-        for (BankAccountBean userBankAccount: userBankAccounts) {
-            if (userBankAccount.getBankAccountId() == ibanBean.getBankAccountId()){
+        for (BankAccountBean userBankAccount : userBankAccounts) {
+            if (userBankAccount.getBankAccountId() == ibanBean.getBankAccountId()) {
                 userMayDeleteAccount = true;
                 break;
             }
@@ -136,11 +138,12 @@ public class AccountControllerImpl implements AccountController {
 
     /**
      * Opens a bank account given a userId, creates an iBAN and adds a card.
+     *
      * @param userId
      * @return
      */
-    private OpenedAccount openBankAccountandCard(long userId){
-        // Create BankAccountController
+    private OpenedAccount openBankAccountandCard(long userId) {
+        // Create BankAccount
         BankAccountBean bankAccountBean = new BankAccountBean();
         bankAccountBean.setUserId(userId);
         bankAccountBean = bankAccountService.saveBankAccount(bankAccountBean);
@@ -150,12 +153,12 @@ public class AccountControllerImpl implements AccountController {
             // Lock to avoid duplicate iBAN
             iBANlock.lock();
             // Generate iBAN
-            String iBAN = IbanHelper.generateIban(IBANService.getAllIBAN());
+            String iBAN = IbanHelper.generateIban(ibanService.getAllIBAN());
 
             // Connect BankAccountController to iBAN
             ibanBean.setIban(iBAN);
             ibanBean.setBankAccountId(bankAccountBean.getBankAccountId());
-            IBANService.saveIbanBean(ibanBean);
+            ibanService.saveIbanBean(ibanBean);
         } finally {
             // Unlock iBAN
             iBANlock.unlock();

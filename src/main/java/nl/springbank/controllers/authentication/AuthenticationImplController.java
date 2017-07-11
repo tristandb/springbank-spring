@@ -1,6 +1,5 @@
 package nl.springbank.controllers.authentication;
 
-import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,11 +14,11 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
- * @author Tristan de Boer).
+ * @author Tristan de Boer.
  */
 @Service
 @AutoJsonRpcServiceImpl
-public class AuthenticationImpl implements Authentication {
+public class AuthenticationImplController implements AuthenticationController {
 
     /**
      * Autowire <code>UserService</code>.
@@ -27,19 +26,20 @@ public class AuthenticationImpl implements Authentication {
     private final UserService userService;
 
     @Autowired
-    public AuthenticationImpl(UserService userService) {
+    public AuthenticationImplController(UserService userService) {
         this.userService = userService;
     }
 
     /**
      * Attempts to log in and returns an authentication token.
+     *
      * @param username The username of the customer
      * @param password The password of the customer
-     * @throws AuthenticationError The user could not be authenticated. Invalid username, password or combination.
      * @return AuthenticationObject
+     * @throws AuthenticationError The user could not be authenticated. Invalid username, password or combination.
      */
     @Override
-    public AuthenticationObject getAuthToken(@JsonRpcParam(value = "username") String username, @JsonRpcParam(value = "password") String password) throws AuthenticationError {
+    public AuthenticationObject getAuthToken(String username, String password) throws AuthenticationError {
         UserBean user = userService.isCorrectPassword(username, password);
         if (user != null) {
             String authToken = Jwts.builder().setSubject(String.valueOf(user.getId())).setIssuedAt(new Date())
