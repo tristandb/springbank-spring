@@ -6,6 +6,7 @@ import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import nl.springbank.controllers.TestController;
 import nl.springbank.controllers.account.AccountController;
 import nl.springbank.controllers.authentication.Authentication;
+import nl.springbank.controllers.bankaccount.BankAccountController;
 import nl.springbank.helper.JsonRpcRequest;
 import org.apache.hc.client5.http.impl.sync.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.sync.HttpClients;
@@ -51,6 +52,9 @@ public class JsonRpcRedirect {
 
     @Autowired
     private AccountController accountController;
+
+    @Autowired
+    private BankAccountController bankAccountController;
 
     @RequestMapping(value = "/api", method = RequestMethod.POST)
     @ResponseBody

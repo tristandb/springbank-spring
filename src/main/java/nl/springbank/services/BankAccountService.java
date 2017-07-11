@@ -54,7 +54,7 @@ public class BankAccountService {
     }
 
     /**
-     * Create a new BankAccount in the database.
+     * Create a new BankAccountController in the database.
      *
      * @param bankAccountBean
      * @return
@@ -64,9 +64,9 @@ public class BankAccountService {
     }
 
     /**
-     * Deletes a BankAccount.
+     * Deletes a BankAccountController.
      *
-     * @param bankAccountId The BankAccount to delete
+     * @param bankAccountId The BankAccountController to delete
      */
     public void deleteBankAccount(long bankAccountId) {
         bankAccountDao.delete(bankAccountId);

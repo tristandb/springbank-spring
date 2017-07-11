@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Import(nl.springbank.config.TestConfiguration.class)
 @ActiveProfiles("test")
-public class BankAccountControllerTest extends TestCase {
+public class BankAccountControllerControllerTest extends TestCase {
     @Autowired
     MockMvc mockMvc;
 
@@ -75,7 +75,7 @@ public class BankAccountControllerTest extends TestCase {
     }*/
 
     /**
-     * Test delete BankAccount given an bankAccountId.
+     * Test delete BankAccountController given an bankAccountId.
      */
    /* @Test
     @Transactional
@@ -91,7 +91,7 @@ public class BankAccountControllerTest extends TestCase {
     }*/
 
     /**
-     * Test delete BankAccount given an non existing bankAccountId.
+     * Test delete BankAccountController given an non existing bankAccountId.
      */
     /*@Test
     @Transactional

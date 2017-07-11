@@ -31,7 +31,7 @@ import java.util.Iterator;
 @SpringBootTest
 @Import(nl.springbank.config.TestConfiguration.class)
 @ActiveProfiles("test")
-public class BankAccountServiceTest extends TestCase {
+public class BankAccountControllerServiceTest extends TestCase {
     @Autowired
     private BankAccountService bankAccountService;
 
@@ -62,7 +62,7 @@ public class BankAccountServiceTest extends TestCase {
     }
 
     /**
-     * Test delete BankAccount given an bankAccountId
+     * Test delete BankAccountController given an bankAccountId
      */
     @Test
     @Transactional
@@ -101,7 +101,7 @@ public class BankAccountServiceTest extends TestCase {
     @Test
     @Transactional
     public void testConnectIncorrectUser() throws Exception {
-        // Incorrect BankAccount
+        // Incorrect BankAccountController
         UserBankAccountBean userBankAccountBean = new UserBankAccountBean();
         userBankAccountBean.setBankAccountId(9);
         userBankAccountBean.setUserId(1);
@@ -150,7 +150,7 @@ public class BankAccountServiceTest extends TestCase {
     @Test
     @Transactional
     public void testConnectIncorrectUserIbanBean() throws Exception {
-        // Incorrect BankAccount
+        // Incorrect BankAccountController
         UserIbanBean userIbanBean = new UserIbanBean();
         userIbanBean.setIban("NL15SPRI0749536256");
         userIbanBean.setUserId(1);

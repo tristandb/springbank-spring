@@ -16,7 +16,7 @@ import nl.springbank.objects.OpenedAccount;
 import nl.springbank.services.BankAccountService;
 import nl.springbank.services.CardService;
 import nl.springbank.services.UserService;
-import nl.springbank.services.iBANService;
+import nl.springbank.services.IBANService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class AccountControllerImpl implements AccountController {
     private UserService userService;
 
     @Autowired
-    private iBANService iBANService;
+    private IBANService IBANService;
 
     @Autowired
     private BankAccountService bankAccountService;
@@ -105,7 +105,7 @@ public class AccountControllerImpl implements AccountController {
     public void closeAccount(@JsonRpcParam("authToken") String authToken, @JsonRpcParam("iBAN") String iBAN) throws InvalidParamValueError, NotAuthorizedError {
         long userId = AuthenticationHelper.getUserId(authToken);
 
-        IbanBean ibanBean = iBANService.getIbanBean(iBAN);
+        IbanBean ibanBean = IBANService.getIbanBean(iBAN);
 
         // Check if iBAN exists
         if (ibanBean == null){
@@ -140,7 +140,7 @@ public class AccountControllerImpl implements AccountController {
      * @return
      */
     private OpenedAccount openBankAccountandCard(long userId){
-        // Create BankAccount
+        // Create BankAccountController
         BankAccountBean bankAccountBean = new BankAccountBean();
         bankAccountBean.setUserId(userId);
         bankAccountBean = bankAccountService.saveBankAccount(bankAccountBean);
@@ -150,12 +150,12 @@ public class AccountControllerImpl implements AccountController {
             // Lock to avoid duplicate iBAN
             iBANlock.lock();
             // Generate iBAN
-            String iBAN = IbanHelper.generateIban(iBANService.getAllIBAN());
+            String iBAN = IbanHelper.generateIban(IBANService.getAllIBAN());
 
-            // Connect BankAccount to iBAN
+            // Connect BankAccountController to iBAN
             ibanBean.setIban(iBAN);
             ibanBean.setBankAccountId(bankAccountBean.getBankAccountId());
-            iBANService.saveIbanBean(ibanBean);
+            IBANService.saveIbanBean(ibanBean);
         } finally {
             // Unlock iBAN
             iBANlock.unlock();

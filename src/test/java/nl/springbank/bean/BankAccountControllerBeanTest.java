@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  *
  * @author Tristan de Boer).
  */
-public class BankAccountBeanTest {
+public class BankAccountControllerBeanTest {
     private final BankAccountBean bankAccountBean = new BankAccountBean();
 
     @Test
