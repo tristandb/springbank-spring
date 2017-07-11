@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import nl.springbank.helper.*;
+import nl.springbank.objects.AuthTokenObject;
+import nl.springbank.objects.IbanAuthTokenObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

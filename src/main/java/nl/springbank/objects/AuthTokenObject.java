@@ -1,4 +1,4 @@
-package nl.springbank.helper;
+package nl.springbank.objects;
 
 /**
  * @author Tristan de Boer.
