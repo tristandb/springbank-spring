@@ -37,6 +37,7 @@ public class AccountControllerImplTest {
     private ObjectMapper mapper;
 
     @Test
+    @Transactional
     public void openAccount() throws Exception {
         // Object to send with as params
         OpenAccountObject accountObject = new OpenAccountObject("Duck", "Donald", "D.", "1954-02-19","571376046", "1313 Webfoot Walk, Duckburg",
@@ -44,7 +45,7 @@ public class AccountControllerImplTest {
 
         JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("openAccount", accountObject);
         this.mockMvc.perform(
-                post("/api")
+                post("/api/account")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(jsonRpcRequest))
         ).andExpect(status().isOk()).andDo(mvcResult -> {System.out.println(mvcResult.getResponse().getContentAsString());});
