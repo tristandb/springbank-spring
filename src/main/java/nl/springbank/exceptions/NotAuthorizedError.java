@@ -7,4 +7,7 @@ package nl.springbank.exceptions;
  */
 public class NotAuthorizedError extends Throwable {
 
+    public NotAuthorizedError(String s) {
+        super(s);
+    }
 }

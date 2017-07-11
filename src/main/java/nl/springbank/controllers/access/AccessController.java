@@ -32,7 +32,7 @@ public interface AccessController {
             @JsonRpcError(exception = NotAuthorizedError.class, code = 419),
             @JsonRpcError(exception = NoEffectError.class, code = 420)
     })
-    Object revokeAccess(
+    void revokeAccess(
             @JsonRpcParam(value = "authToken") String authToken,
             @JsonRpcParam(value = "iBAN") String iBAN
     ) throws InvalidParamValueError, NotAuthorizedError, NoEffectError;
@@ -42,7 +42,7 @@ public interface AccessController {
             @JsonRpcError(exception = NotAuthorizedError.class, code = 419),
             @JsonRpcError(exception = NoEffectError.class, code = 420)
     })
-    Object revokeAccess(
+    void revokeAccess(
             @JsonRpcParam(value = "authToken") String authToken,
             @JsonRpcParam(value = "iBAN") String iBAN,
             @JsonRpcParam(value = "username") String username

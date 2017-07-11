@@ -1,8 +1,11 @@
 package nl.springbank.helper;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * @author Tristan de Boer.
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProvideAccessObject {
     private String authToken;
     private String iBAN;
@@ -12,6 +15,11 @@ public class ProvideAccessObject {
         this.authToken = authToken;
         this.iBAN = iBAN;
         this.username = username;
+    }
+
+    public ProvideAccessObject(String authToken, String iBAN) {
+        this.authToken = authToken;
+        this.iBAN = iBAN;
     }
 
     public String getAuthToken() {

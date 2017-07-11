@@ -38,7 +38,7 @@ public class BankAccountControllerImpl implements BankAccountController {
             throw new InvalidParamValueError("");
         }
         if (bankAccountBean.getUserId() != userId && !bankAccountService.getAuthorizedUsers(bankAccountId).contains(userId)) {
-            throw new NotAuthorizedError();
+            throw new NotAuthorizedError("User is not eligible to get access");
         }
         return new BalanceObject(bankAccountBean.getBalance());
     }

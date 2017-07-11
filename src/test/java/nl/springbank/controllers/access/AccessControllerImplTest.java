@@ -41,11 +41,15 @@ public class AccessControllerImplTest {
     private ObjectMapper mapper;
 
     private AuthTokenObject authTokenObject;
+    private AuthTokenObject authTokenObject14;
 
     @Before
     public void authenticate() throws Exception {
         authTokenObject = new AuthTokenObject(Jwts.builder().setSubject(String.valueOf(1)).setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS512, AuthenticationHelper.PRIVATE_KEY).compact());
+        authTokenObject14 = new AuthTokenObject(Jwts.builder().setSubject(String.valueOf(14)).setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS512, AuthenticationHelper.PRIVATE_KEY).compact());
+
     }
 
     @Test
@@ -119,13 +123,45 @@ public class AccessControllerImplTest {
     }
 
     @Test
+    @Transactional
     public void revokeAccess() throws Exception {
+        // Object to send with as params
+        ProvideAccessObject provideAccessObject = new ProvideAccessObject(authTokenObject.getAuthToken(), "NL58INGB8290060132", "dagoduck");
 
+        JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("revokeAccess", provideAccessObject);
+        this.mockMvc.perform(
+                post("/api/access")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(jsonRpcRequest))
+        ).andExpect(status().is2xxSuccessful()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("{}"));
     }
 
     @Test
+    @Transactional
     public void revokeAccess1() throws Exception {
+        // Object to send with as params
+        ProvideAccessObject provideAccessObject = new ProvideAccessObject(authTokenObject14.getAuthToken(), "NL58INGB8290060132");
 
+        JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("revokeAccess", provideAccessObject);
+        this.mockMvc.perform(
+                post("/api/access")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(jsonRpcRequest))
+        ).andExpect(status().is2xxSuccessful()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("{}"));
+    }
+
+    @Test
+    @Transactional
+    public void revokeAccessInvalidIban() throws Exception {
+        // Object to send with as params
+        ProvideAccessObject provideAccessObject = new ProvideAccessObject(authTokenObject14.getAuthToken(), "NL58INGB8290060130");
+
+        JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("revokeAccess", provideAccessObject);
+        this.mockMvc.perform(
+                post("/api/access")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(jsonRpcRequest))
+        ).andExpect(status().is2xxSuccessful()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("InvalidParamValueError"));
     }
 
 }

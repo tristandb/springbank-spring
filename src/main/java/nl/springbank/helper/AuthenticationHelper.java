@@ -18,7 +18,7 @@ public class AuthenticationHelper {
             final Claims claims = Jwts.parser().setSigningKey(PRIVATE_KEY).parseClaimsJws(authToken).getBody();
             return Long.valueOf(claims.getSubject());
         } catch (SignatureException e){
-            throw new NotAuthorizedError();
+            throw new NotAuthorizedError("Signature is not correct");
         }
     }
 }

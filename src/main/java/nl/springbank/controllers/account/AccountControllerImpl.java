@@ -132,7 +132,7 @@ public class AccountControllerImpl implements AccountController {
                 userService.deleteUser(userId);
             }
         } else {
-            throw new NotAuthorizedError();
+            throw new NotAuthorizedError("User is not eligible to delete account");
         }
     }
 
@@ -173,6 +173,7 @@ public class AccountControllerImpl implements AccountController {
             cardBean.setBankAccountId(bankAccountBean.getBankAccountId());
             cardBean.setCardNumber(cardId);
             cardBean.setExpirationDate(CardHelper.getExpirationDate());
+            cardBean.setUserId(userId);
             cardBean.setPin(CardHelper.getRandomPin());
             cardService.saveCardBean(cardBean);
         } finally {

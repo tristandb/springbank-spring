@@ -23,4 +23,13 @@ public class UserBankAccountService {
     public UserBankAccountBean saveUserBankAccountBean(UserBankAccountBean userBankAccountBean) {
         return userBankAccountDao.save(userBankAccountBean);
     }
+
+    /**
+     * Revoke access to a BankAccount.
+     * @param userId
+     * @param bankAccountId
+     */
+    public void deleteUserBankAccountBean(long userId, long bankAccountId) {
+        userBankAccountDao.deleteByUserIdAndBankAccountId(userId, bankAccountId);
+    }
 }

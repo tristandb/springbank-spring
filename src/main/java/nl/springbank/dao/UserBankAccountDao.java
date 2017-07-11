@@ -16,4 +16,6 @@ import java.util.List;
 @Transactional
 public interface UserBankAccountDao extends CrudRepository<UserBankAccountBean, Long> {
     Iterable<UserBankAccountBean> findByBankAccountId(long bankAccountId);
+
+    void deleteByUserIdAndBankAccountId(long userId, long bankAccountId);
 }

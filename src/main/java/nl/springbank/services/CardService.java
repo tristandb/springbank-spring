@@ -31,4 +31,8 @@ public class CardService {
     public CardBean saveCardBean(CardBean cardBean){
         return this.cardDao.save(cardBean);
     }
+
+    public void deleteCardByUserIdAndBankAccount(long userId, long bankAccountId) {
+        cardDao.deleteByUserIdAndBankAccountId(userId, bankAccountId);
+    }
 }

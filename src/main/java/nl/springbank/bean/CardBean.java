@@ -29,6 +29,10 @@ public class CardBean {
     @Column(name = "bank_account_id")
     private long bankAccountId;
 
+    // The cards corresponding user_id
+    @Column(name = "user_id")
+    private long userId;
+
     // The cards pin
     @Column(name = "pin")
     private int pin;
@@ -93,5 +97,13 @@ public class CardBean {
 
     public void setPin(int pin) {
         this.pin = pin;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

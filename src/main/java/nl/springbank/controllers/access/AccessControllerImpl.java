@@ -1,21 +1,14 @@
 package nl.springbank.controllers.access;
 
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
-import nl.springbank.bean.BankAccountBean;
-import nl.springbank.bean.CardBean;
-import nl.springbank.bean.UserBankAccountBean;
-import nl.springbank.bean.UserBean;
+import nl.springbank.bean.*;
 import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NoEffectError;
 import nl.springbank.exceptions.NotAuthorizedError;
 import nl.springbank.helper.AuthenticationHelper;
 import nl.springbank.helper.CardHelper;
 import nl.springbank.objects.OpenedCard;
-import nl.springbank.services.BankAccountService;
-import nl.springbank.services.CardService;
-import nl.springbank.services.UserBankAccountService;
-import nl.springbank.services.UserService;
-import org.omg.CORBA.DynAnyPackage.Invalid;
+import nl.springbank.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +37,9 @@ public class AccessControllerImpl implements AccessController {
 
     @Autowired
     private CardService cardService;
+
+    @Autowired
+    private IBANService ibanService;
 
     public AccessControllerImpl() {
         this.cardLock = new ReentrantLock();
@@ -91,6 +87,7 @@ public class AccessControllerImpl implements AccessController {
                     cardBean.setCardNumber(cardId);
                     cardBean.setExpirationDate(CardHelper.getExpirationDate());
                     cardBean.setPin(CardHelper.getRandomPin());
+                    cardBean.setUserId(targetUserAccount.getId());
                     cardService.saveCardBean(cardBean);
                 } finally {
                     cardLock.unlock();
@@ -98,22 +95,69 @@ public class AccessControllerImpl implements AccessController {
                 return new OpenedCard(String.valueOf(cardBean.getCardNumber()), String.valueOf(cardBean.getPin()));
             }
         } else {
-            throw new NotAuthorizedError();
+            throw new NotAuthorizedError("Not authorized");
         }
     }
 
     @Override
-    public Object revokeAccess(String authToken, String iBAN)
+    public void revokeAccess(String authToken, String iBAN)
             throws InvalidParamValueError, NotAuthorizedError, NoEffectError {
+        // Get the BankAccount from IBAN
+        BankAccountBean bankAccountBean;
+        try {
+            bankAccountBean = bankAccountService.getBankAccountByIban(iBAN);
+        } catch (NullPointerException e) {
+            throw new InvalidParamValueError("iBAN does not exist");
+        }
         long userId = AuthenticationHelper.getUserId(authToken);
-        return null;
+
+        this.revokeAccess(userId, bankAccountBean.getBankAccountId());
     }
 
+    /**
+     * Revokes a user from access to an account.
+     * The function can only be called when the user is the main holder of the account.
+     * @param authToken
+     * @param iBAN
+     * @param username
+     * @return
+     * @throws InvalidParamValueError
+     * @throws NotAuthorizedError
+     * @throws NoEffectError
+     */
     @Override
-    public Object revokeAccess(String authToken, String iBAN, String username)
+    public void revokeAccess(String authToken, String iBAN, String username)
             throws InvalidParamValueError, NotAuthorizedError, NoEffectError {
+
         long userId = AuthenticationHelper.getUserId(authToken);
 
-        return null;
+        // Get the BankAccount from IBAN
+        BankAccountBean bankAccountBean;
+        try {
+            bankAccountBean = bankAccountService.getBankAccountByIban(iBAN);
+        } catch (NullPointerException e) {
+            throw new InvalidParamValueError("iBAN does not exist");
+        }
+        if (bankAccountBean.getUserId() != userId) {
+            throw new NotAuthorizedError("User is not a owner of the account");
+        }
+
+        // Get username of account
+        UserBean userBean = userService.getUserByUsername(username);
+
+        // Revoke access to the account
+        this.revokeAccess(userBean.getId(), bankAccountBean.getBankAccountId());
+    }
+
+    /**
+     * Function that revokes access to a user to iBAN.
+     * @param userId The user that needs to be revoked
+     * @param bankAccountId The bankAccountId of the account
+     */
+    public void revokeAccess(long userId, long bankAccountId) throws InvalidParamValueError, NotAuthorizedError, NoEffectError{
+        userBankAccountService.deleteUserBankAccountBean(userId, bankAccountId);
+
+        // Delete card
+        cardService.deleteCardByUserIdAndBankAccount(userId, bankAccountId);
     }
 }
