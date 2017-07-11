@@ -88,7 +88,7 @@ public class BankAccountControllerImplTest {
                 post("/api/bankaccount")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(jsonRpcRequest))
-        ).andExpect(status().is5xxServerError()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("InvalidParamValueError"));
+        ).andExpect(status().is2xxSuccessful()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("InvalidParamValueError"));
     }
 
     @Test
@@ -100,6 +100,6 @@ public class BankAccountControllerImplTest {
                 post("/api/bankaccount")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(jsonRpcRequest))
-        ).andExpect(status().is5xxServerError()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("NotAuthorizedError"));
+        ).andExpect(status().is2xxSuccessful()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("NotAuthorizedError"));
     }
 }
