@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Import(nl.springbank.config.TestConfiguration.class)
 @ActiveProfiles("test")
-public class AuthenticationImplTest {
+public class AuthenticationControllerImplTest {
     @Autowired
     MockMvc mockMvc;
 
