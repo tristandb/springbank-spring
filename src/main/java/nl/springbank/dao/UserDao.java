@@ -14,4 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserDao extends CrudRepository<UserBean, Long> {
 
     UserBean findByUsernameAndPassword(String username, String password);
+
+    UserBean findByUsername(String username);
 }

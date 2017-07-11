@@ -83,6 +83,19 @@ public class BankAccountService {
         return userBankAccountDao.save(userBankAccountBean);
     }
 
+    /**
+     * Returns BankAccountBean given an iBAN.
+     *
+     * @param iBAN the iBAN
+     * @return
+     */
+    public BankAccountBean getBankAccountByIban(String iBAN) throws NullPointerException {
+        IbanBean ibanBean = ibanDao.findByIban(iBAN);
+        if (ibanBean == null) {
+            throw new NullPointerException();
+        }
+        return bankAccountDao.findOne(ibanBean.getBankAccountId());
+    }
 
     /**
      * Connects a user given an IBAN and a userID.
@@ -119,7 +132,7 @@ public class BankAccountService {
     public List<Long> getAuthorizedUsers(long bankAccountId) {
         List<UserBankAccountBean> userBankAccountBeans = Lists.newArrayList(userBankAccountDao.findByBankAccountId(bankAccountId).iterator());
         List<Long> result = new ArrayList<>();
-        for (UserBankAccountBean userBankAccountBean: userBankAccountBeans) {
+        for (UserBankAccountBean userBankAccountBean : userBankAccountBeans) {
             result.add(userBankAccountBean.getUserId());
         }
         return result;

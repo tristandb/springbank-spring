@@ -44,6 +44,13 @@ public class UserService {
     }
 
     /**
+     * Returns a <code>nl.springbank.bean.UserBean</code> having provided a username.
+     */
+    public UserBean getUserByUsername(String username) {
+        return userDao.findByUsername(username);
+    }
+
+    /**
      * Creates a new entry for <code>nl.springbank.bean.UserBean</code>.
      */
     public UserBean saveUser(UserBean userBean) {
@@ -60,12 +67,13 @@ public class UserService {
 
     /**
      * Checks if password is correct.
+     *
      * @param username The username of a user.
      * @param password The password of a user.
      * @return
      */
     public UserBean isCorrectPassword(String username, String password) {
-        return userDao.findByUsernameAndPassword(username, password) ;
+        return userDao.findByUsernameAndPassword(username, password);
     }
 
     /**
