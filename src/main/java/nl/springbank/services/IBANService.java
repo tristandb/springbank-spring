@@ -14,11 +14,11 @@ import java.util.List;
  * @author Tristan de Boer.
  */
 @Service
-public class iBANService {
+public class IBANService {
     private final IbanDao ibanDao;
 
     @Autowired
-    public iBANService(IbanDao ibanDao) {
+    public IBANService(IbanDao ibanDao) {
         this.ibanDao = ibanDao;
     }
 
