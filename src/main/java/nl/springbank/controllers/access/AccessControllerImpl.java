@@ -1,6 +1,8 @@
 package nl.springbank.controllers.access;
 
-import com.googlecode.jsonrpc4j.JsonRpcParam;
+import nl.springbank.exceptions.InvalidParamValueError;
+import nl.springbank.exceptions.NoEffectError;
+import nl.springbank.exceptions.NotAuthorizedError;
 
 /**
  * Authentication controller that enables a user to get access and revoke access.
@@ -10,17 +12,20 @@ import com.googlecode.jsonrpc4j.JsonRpcParam;
 public class AccessControllerImpl implements AccessController {
 
     @Override
-    public Object provideAccess(@JsonRpcParam(value = "authToken") String authToken, @JsonRpcParam(value = "iBAN") String iBAN, @JsonRpcParam(value = "username") String username) {
+    public Object provideAccess(String authToken, String iBAN, String username)
+            throws InvalidParamValueError, NotAuthorizedError, NoEffectError {
         return null;
     }
 
     @Override
-    public Object revokeAccess(@JsonRpcParam(value = "authToken") String authToken, @JsonRpcParam(value = "iBAN") String iBAN, @JsonRpcParam(value = "username") String username) {
+    public Object revokeAccess(String authToken, String iBAN)
+            throws InvalidParamValueError, NotAuthorizedError, NoEffectError {
         return null;
     }
 
     @Override
-    public Object revokeAccess(@JsonRpcParam(value = "authToken") String authToken, @JsonRpcParam(value = "iBAN") String iBAN) {
+    public Object revokeAccess(String authToken, String iBAN, String username)
+            throws InvalidParamValueError, NotAuthorizedError, NoEffectError {
         return null;
     }
 }

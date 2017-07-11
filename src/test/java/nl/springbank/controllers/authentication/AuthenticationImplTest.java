@@ -57,7 +57,7 @@ public class AuthenticationImplTest {
                 post("/api/authentication")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(jsonRpcRequest))
-        ).andExpect(content().json("{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"error\":{\"code\":-32001,\"message\":null,\"data\":{\"exceptionTypeName\":\"nl.springbank.exceptions.AuthenticationError\",\"message\":null}}}"));
+        ).andExpect(content().json("{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"error\":{\"code\":422,\"message\":null,\"data\":{\"exceptionTypeName\":\"nl.springbank.exceptions.AuthenticationError\",\"message\":null}}}"));
     }
 
 }
