@@ -73,6 +73,7 @@ public class AccountControllerImpl implements AccountController {
         try {
             userId = userService.saveUser(userBean).getId();
         } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
             throw new InvalidParamValueError("Invalid parameters given");
         }
 

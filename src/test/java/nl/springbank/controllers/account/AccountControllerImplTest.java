@@ -1,8 +1,9 @@
-package nl.springbank.controllers;
+package nl.springbank.controllers.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.springbank.helper.AuthObject;
 import nl.springbank.helper.JsonRpcRequest;
+import nl.springbank.helper.OpenAccountObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,53 +15,49 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.transaction.Transactional;
+
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Test access controller.
- *
- * @author Tristan de Boer.
+ * @author Tristan de Boer).
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(nl.springbank.config.TestConfiguration.class)
 @ActiveProfiles("test")
-public class AuthenticationControllerTest {
-
+public class AccountControllerImplTest {
     @Autowired
     MockMvc mockMvc;
-
 
     @Autowired
     private ObjectMapper mapper;
 
     @Test
-    public void testGetAuthToken() throws Exception {
+    public void openAccount() throws Exception {
         // Object to send with as params
-        AuthObject authObject = new AuthObject("tristan", "password");
+        OpenAccountObject accountObject = new OpenAccountObject("Duck", "Donald", "D.", "1954-02-19","571376046", "1313 Webfoot Walk, Duckburg",
+                "+316 12345678", "donald@gmail.com", "duckd", "kwikkwekkwak");
 
-        JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("getAuthToken", authObject);
+        JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("openAccount", accountObject);
         this.mockMvc.perform(
                 post("/api")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(jsonRpcRequest))
-        ).andExpect(status().isOk());
+        ).andExpect(status().isOk()).andDo(mvcResult -> {System.out.println(mvcResult.getResponse().getContentAsString());});
     }
 
     @Test
-    public void testGetAuthTokenInvalidCredentials() throws Exception {
-        // Object to send with as params
-        AuthObject authObject = new AuthObject("tristan", "wrong_password");
+    public void openAdditionalAccount() throws Exception {
 
-        JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("getAuthToken", authObject);
-        this.mockMvc.perform(
-                post("/api")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(jsonRpcRequest))
-        ).andExpect(content().json("{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"error\":{\"code\":-32001,\"message\":null,\"data\":{\"exceptionTypeName\":\"nl.springbank.exceptions.AuthenticationError\",\"message\":null}}}"));
     }
-}
 
+    @Test
+    public void closeAccount() throws Exception {
+
+    }
+
+}

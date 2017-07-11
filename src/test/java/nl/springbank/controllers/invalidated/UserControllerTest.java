@@ -1,4 +1,4 @@
-package nl.springbank.controllers;
+package nl.springbank.controllers.invalidated;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;

@@ -1,6 +1,11 @@
 -- phpMyAdmin SQL Dump
 -- version 4.5.4.1deb2ubuntu2
 -- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Gegenereerd op: 11 jul 2017 om 13:55
+-- Serverversie: 5.7.18-0ubuntu0.16.04.1
+-- PHP-versie: 7.0.18-0ubuntu0.16.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -12,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `springbank`
+-- Database: `springbank-test-suite`
 --
 
 -- --------------------------------------------------------
@@ -24,7 +29,6 @@ SET time_zone = "+00:00";
 CREATE TABLE `bank_account` (
   `account_id` int(11) NOT NULL,
   `holder_user_id` int(11) NOT NULL,
-  `iban` varchar(34) NOT NULL COMMENT 'IBAN consists of up to 34 alphanumeric characters',
   `balance` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -38,7 +42,19 @@ CREATE TABLE `card` (
   `card_id` int(11) NOT NULL,
   `card_number` int(4) NOT NULL,
   `bank_account_id` int(11) NOT NULL,
-  `expiration_date` date NOT NULL
+  `expiration_date` date NOT NULL,
+  `pin` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `iban`
+--
+
+CREATE TABLE `iban` (
+  `bank_account_id` int(11) NOT NULL,
+  `iban` varchar(34) NOT NULL COMMENT 'IBAN consists of up to 34 alphanumeric characters'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -49,8 +65,8 @@ CREATE TABLE `card` (
 
 CREATE TABLE `transaction` (
   `transaction_id` int(11) NOT NULL,
-  `source_bank_account_iban` varchar(34) NOT NULL,
-  `target_bank_account_iban` varchar(34) NOT NULL,
+  `source_bank_account_iban` varchar(34) DEFAULT NULL,
+  `target_bank_account_iban` varchar(34) DEFAULT NULL,
   `target_account_id` int(11) NOT NULL,
   `source_account_id` int(11) NOT NULL,
   `amount` decimal(10,0) NOT NULL,
@@ -72,8 +88,17 @@ CREATE TABLE `user` (
   `bsn` varchar(9) NOT NULL COMMENT 'Burger Service Nummer',
   `street_address` varchar(100) NOT NULL,
   `telephone_number` varchar(15) NOT NULL,
-  `email` varchar(50) NOT NULL
+  `username` varchar(50) NOT NULL,
+  `password` varchar(300) NOT NULL,
+  `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `user`
+--
+
+INSERT INTO `user` (`user_id`, `name`, `surname`, `initials`, `date_of_birth`, `bsn`, `street_address`, `telephone_number`, `username`, `password`, `email`) VALUES
+(1, 'Tristan', 'Drijver', 'T.D.', '1970-01-01', '123456789', 'Dorpsstraat 1, Ons Dorp', '0612345678', 'tristan', 'tristan', 'tristan@drijver.tld');
 
 -- --------------------------------------------------------
 
@@ -96,7 +121,6 @@ CREATE TABLE `user_bank_account` (
 --
 ALTER TABLE `bank_account`
   ADD PRIMARY KEY (`account_id`),
-  ADD UNIQUE KEY `iban` (`iban`),
   ADD KEY `holder_user_id` (`holder_user_id`),
   ADD KEY `account_id` (`account_id`);
 
@@ -105,7 +129,15 @@ ALTER TABLE `bank_account`
 --
 ALTER TABLE `card`
   ADD PRIMARY KEY (`card_id`),
-  ADD KEY `card_id` (`card_id`);
+  ADD KEY `card_id` (`card_id`),
+  ADD KEY `bank_account_id` (`bank_account_id`);
+
+--
+-- Indexen voor tabel `iban`
+--
+ALTER TABLE `iban`
+  ADD PRIMARY KEY (`bank_account_id`),
+  ADD UNIQUE KEY `bankAccountId` (`bank_account_id`);
 
 --
 -- Indexen voor tabel `transaction`
@@ -117,13 +149,16 @@ ALTER TABLE `transaction`
 -- Indexen voor tabel `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`user_id`,`email`);
+  ADD PRIMARY KEY (`user_id`,`username`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- Indexen voor tabel `user_bank_account`
 --
 ALTER TABLE `user_bank_account`
-  ADD PRIMARY KEY (`user_bank_account_id`);
+  ADD PRIMARY KEY (`user_bank_account_id`),
+  ADD KEY `FK32bq0igatas1bm9d7cj3emdmn` (`bank_account_id`),
+  ADD KEY `FKjn71dv46t5vlrjbqroobqfxcl` (`user_id`);
 
 --
 -- AUTO_INCREMENT voor geëxporteerde tabellen
@@ -133,12 +168,12 @@ ALTER TABLE `user_bank_account`
 -- AUTO_INCREMENT voor een tabel `bank_account`
 --
 ALTER TABLE `bank_account`
-  MODIFY `account_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `account_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT voor een tabel `card`
 --
 ALTER TABLE `card`
-  MODIFY `card_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `card_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT voor een tabel `transaction`
 --
@@ -148,12 +183,42 @@ ALTER TABLE `transaction`
 -- AUTO_INCREMENT voor een tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT voor een tabel `user_bank_account`
 --
 ALTER TABLE `user_bank_account`
-  MODIFY `user_bank_account_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_bank_account_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- Beperkingen voor geëxporteerde tabellen
+--
+
+--
+-- Beperkingen voor tabel `bank_account`
+--
+ALTER TABLE `bank_account`
+  ADD CONSTRAINT `FK8jud4i10ibvbti0xtla8e88h5` FOREIGN KEY (`holder_user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FKce76ojmu9t1kc6b49nylpa2ho` FOREIGN KEY (`account_id`) REFERENCES `bank_account` (`account_id`);
+
+--
+-- Beperkingen voor tabel `card`
+--
+ALTER TABLE `card`
+  ADD CONSTRAINT `card_ibfk_1` FOREIGN KEY (`bank_account_id`) REFERENCES `bank_account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Beperkingen voor tabel `iban`
+--
+ALTER TABLE `iban`
+  ADD CONSTRAINT `iban_ibfk_1` FOREIGN KEY (`bank_account_id`) REFERENCES `bank_account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Beperkingen voor tabel `user_bank_account`
+--
+ALTER TABLE `user_bank_account`
+  ADD CONSTRAINT `FK32bq0igatas1bm9d7cj3emdmn` FOREIGN KEY (`bank_account_id`) REFERENCES `bank_account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FKjn71dv46t5vlrjbqroobqfxcl` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
