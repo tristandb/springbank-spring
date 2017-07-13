@@ -114,7 +114,7 @@ public class AccountControllerImpl implements AccountController {
             throw new InvalidParamValueError("iBAN does not exist");
         }
 
-        List<BankAccountBean> userBankAccounts = bankAccountService.getUserBankAccounts(userId);
+        List<BankAccountBean> userBankAccounts = bankAccountService.getOwnerBankAccounts(userId);
         boolean userMayDeleteAccount = false;
         for (BankAccountBean userBankAccount : userBankAccounts) {
             if (userBankAccount.getBankAccountId() == ibanBean.getBankAccountId()) {
