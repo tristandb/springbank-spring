@@ -1,13 +1,11 @@
 package nl.springbank.services;
 
 import com.google.common.collect.Lists;
-import nl.springbank.bean.BankAccountBean;
-import nl.springbank.bean.IbanBean;
-import nl.springbank.bean.UserBankAccountBean;
-import nl.springbank.bean.UserIbanBean;
+import nl.springbank.bean.*;
 import nl.springbank.dao.BankAccountDao;
 import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.UserBankAccountDao;
+import nl.springbank.dao.UsernameIbanDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,11 +26,14 @@ public class BankAccountService {
 
     private final UserBankAccountDao userBankAccountDao;
 
+    private final UsernameIbanDao usernameIbanDao;
+
     @Autowired
-    public BankAccountService(BankAccountDao bankAccountDao, IbanDao ibanDao, UserBankAccountDao userBankAccountDao) {
+    public BankAccountService(BankAccountDao bankAccountDao, IbanDao ibanDao, UserBankAccountDao userBankAccountDao, UsernameIbanDao usernameIbanDao) {
         this.bankAccountDao = bankAccountDao;
         this.ibanDao = ibanDao;
         this.userBankAccountDao = userBankAccountDao;
+        this.usernameIbanDao = usernameIbanDao;
     }
 
     /**
@@ -120,8 +121,19 @@ public class BankAccountService {
      * @param userId
      * @return
      */
-    public List<BankAccountBean> getUserBankAccounts(long userId) {
+    public List<BankAccountBean> getOwnerBankAccounts(long userId) {
         return Lists.newArrayList(bankAccountDao.findByUserId(userId));
+    }
+
+
+    /**
+     * Return a list of BankAccounts that the user has access to.
+     *
+     * @param userId The userId of the user
+     */
+    public List<UsernameIbanBean> getUserBankAccounts(long userId) {
+        // Get a list of BankAccounts that the user has access to or is owner of.
+        return Lists.newArrayList(this.usernameIbanDao.findByUserId(userId));
     }
 
     /**
