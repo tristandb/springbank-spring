@@ -1,10 +1,7 @@
 package nl.springbank.bean;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 /**
  * TransactionBean.
@@ -20,8 +17,8 @@ public class TransactionBean {
     // Transaction identifier
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "transaction_id", nullable = false, unique = true)
-    private Long transactionId;
+    @Column(name = "transaction_id", unique = true)
+    private long transactionId;
 
     // source bank account iban
     @Column(name = "source_bank_account_iban")
@@ -39,8 +36,13 @@ public class TransactionBean {
     @Column(name = "target_account_id")
     private long targetBankAccount;
 
+    @Column(name = "target_name")
+    private String targetName;
+
+    // Date of the transaction
+    private Timestamp date;
+
     // Amount transferred
-    @NotNull
     private double amount;
 
     // Message as specified by the transfer
@@ -53,11 +55,11 @@ public class TransactionBean {
     public TransactionBean() {
     }
 
-    public Long getTransactionId() {
+    public long getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(Long transactionId) {
+    public void setTransactionId(long transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -91,6 +93,22 @@ public class TransactionBean {
 
     public void setTargetBankAccount(long targetBankAccount) {
         this.targetBankAccount = targetBankAccount;
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
     }
 
     public double getAmount() {
