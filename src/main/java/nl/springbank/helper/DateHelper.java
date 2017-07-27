@@ -1,8 +1,12 @@
 package nl.springbank.helper;
 
+import sun.util.calendar.CalendarSystem;
+
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Converts dates.
@@ -19,5 +23,9 @@ public class DateHelper {
 
         }
         return date;
+    }
+
+    public static String getCalenderDatefromTimestamp(Timestamp timestamp) {
+        return ((Object) CalendarSystem.getGregorianCalendar().getCalendarDate(timestamp.getTime(), TimeZone.getDefault())).toString();
     }
 }

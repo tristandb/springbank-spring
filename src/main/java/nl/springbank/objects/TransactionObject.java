@@ -1,6 +1,7 @@
 package nl.springbank.objects;
 
 import nl.springbank.bean.TransactionBean;
+import nl.springbank.helper.DateHelper;
 import sun.util.calendar.CalendarSystem;
 
 import java.util.TimeZone;
@@ -17,7 +18,7 @@ public class TransactionObject {
         this.sourceIBAN = transactionBean.getSourceBankAccountIban();
         this.targetIBAN = transactionBean.getTargetBankAccountIban();
         this.targetName = transactionBean.getTargetName();
-        this.date = ((Object) CalendarSystem.getGregorianCalendar().getCalendarDate(transactionBean.getDate().getTime(), TimeZone.getDefault())).toString();
+        this.date = DateHelper.getCalenderDatefromTimestamp(transactionBean.getDate());
         this.amount = transactionBean.getAmount();
         this.description = transactionBean.getMessage();
     }
