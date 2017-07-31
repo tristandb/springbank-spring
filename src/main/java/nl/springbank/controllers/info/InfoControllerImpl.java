@@ -3,14 +3,17 @@ package nl.springbank.controllers.info;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.TransactionBean;
+import nl.springbank.bean.UsernameIbanBean;
 import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NotAuthorizedError;
 import nl.springbank.helper.AuthenticationHelper;
 import nl.springbank.objects.BalanceObject;
 import nl.springbank.objects.TransactionObject;
+import nl.springbank.objects.UserAccessObject;
 import nl.springbank.services.BankAccountService;
 import nl.springbank.services.IBANService;
 import nl.springbank.services.TransactionService;
+import nl.springbank.services.UserBankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +24,21 @@ import java.util.List;
 @AutoJsonRpcServiceImpl
 public class InfoControllerImpl implements InfoController {
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
+
+    private final IBANService iBANService;
+
+    private final TransactionService transactionService;
+
+    private final UserBankAccountService userBankAccountService;
 
     @Autowired
-    private IBANService iBANService;
-
-    @Autowired
-    private TransactionService transactionService;
+    public InfoControllerImpl(BankAccountService bankAccountService, IBANService iBANService, TransactionService transactionService, UserBankAccountService userBankAccountService) {
+        this.bankAccountService = bankAccountService;
+        this.iBANService = iBANService;
+        this.transactionService = transactionService;
+        this.userBankAccountService = userBankAccountService;
+    }
 
     @Override
     public BalanceObject getBalance(String authToken, String iBAN) throws InvalidParamValueError, NotAuthorizedError {
@@ -44,7 +54,7 @@ public class InfoControllerImpl implements InfoController {
         if (bankAccountBean.getUserId() != userId && !bankAccountService.getAuthorizedUsers(bankAccountId).contains(userId)) {
             throw new NotAuthorizedError("User is not eligible to get access");
         }
-        return new BalanceObject(bankAccountBean.getBalance());
+        return new BalanceObject(bankAccountBean);
     }
 
     @Override
@@ -73,17 +83,27 @@ public class InfoControllerImpl implements InfoController {
 
     /**
      * Retrieves an overview of all bank accounts a user has access to. User can only request this for himself.
+     *
      * @param authToken The authentication token, obtained with getAuthToken
      * @return An array of dictionaries containing iBAN and owner.
      * @throws InvalidParamValueError One or more parameter has an invalid value. See message.
-     * @throws NotAuthorizedError The authenticated user is not authorized to perform this action.
+     * @throws NotAuthorizedError     The authenticated user is not authorized to perform this action.
      */
     @Override
-    public Object getUserAccess(String authToken) throws InvalidParamValueError, NotAuthorizedError {
+    public List<UserAccessObject> getUserAccess(String authToken) throws InvalidParamValueError, NotAuthorizedError {
         // Get userId
         long userId = AuthenticationHelper.getUserId(authToken);
-
-        return null;
+        List<UsernameIbanBean> usernameIbanBeans;
+        try {
+            usernameIbanBeans = bankAccountService.getUserBankAccounts(userId);
+        } catch (Exception e) {
+            throw new InvalidParamValueError(e.getMessage());
+        }
+        List<UserAccessObject> userAccessObjects = new ArrayList<>();
+        for (UsernameIbanBean usernameIbanBean : usernameIbanBeans) {
+            userAccessObjects.add(new UserAccessObject(usernameIbanBean));
+        }
+        return userAccessObjects;
     }
 
     @Override

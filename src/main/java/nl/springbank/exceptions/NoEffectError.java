@@ -5,7 +5,7 @@ package nl.springbank.exceptions;
  *
  * @author Sven Konings.
  */
-public class NoEffectError extends Throwable {
+public class NoEffectError extends Exception {
     public NoEffectError(String message) {
         super(message);
     }

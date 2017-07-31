@@ -20,11 +20,15 @@ import org.springframework.stereotype.Service;
 @AutoJsonRpcServiceImpl
 public class BankAccountControllerImpl implements BankAccountController {
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
+
+    private final IBANService iBANService;
 
     @Autowired
-    private IBANService iBANService;
+    public BankAccountControllerImpl(BankAccountService bankAccountService, IBANService iBANService) {
+        this.bankAccountService = bankAccountService;
+        this.iBANService = iBANService;
+    }
 
     @Override
     public BalanceObject getBalance(String authToken, String iBAN) throws NotAuthorizedError, InvalidParamValueError {
@@ -40,6 +44,6 @@ public class BankAccountControllerImpl implements BankAccountController {
         if (bankAccountBean.getUserId() != userId && !bankAccountService.getAuthorizedUsers(bankAccountId).contains(userId)) {
             throw new NotAuthorizedError("User is not eligible to get access");
         }
-        return new BalanceObject(bankAccountBean.getBalance());
+        return new BalanceObject(bankAccountBean);
     }
 }

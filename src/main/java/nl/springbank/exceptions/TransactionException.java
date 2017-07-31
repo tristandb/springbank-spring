@@ -5,6 +5,6 @@ package nl.springbank.exceptions;
  *
  * @author Tristan de Boer.
  */
-public class TransactionException extends Throwable {
+public class TransactionException extends Exception {
 
 }

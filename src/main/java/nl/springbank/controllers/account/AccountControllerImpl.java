@@ -14,8 +14,8 @@ import nl.springbank.helper.IbanHelper;
 import nl.springbank.objects.OpenedAccount;
 import nl.springbank.services.BankAccountService;
 import nl.springbank.services.CardService;
-import nl.springbank.services.UserService;
 import nl.springbank.services.IBANService;
+import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -36,21 +36,22 @@ public class AccountControllerImpl implements AccountController {
 
     private final ReentrantLock cardLock;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    private final IBANService ibanService;
+
+    private final BankAccountService bankAccountService;
+
+    private final CardService cardService;
 
     @Autowired
-    private IBANService ibanService;
-
-    @Autowired
-    private BankAccountService bankAccountService;
-
-    @Autowired
-    private CardService cardService;
-
-    public AccountControllerImpl() {
+    public AccountControllerImpl(UserService userService, IBANService ibanService, BankAccountService bankAccountService, CardService cardService) {
         this.cardLock = new ReentrantLock();
         this.iBANlock = new ReentrantLock();
+        this.userService = userService;
+        this.ibanService = ibanService;
+        this.bankAccountService = bankAccountService;
+        this.cardService = cardService;
     }
 
     @Override
@@ -180,6 +181,6 @@ public class AccountControllerImpl implements AccountController {
             cardLock.unlock();
         }
 
-        return new OpenedAccount(ibanBean.getIban(), CardHelper.convertToString(cardBean.getCardNumber()), CardHelper.convertToString(cardBean.getPin()));
+        return new OpenedAccount(ibanBean, cardBean);
     }
 }

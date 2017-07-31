@@ -5,7 +5,7 @@ package nl.springbank.exceptions;
  *
  * @author Sven Konings.
  */
-public class InvalidPINError extends Throwable {
+public class InvalidPINError extends Exception {
     public InvalidPINError(String message) {
         super(message);
     }

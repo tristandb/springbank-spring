@@ -1,6 +1,5 @@
 package nl.springbank.services;
 
-import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.UserBankAccountBean;
 import nl.springbank.dao.UserBankAccountDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,10 @@ public class UserBankAccountService {
     @Autowired
     private UserBankAccountDao userBankAccountDao;
 
+    public Iterable<UserBankAccountBean> getAccessByUserId(long userId) {
+        return userBankAccountDao.findByUserId(userId);
+    }
+
     /**
      * Create a new UserBankAccount entry in the database.
      *
@@ -26,6 +29,7 @@ public class UserBankAccountService {
 
     /**
      * Revoke access to a BankAccount.
+     *
      * @param userId
      * @param bankAccountId
      */

@@ -89,7 +89,7 @@ public class InfoControllerImplTest {
                 post("/api/info")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(jsonRpcRequest))
-        ).andExpect(status().is5xxServerError()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("InvalidParamValueError"));
+        ).andExpect(status().isOk()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("InvalidParamValueError"));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class InfoControllerImplTest {
                 post("/api/info")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(jsonRpcRequest))
-        ).andExpect(status().is5xxServerError()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("NotAuthorizedError"));
+        ).andExpect(status().isOk()).andExpect(mvcResult -> mvcResult.getResponse().getContentAsString().contains("NotAuthorizedError"));
     }
 
     // TODO: Extend transaction overview tests

@@ -1,7 +1,10 @@
 package nl.springbank.controllers.access;
 
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
-import nl.springbank.bean.*;
+import nl.springbank.bean.BankAccountBean;
+import nl.springbank.bean.CardBean;
+import nl.springbank.bean.UserBankAccountBean;
+import nl.springbank.bean.UserBean;
 import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NoEffectError;
 import nl.springbank.exceptions.NotAuthorizedError;
@@ -26,23 +29,24 @@ public class AccessControllerImpl implements AccessController {
 
     private final ReentrantLock cardLock;
 
-    @Autowired
-    private BankAccountService bankAccountService;
+    private final BankAccountService bankAccountService;
+
+    private final UserService userService;
+
+    private final UserBankAccountService userBankAccountService;
+
+    private final CardService cardService;
+
+    private final IBANService ibanService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserBankAccountService userBankAccountService;
-
-    @Autowired
-    private CardService cardService;
-
-    @Autowired
-    private IBANService ibanService;
-
-    public AccessControllerImpl() {
+    public AccessControllerImpl(BankAccountService bankAccountService, UserService userService, UserBankAccountService userBankAccountService, CardService cardService, IBANService ibanService) {
         this.cardLock = new ReentrantLock();
+        this.bankAccountService = bankAccountService;
+        this.userService = userService;
+        this.userBankAccountService = userBankAccountService;
+        this.cardService = cardService;
+        this.ibanService = ibanService;
     }
 
     @Override
@@ -92,7 +96,7 @@ public class AccessControllerImpl implements AccessController {
                 } finally {
                     cardLock.unlock();
                 }
-                return new OpenedCard(String.valueOf(cardBean.getCardNumber()), String.valueOf(cardBean.getPin()));
+                return new OpenedCard(cardBean);
             }
         } else {
             throw new NotAuthorizedError("Not authorized");
@@ -117,6 +121,7 @@ public class AccessControllerImpl implements AccessController {
     /**
      * Revokes a user from access to an account.
      * The function can only be called when the user is the main holder of the account.
+     *
      * @param authToken
      * @param iBAN
      * @param username
@@ -151,10 +156,11 @@ public class AccessControllerImpl implements AccessController {
 
     /**
      * Function that revokes access to a user to iBAN.
-     * @param userId The user that needs to be revoked
+     *
+     * @param userId        The user that needs to be revoked
      * @param bankAccountId The bankAccountId of the account
      */
-    public void revokeAccess(long userId, long bankAccountId) throws InvalidParamValueError, NotAuthorizedError, NoEffectError{
+    public void revokeAccess(long userId, long bankAccountId) throws InvalidParamValueError, NotAuthorizedError, NoEffectError {
         userBankAccountService.deleteUserBankAccountBean(userId, bankAccountId);
 
         // Delete card

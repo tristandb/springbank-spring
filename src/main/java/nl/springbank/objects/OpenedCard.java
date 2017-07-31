@@ -1,5 +1,8 @@
 package nl.springbank.objects;
 
+import nl.springbank.bean.CardBean;
+import nl.springbank.helper.CardHelper;
+
 /**
  * @author Tristan de Boer.
  */
@@ -9,9 +12,9 @@ public class OpenedCard {
 
     private String pinCode;
 
-    public OpenedCard(String pinCard, String pinCode) {
-        this.pinCard = pinCard;
-        this.pinCode = pinCode;
+    public OpenedCard(CardBean cardBean) {
+        this.pinCard = CardHelper.convertToString(cardBean.getCardNumber());
+        this.pinCode = CardHelper.convertToString(cardBean.getPin());
     }
 
     public String getPinCard() {

@@ -24,7 +24,7 @@ public class IBANService {
 
     public List<String> getAllIBAN() {
         List<String> result = new ArrayList<>();
-        for (IbanBean ibanBean: ibanDao.findAll()){
+        for (IbanBean ibanBean : ibanDao.findAll()) {
             result.add(ibanBean.getIban());
         }
         return result;
@@ -34,7 +34,11 @@ public class IBANService {
         return ibanDao.save(ibanBean);
     }
 
-    public IbanBean getIbanBean(String iBAN){
+    public IbanBean getIbanBean(String iBAN) {
         return ibanDao.findByIban(iBAN);
+    }
+
+    public IbanBean getIbanBean(long bankAccountId) {
+        return ibanDao.findOne(bankAccountId);
     }
 }

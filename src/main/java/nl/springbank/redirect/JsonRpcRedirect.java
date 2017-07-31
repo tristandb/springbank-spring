@@ -3,10 +3,12 @@ package nl.springbank.redirect;
 import com.google.gson.Gson;
 import com.googlecode.jsonrpc4j.JsonRpcService;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
-import nl.springbank.controllers.TestController;
+import nl.springbank.controllers.access.AccessController;
 import nl.springbank.controllers.account.AccountController;
 import nl.springbank.controllers.authentication.AuthenticationController;
 import nl.springbank.controllers.bankaccount.BankAccountController;
+import nl.springbank.controllers.info.InfoController;
+import nl.springbank.controllers.transfer.TransferController;
 import nl.springbank.helper.JsonRpcRequest;
 import org.apache.hc.client5.http.impl.sync.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.sync.HttpClients;
@@ -43,18 +45,6 @@ public class JsonRpcRedirect {
     private static final String DEFAULT_URL = "http://localhost:8080";
 
     private CloseableHttpClient httpclient = HttpClients.createDefault();
-
-    @Autowired
-    private TestController testController;
-
-    @Autowired
-    private AuthenticationController authentication;
-
-    @Autowired
-    private AccountController accountController;
-
-    @Autowired
-    private BankAccountController bankAccountController;
 
     @RequestMapping(value = "/api", method = RequestMethod.POST)
     @ResponseBody
@@ -96,7 +86,8 @@ public class JsonRpcRedirect {
 
                                 BufferedReader reader = new BufferedReader(new InputStreamReader(
                                         (response.getEntity().getContent())));
-                                String out; StringBuilder output = new StringBuilder();
+                                String out;
+                                StringBuilder output = new StringBuilder();
                                 while ((out = reader.readLine()) != null) {
                                     output.append(out);
                                 }

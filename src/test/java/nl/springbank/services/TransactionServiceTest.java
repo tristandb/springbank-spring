@@ -174,7 +174,7 @@ public class TransactionServiceTest extends TestCase {
                 try {
                     transactionService.makeTransaction(transactionBean);
 
-                } catch (TransactionException | Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     fail();
                 }
@@ -186,7 +186,7 @@ public class TransactionServiceTest extends TestCase {
                 transactionBean.setMessage("[Test] Booking");
                 try {
                     transactionService.makeTransaction(transactionBean);
-                } catch (TransactionException | Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     fail();
                 }
