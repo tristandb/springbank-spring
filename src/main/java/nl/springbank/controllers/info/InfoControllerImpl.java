@@ -8,12 +8,13 @@ import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NotAuthorizedError;
 import nl.springbank.helper.AuthenticationHelper;
 import nl.springbank.objects.BalanceObject;
+import nl.springbank.objects.BankAccountAccessObject;
 import nl.springbank.objects.TransactionObject;
 import nl.springbank.objects.UserAccessObject;
 import nl.springbank.services.BankAccountService;
 import nl.springbank.services.IBANService;
 import nl.springbank.services.TransactionService;
-import nl.springbank.services.UserBankAccountService;
+import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,14 +31,14 @@ public class InfoControllerImpl implements InfoController {
 
     private final TransactionService transactionService;
 
-    private final UserBankAccountService userBankAccountService;
+    private final UserService userService;
 
     @Autowired
-    public InfoControllerImpl(BankAccountService bankAccountService, IBANService iBANService, TransactionService transactionService, UserBankAccountService userBankAccountService) {
+    public InfoControllerImpl(BankAccountService bankAccountService, IBANService iBANService, TransactionService transactionService, UserService userService) {
         this.bankAccountService = bankAccountService;
         this.iBANService = iBANService;
         this.transactionService = transactionService;
-        this.userBankAccountService = userBankAccountService;
+        this.userService = userService;
     }
 
     @Override
@@ -76,6 +77,10 @@ public class InfoControllerImpl implements InfoController {
         }
         List<TransactionObject> transactions = new ArrayList<>();
         for (TransactionBean transactionBean : transactionBeans) {
+            if (nrOfTransactions <= 0) {
+                break;
+            }
+            nrOfTransactions--;
             transactions.add(new TransactionObject(transactionBean));
         }
         return transactions;
@@ -109,6 +114,24 @@ public class InfoControllerImpl implements InfoController {
     @Override
     public Object getBankAccountAccess(String authToken, String iBAN)
             throws InvalidParamValueError, NotAuthorizedError {
-        return null;
+        long userId = AuthenticationHelper.getUserId(authToken);
+        BankAccountBean bankAccountBean;
+        List<Long> authorizedUserIds;
+        long bankAccountId;
+        try {
+            bankAccountId = iBANService.getIbanBean(iBAN).getBankAccountId();
+            bankAccountBean = bankAccountService.getBankAccount(bankAccountId);
+            authorizedUserIds = bankAccountService.getAuthorizedUsers(bankAccountId);
+        } catch (Exception e) {
+            throw new InvalidParamValueError(e.getMessage());
+        }
+        if (bankAccountBean.getUserId() != userId && !bankAccountService.getAuthorizedUsers(bankAccountId).contains(userId)) {
+            throw new NotAuthorizedError("User is not eligible to get access");
+        }
+        List<BankAccountAccessObject> bankAccountAccessObjects = new ArrayList<>();
+        for (Long authorizedUserId : authorizedUserIds) {
+            bankAccountAccessObjects.add(new BankAccountAccessObject(userService.getUser(authorizedUserId)));
+        }
+        return bankAccountAccessObjects;
     }
 }
