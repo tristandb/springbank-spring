@@ -1,8 +1,6 @@
 package nl.springbank.dao;
 
-import nl.springbank.bean.UserBankAccountBean;
 import nl.springbank.bean.UsernameIbanBean;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 

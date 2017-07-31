@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *
  * @author Tristan de Boer).
  */
-public class JsonRpcRequest extends JsonRpc{
+public class JsonRpcRequest extends JsonRpc {
     public String method;
 
     public Object params = new ArrayList<>();

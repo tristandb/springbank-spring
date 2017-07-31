@@ -20,9 +20,6 @@ import java.util.Date;
 @AutoJsonRpcServiceImpl
 public class AuthenticationImplController implements AuthenticationController {
 
-    /**
-     * Autowire <code>UserService</code>.
-     */
     private final UserService userService;
 
     @Autowired

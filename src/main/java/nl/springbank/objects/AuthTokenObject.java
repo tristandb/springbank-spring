@@ -24,7 +24,7 @@ public class AuthTokenObject {
         this.authToken = authToken;
     }
 
-    public static AuthTokenObject create(long subject){
+    public static AuthTokenObject create(long subject) {
         return new AuthTokenObject(Jwts.builder().setSubject(String.valueOf(subject)).setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS512, AuthenticationHelper.PRIVATE_KEY).compact());
     }

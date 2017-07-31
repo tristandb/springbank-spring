@@ -2,7 +2,6 @@ package nl.springbank.dao;
 
 import nl.springbank.bean.TransactionBean;
 import org.springframework.data.repository.CrudRepository;
-
 import org.springframework.transaction.annotation.Transactional;
 
 /**

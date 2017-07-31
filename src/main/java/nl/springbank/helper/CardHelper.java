@@ -43,7 +43,7 @@ public class CardHelper {
         return new Date(cal.getTimeInMillis());
     }
 
-    public static String convertToString(int number){
+    public static String convertToString(int number) {
         return String.format("%04d", number);
     }
 }

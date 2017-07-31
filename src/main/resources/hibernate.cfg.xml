@@ -1,7 +1,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="show_sql">true</property>
-        <mapping class="nl.springbank.bean.BankAccountBean" />
-            <mapping class="nl.springbank.bean.IbanBean" />
+        <mapping class="nl.springbank.bean.BankAccountBean"/>
+        <mapping class="nl.springbank.bean.IbanBean"/>
     </session-factory>
 </hibernate-configuration>

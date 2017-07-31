@@ -20,15 +20,15 @@ public class CardService {
         this.cardDao = cardDao;
     }
 
-    public List<Integer> getCardNumbers(long bankAccountId){
+    public List<Integer> getCardNumbers(long bankAccountId) {
         List<Integer> result = new ArrayList<>();
-        for (CardBean cardBean: cardDao.findByBankAccountId(bankAccountId)){
+        for (CardBean cardBean : cardDao.findByBankAccountId(bankAccountId)) {
             result.add(cardBean.getCardNumber());
         }
         return result;
     }
 
-    public CardBean saveCardBean(CardBean cardBean){
+    public CardBean saveCardBean(CardBean cardBean) {
         return this.cardDao.save(cardBean);
     }
 

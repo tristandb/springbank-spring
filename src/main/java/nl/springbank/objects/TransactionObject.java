@@ -2,10 +2,10 @@ package nl.springbank.objects;
 
 import nl.springbank.bean.TransactionBean;
 import nl.springbank.helper.DateHelper;
-import sun.util.calendar.CalendarSystem;
 
-import java.util.TimeZone;
-
+/**
+ * @author Sven Konings
+ */
 public class TransactionObject {
     private String sourceIBAN;
     private String targetIBAN;

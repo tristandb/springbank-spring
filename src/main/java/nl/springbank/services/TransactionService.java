@@ -1,6 +1,5 @@
 package nl.springbank.services;
 
-import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.TransactionBean;
 import nl.springbank.dao.BankAccountDao;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -72,6 +70,7 @@ public class TransactionService {
 
     /**
      * Makes a transaction.
+     *
      * @param transactionBean
      * @return
      */

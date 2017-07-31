@@ -14,7 +14,7 @@ import java.util.TimeZone;
  * @author Tristan de Boer.
  */
 public class DateHelper {
-    public static Date getDateFromString(String dateString){
+    public static Date getDateFromString(String dateString) {
         String pattern = "yyyy-MM-dd";
         Date date = null;
         try {
