@@ -6,5 +6,10 @@ package nl.springbank.exceptions;
  * @author Tristan de Boer.
  */
 public class AuthenticationError extends Exception {
+    public AuthenticationError() {
+    }
 
+    public AuthenticationError(String message) {
+        super(message);
+    }
 }

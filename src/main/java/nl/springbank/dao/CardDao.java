@@ -13,5 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface CardDao extends CrudRepository<CardBean, Long> {
     Iterable<CardBean> findByBankAccountId(long bankAccountId);
 
+    CardBean findByBankAccountIdAndCardNumber(long bankAccountId, int cardNumber);
+
     void deleteByUserIdAndBankAccountId(long userId, long bankAccountId);
 }

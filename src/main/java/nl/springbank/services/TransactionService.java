@@ -1,5 +1,6 @@
 package nl.springbank.services;
 
+import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.TransactionBean;
 import nl.springbank.dao.BankAccountDao;
@@ -8,8 +9,8 @@ import nl.springbank.dao.TransactionDao;
 import nl.springbank.exceptions.TransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -77,7 +78,18 @@ public class TransactionService {
     public void makeTransaction(TransactionBean transactionBean) throws TransactionException {
         this.lock.lock();
         try {
-            throw new NotImplementedException();
+            BankAccountBean sourceAccount = bankAccountService.getBankAccount(transactionBean.getSourceBankAccount());
+            BankAccountBean targetAccount = bankAccountService.getBankAccount(transactionBean.getTargetBankAccount());
+            double amount = transactionBean.getAmount();
+            if (amount < 0) {
+                throw new TransactionException("Amount less than zero: " + amount);
+            } else if (!(sourceAccount.getBalance() > amount)) {
+                throw new TransactionException("Not enough money");
+            }
+            sourceAccount.setBalance(sourceAccount.getBalance() - amount);
+            targetAccount.setBalance(targetAccount.getBalance() + amount);
+            bankAccountDao.save(Arrays.asList(sourceAccount, targetAccount));
+            transactionDao.save(transactionBean);
         } finally {
             this.lock.unlock();
         }

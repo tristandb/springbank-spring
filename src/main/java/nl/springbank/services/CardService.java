@@ -28,6 +28,10 @@ public class CardService {
         return result;
     }
 
+    public CardBean getCard(long bankAccountId, int cardNumber) {
+        return cardDao.findByBankAccountIdAndCardNumber(bankAccountId, cardNumber);
+    }
+
     public CardBean saveCardBean(CardBean cardBean) {
         return this.cardDao.save(cardBean);
     }

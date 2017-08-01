@@ -6,6 +6,9 @@ package nl.springbank.exceptions;
  * @author Sven Konings.
  */
 public class InvalidPINError extends Exception {
+    public InvalidPINError() {
+    }
+
     public InvalidPINError(String message) {
         super(message);
     }

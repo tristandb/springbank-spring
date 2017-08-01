@@ -12,7 +12,6 @@ import nl.springbank.objects.BankAccountAccessObject;
 import nl.springbank.objects.TransactionObject;
 import nl.springbank.objects.UserAccessObject;
 import nl.springbank.services.BankAccountService;
-import nl.springbank.services.IBANService;
 import nl.springbank.services.TransactionService;
 import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +26,13 @@ public class InfoControllerImpl implements InfoController {
 
     private final BankAccountService bankAccountService;
 
-    private final IBANService iBANService;
-
     private final TransactionService transactionService;
 
     private final UserService userService;
 
     @Autowired
-    public InfoControllerImpl(BankAccountService bankAccountService, IBANService iBANService, TransactionService transactionService, UserService userService) {
+    public InfoControllerImpl(BankAccountService bankAccountService, TransactionService transactionService, UserService userService) {
         this.bankAccountService = bankAccountService;
-        this.iBANService = iBANService;
         this.transactionService = transactionService;
         this.userService = userService;
     }
@@ -45,14 +41,12 @@ public class InfoControllerImpl implements InfoController {
     public BalanceObject getBalance(String authToken, String iBAN) throws InvalidParamValueError, NotAuthorizedError {
         long userId = AuthenticationHelper.getUserId(authToken);
         BankAccountBean bankAccountBean;
-        long bankAccountId;
         try {
-            bankAccountId = iBANService.getIbanBean(iBAN).getBankAccountId();
-            bankAccountBean = bankAccountService.getBankAccount(bankAccountId);
+            bankAccountBean = bankAccountService.getBankAccountByIban(iBAN);
         } catch (Exception e) {
             throw new InvalidParamValueError(e.getMessage());
         }
-        if (bankAccountBean.getUserId() != userId && !bankAccountService.getAuthorizedUsers(bankAccountId).contains(userId)) {
+        if (bankAccountBean.getUserId() != userId && !bankAccountService.getAuthorizedUsers(bankAccountBean.getBankAccountId()).contains(userId)) {
             throw new NotAuthorizedError("User is not eligible to get access");
         }
         return new BalanceObject(bankAccountBean);
@@ -64,15 +58,13 @@ public class InfoControllerImpl implements InfoController {
         long userId = AuthenticationHelper.getUserId(authToken);
         BankAccountBean bankAccountBean;
         Iterable<TransactionBean> transactionBeans;
-        long bankAccountId;
         try {
-            bankAccountId = iBANService.getIbanBean(iBAN).getBankAccountId();
-            bankAccountBean = bankAccountService.getBankAccount(bankAccountId);
-            transactionBeans = transactionService.getTransactionsById(bankAccountId);
+            bankAccountBean = bankAccountService.getBankAccountByIban(iBAN);
+            transactionBeans = transactionService.getTransactionsById(bankAccountBean.getBankAccountId());
         } catch (Exception e) {
             throw new InvalidParamValueError(e.getMessage());
         }
-        if (bankAccountBean.getUserId() != userId && !bankAccountService.getAuthorizedUsers(bankAccountId).contains(userId)) {
+        if (bankAccountBean.getUserId() != userId && !bankAccountService.getAuthorizedUsers(bankAccountBean.getBankAccountId()).contains(userId)) {
             throw new NotAuthorizedError("User is not eligible to get access");
         }
         List<TransactionObject> transactions = new ArrayList<>();
@@ -117,15 +109,13 @@ public class InfoControllerImpl implements InfoController {
         long userId = AuthenticationHelper.getUserId(authToken);
         BankAccountBean bankAccountBean;
         List<Long> authorizedUserIds;
-        long bankAccountId;
         try {
-            bankAccountId = iBANService.getIbanBean(iBAN).getBankAccountId();
-            bankAccountBean = bankAccountService.getBankAccount(bankAccountId);
-            authorizedUserIds = bankAccountService.getAuthorizedUsers(bankAccountId);
+            bankAccountBean = bankAccountService.getBankAccountByIban(iBAN);
+            authorizedUserIds = bankAccountService.getAuthorizedUsers(bankAccountBean.getBankAccountId());
         } catch (Exception e) {
             throw new InvalidParamValueError(e.getMessage());
         }
-        if (bankAccountBean.getUserId() != userId && !bankAccountService.getAuthorizedUsers(bankAccountId).contains(userId)) {
+        if (bankAccountBean.getUserId() != userId && !bankAccountService.getAuthorizedUsers(bankAccountBean.getBankAccountId()).contains(userId)) {
             throw new NotAuthorizedError("User is not eligible to get access");
         }
         List<BankAccountAccessObject> bankAccountAccessObjects = new ArrayList<>();

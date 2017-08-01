@@ -6,5 +6,7 @@ package nl.springbank.exceptions;
  * @author Tristan de Boer.
  */
 public class TransactionException extends Exception {
-
+    public TransactionException(String message) {
+        super(message);
+    }
 }
