@@ -4,57 +4,52 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * TransactionBean.
+ * Bean representing the transaction table. A transaction is associated with a source and a target bank account.
  *
- * @author Tristan de Boer).
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 @Entity
 @Table(name = "transaction")
 public class TransactionBean {
     /*
-        Private methods
+     * Table values
      */
-    // Transaction identifier
+    /** Transaction identifier. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "transaction_id", unique = true)
+    @Column(name = "transaction_id", unique = true, nullable = false)
     private long transactionId;
 
-    // source bank account iban
-    @Column(name = "source_bank_account_iban")
-    private String sourceBankAccountIban;
+    /** The source bank account. */
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "source_account_id", nullable = false)
+    private BankAccountBean sourceBankAccount;
 
-    // target bank account iban
-    @Column(name = "target_bank_account_iban")
-    private String targetBankAccountIban;
+    /** The target bank account. */
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "target_account_id", nullable = false)
+    private BankAccountBean targetBankAccount;
 
-    // source bank account
-    @Column(name = "source_account_id")
-    private long sourceBankAccount;
-
-    // target bank account
-    @Column(name = "target_account_id")
-    private long targetBankAccount;
-
-    @Column(name = "target_name")
+    /** The target name of the transaction */
+    @Column(name = "target_name", nullable = false)
     private String targetName;
 
-    // Date of the transaction
+    /** The date of the transaction */
+    @Column(name = "date", nullable = false)
     private Timestamp date;
 
-    // Amount transferred
+    /** The amount of the transaction */
+    @Column(name = "amount", nullable = false)
     private double amount;
 
-    // Message as specified by the transfer
+    /** The message of the transaction */
+    @Column(name = "message")
     private String message;
 
     /*
-        Public methods
+     * Bean methods
      */
-
-    public TransactionBean() {
-    }
-
     public long getTransactionId() {
         return transactionId;
     }
@@ -63,35 +58,19 @@ public class TransactionBean {
         this.transactionId = transactionId;
     }
 
-    public String getSourceBankAccountIban() {
-        return sourceBankAccountIban;
-    }
-
-    public void setSourceBankAccountIban(String sourceBankAccountIban) {
-        this.sourceBankAccountIban = sourceBankAccountIban;
-    }
-
-    public String getTargetBankAccountIban() {
-        return targetBankAccountIban;
-    }
-
-    public void setTargetBankAccountIban(String targetBankAccountIban) {
-        this.targetBankAccountIban = targetBankAccountIban;
-    }
-
-    public long getSourceBankAccount() {
+    public BankAccountBean getSourceBankAccount() {
         return sourceBankAccount;
     }
 
-    public void setSourceBankAccount(long sourceBankAccount) {
+    public void setSourceBankAccount(BankAccountBean sourceBankAccount) {
         this.sourceBankAccount = sourceBankAccount;
     }
 
-    public long getTargetBankAccount() {
+    public BankAccountBean getTargetBankAccount() {
         return targetBankAccount;
     }
 
-    public void setTargetBankAccount(long targetBankAccount) {
+    public void setTargetBankAccount(BankAccountBean targetBankAccount) {
         this.targetBankAccount = targetBankAccount;
     }
 
@@ -131,12 +110,10 @@ public class TransactionBean {
     public String toString() {
         return "TransactionBean{" +
                 "transactionId=" + transactionId +
-                ", sourceBankAccountIban='" + sourceBankAccountIban + '\'' +
-                ", targetBankAccountIban='" + targetBankAccountIban + '\'' +
                 ", sourceBankAccount=" + sourceBankAccount +
                 ", targetBankAccount=" + targetBankAccount +
                 ", amount=" + amount +
-                ", message='" + message + '\'' +
+                ", message='" + message + "'" +
                 '}';
     }
 }

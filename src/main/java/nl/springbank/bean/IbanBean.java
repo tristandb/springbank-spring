@@ -1,39 +1,38 @@
 package nl.springbank.bean;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 /**
- * Description
+ * Bean representing the iban table. Associates each bank account with an iban.
  *
- * @author Tristan de Boer).
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 @Entity
 @Table(name = "iban")
 public class IbanBean {
     /*
-        Private methods
+     * Table values
      */
+    /** The bank account. */
     @Id
-    @Column(name = "bank_account_id")
-    private long bankAccountId;
+    @OneToOne(optional = false)
+    @JoinColumn(name = "bank_account_id", unique = true, nullable = false)
+    private BankAccountBean bankAccount;
 
-    // The IBAN of the account
-    @NotNull
+    /** The iban associated with the account. */
+    @Column(name = "iban", unique = true, nullable = false)
     private String iban;
 
-
-    public IbanBean() {
+    /*
+     * Bean methods
+     */
+    public BankAccountBean getBankAccount() {
+        return bankAccount;
     }
 
-    public long getBankAccountId() {
-        return bankAccountId;
-    }
-
-    public void setBankAccountId(long bankAccountId) {
-        this.bankAccountId = bankAccountId;
+    public void setBankAccount(BankAccountBean bankAccount) {
+        this.bankAccount = bankAccount;
     }
 
     public String getIban() {
@@ -47,8 +46,8 @@ public class IbanBean {
     @Override
     public String toString() {
         return "IbanBean{" +
-                "bankAccountId=" + bankAccountId +
-                ", iban='" + iban + '\'' +
+                "bankAccount=" + bankAccount +
+                ", iban='" + iban + "'" +
                 '}';
     }
 }
