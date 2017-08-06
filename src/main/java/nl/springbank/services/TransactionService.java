@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -54,7 +56,6 @@ public class TransactionService {
     public List<TransactionBean> getTransactionsBySourceOrTargetAccount(BankAccountBean sourceAccount, BankAccountBean targetAccount) throws InvalidParamValueError {
         List<TransactionBean> transactions;
         try {
-            // TODO: Sort these by date?
             transactions = transactionDao.findBySourceBankAccountOrTargetBankAccount(sourceAccount, targetAccount);
         } catch (IllegalArgumentException e) {
             throw new InvalidParamValueError(e);
@@ -107,6 +108,35 @@ public class TransactionService {
      */
     public List<TransactionBean> saveTransactions(Iterable<TransactionBean> transactions) {
         return transactionDao.save(transactions);
+    }
+
+    /**
+     * Makes a transaction.
+     *
+     * @param sourceAccount the source bank account
+     * @param targetAccount the target bank account
+     * @param targetName    the target name
+     * @param amount        the amount
+     * @param description   the description
+     * @throws InvalidParamValueError if the transaction couldn't be made
+     */
+    public synchronized void makeTransaction(BankAccountBean sourceAccount, BankAccountBean targetAccount, String targetName, double amount, String description) throws InvalidParamValueError {
+        if (amount < 0) {
+            throw new InvalidParamValueError("Amount less than zero: " + amount);
+        } else if (amount > sourceAccount.getBalance()) {
+            throw new InvalidParamValueError("Amount more than account balance: " + amount);
+        }
+        sourceAccount.setBalance(sourceAccount.getBalance() - amount);
+        targetAccount.setBalance(targetAccount.getBalance() + amount);
+
+        TransactionBean transaction = new TransactionBean();
+        transaction.setSourceBankAccount(sourceAccount);
+        transaction.setTargetBankAccount(targetAccount);
+        transaction.setTargetName(targetName);
+        transaction.setAmount(amount);
+        transaction.setMessage(description);
+        transaction.setDate(Timestamp.from(Instant.now()));
+        saveTransaction(transaction);
     }
 
     /**

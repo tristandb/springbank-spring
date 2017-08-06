@@ -4,6 +4,7 @@ import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.CardBean;
 import nl.springbank.bean.UserBean;
 import nl.springbank.dao.CardDao;
+import nl.springbank.exceptions.InvalidPINError;
 import nl.springbank.exceptions.InvalidParamValueError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,35 @@ public class CardService {
      */
     public List<CardBean> getCards() {
         return cardDao.findAll();
+    }
+
+    /**
+     * Check if the pin code of the card beloning to the given bank account and card number is correct.
+     *
+     * @param bankAccount the given bank account
+     * @param cardNumber  the given card number
+     * @param pinCode     the pin code
+     * @throws InvalidPINError if the pin code is incorrect
+     */
+    public void checkPin(BankAccountBean bankAccount, String cardNumber, String pinCode) throws InvalidPINError {
+        try {
+            checkPin(getCard(bankAccount, cardNumber), pinCode);
+        } catch (InvalidParamValueError e) {
+            throw new InvalidPINError(e);
+        }
+    }
+
+    /**
+     * Check if the pin code of the given card is correct.
+     *
+     * @param cardBean the given card
+     * @param pinCode  the pin code
+     * @throws InvalidPINError if the pin code is incorrect
+     */
+    public void checkPin(CardBean cardBean, String pinCode) throws InvalidPINError {
+        if (!cardBean.getPin().equals(pinCode)) {
+            throw new InvalidPINError("Invalid pin code");
+        }
     }
 
     /**

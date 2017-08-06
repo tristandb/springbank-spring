@@ -18,7 +18,6 @@ import java.util.List;
  */
 @JsonRpcService("/api/info")
 public interface InfoController {
-
     /**
      * Retrieves the balance of a bank account.
      *

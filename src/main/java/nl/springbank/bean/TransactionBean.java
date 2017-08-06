@@ -44,7 +44,7 @@ public class TransactionBean {
     private double amount;
 
     /** The message of the transaction */
-    @Column(name = "message")
+    @Column(name = "message", nullable = false)
     private String message;
 
     /*
