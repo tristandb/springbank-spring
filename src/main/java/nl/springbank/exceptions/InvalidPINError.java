@@ -3,7 +3,7 @@ package nl.springbank.exceptions;
 /**
  * An invalid PINcard, -code or -combination was used.
  *
- * @author Sven Konings.
+ * @author Sven Konings
  */
 public class InvalidPINError extends Exception {
     public InvalidPINError() {
@@ -11,5 +11,9 @@ public class InvalidPINError extends Exception {
 
     public InvalidPINError(String message) {
         super(message);
+    }
+
+    public InvalidPINError(Throwable cause) {
+        super(cause);
     }
 }
