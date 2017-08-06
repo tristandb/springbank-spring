@@ -23,7 +23,7 @@ public interface InfoController {
      *
      * @param authToken The authentication token, obtained with getAuthToken
      * @param iBAN      The number of the bank account
-     * @return a dictionary containing the following members:
+     * @return A dictionary containing the following members:
      * <ul>
      * <li><b>balance</b> The balance of the account</li>
      * </ul>

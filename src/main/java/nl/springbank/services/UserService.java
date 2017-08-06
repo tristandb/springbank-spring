@@ -3,6 +3,7 @@ package nl.springbank.services;
 import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.UserBean;
 import nl.springbank.dao.UserDao;
+import nl.springbank.exceptions.AuthenticationError;
 import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NotAuthorizedError;
 import nl.springbank.helper.AuthenticationHelper;
@@ -81,13 +82,13 @@ public class UserService {
      * @return the user
      * @throws NotAuthorizedError if an error occurred or the user doesn't exist
      */
-    public UserBean authUser(String username, String password) throws NotAuthorizedError {
+    public UserBean authUser(String username, String password) throws AuthenticationError {
         UserBean user;
         try {
             user = userDao.findByUsernameAndPassword(username, password);
             Assert.notNull(user, "User not found");
         } catch (IllegalArgumentException e) {
-            throw new NotAuthorizedError(e);
+            throw new AuthenticationError(e);
         }
         return user;
     }

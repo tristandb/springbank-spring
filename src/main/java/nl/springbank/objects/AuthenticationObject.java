@@ -1,13 +1,17 @@
 package nl.springbank.objects;
 
+import nl.springbank.bean.UserBean;
+import nl.springbank.helper.AuthenticationHelper;
+
 /**
- * @author Tristan de Boer.
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 public class AuthenticationObject {
     private String authToken;
 
-    public AuthenticationObject(String authToken) {
-        this.authToken = authToken;
+    public AuthenticationObject(UserBean user) {
+        this.authToken = AuthenticationHelper.getAuthToken(user.getUserId());
     }
 
     public String getAuthToken() {
