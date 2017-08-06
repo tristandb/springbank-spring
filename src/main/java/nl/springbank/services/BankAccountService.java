@@ -1,12 +1,14 @@
 package nl.springbank.services;
 
 import nl.springbank.bean.BankAccountBean;
+import nl.springbank.bean.UserBean;
 import nl.springbank.dao.BankAccountDao;
 import nl.springbank.exceptions.InvalidParamValueError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -68,6 +70,20 @@ public class BankAccountService {
      */
     public List<BankAccountBean> getBankAccounts() {
         return bankAccountDao.findAll();
+    }
+
+    /**
+     * Creates a new bank account for the given user.
+     *
+     * @param user the given user
+     * @return the created bank account
+     */
+    public BankAccountBean newBankAccount(UserBean user) {
+        BankAccountBean bankAccount = new BankAccountBean();
+        bankAccount.setHolder(user);
+        bankAccount.setAccessUsers(Collections.singleton(user));
+        bankAccount.setBalance(0);
+        return saveBankAccount(bankAccount);
     }
 
     /**

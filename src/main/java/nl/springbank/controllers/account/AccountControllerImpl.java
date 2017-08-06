@@ -7,180 +7,62 @@ import nl.springbank.bean.IbanBean;
 import nl.springbank.bean.UserBean;
 import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NotAuthorizedError;
-import nl.springbank.helper.AuthenticationHelper;
-import nl.springbank.helper.CardHelper;
-import nl.springbank.helper.DateHelper;
-import nl.springbank.helper.IbanHelper;
-import nl.springbank.objects.OpenedAccount;
+import nl.springbank.objects.OpenedAccountObject;
 import nl.springbank.services.BankAccountService;
 import nl.springbank.services.CardService;
-import nl.springbank.services.IBANService;
+import nl.springbank.services.IbanService;
 import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
- * Description
- *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 @Service
 @AutoJsonRpcServiceImpl
 public class AccountControllerImpl implements AccountController {
 
-    private final ReentrantLock iBANlock;
-
-    private final ReentrantLock cardLock;
-
     private final UserService userService;
-
-    private final IBANService ibanService;
-
     private final BankAccountService bankAccountService;
-
+    private final IbanService ibanService;
     private final CardService cardService;
 
     @Autowired
-    public AccountControllerImpl(UserService userService, IBANService ibanService, BankAccountService bankAccountService, CardService cardService) {
-        this.cardLock = new ReentrantLock();
-        this.iBANlock = new ReentrantLock();
+    public AccountControllerImpl(UserService userService, BankAccountService bankAccountService, IbanService ibanService, CardService cardService) {
         this.userService = userService;
-        this.ibanService = ibanService;
         this.bankAccountService = bankAccountService;
+        this.ibanService = ibanService;
         this.cardService = cardService;
     }
 
     @Override
-    public OpenedAccount openAccount(String name, String surname, String initials, String dob, String ssn,
-                                     String address, String telephoneNumber, String email, String username,
-                                     String password) throws InvalidParamValueError {
-
-        // Create a user account
-        UserBean userBean = new UserBean();
-        userBean.setEmail(email);
-        userBean.setDateOfBirth(new java.sql.Date(DateHelper.getDateFromString(dob).getTime()));
-        userBean.setName(name);
-        userBean.setSurname(surname);
-        userBean.setBsn(ssn);
-        userBean.setInitials(initials);
-        userBean.setPassword(password);
-        userBean.setStreetAddress(address);
-        userBean.setTelephoneNumber(telephoneNumber);
-        userBean.setUsername(username);
-        long userId;
-        try {
-            userId = userService.saveUser(userBean).getId();
-        } catch (DataIntegrityViolationException e) {
-            e.printStackTrace();
-            throw new InvalidParamValueError("Invalid parameters given");
-        }
-
-        return this.openBankAccountandCard(userId);
+    public OpenedAccountObject openAccount(String name, String surname, String initials, String dob, String ssn, String address, String telephoneNumber, String email, String username, String password) throws InvalidParamValueError {
+        UserBean user = userService.newUser(name, surname, initials, dob, ssn, address, telephoneNumber, email, username, password);
+        return openAccount(user);
     }
 
-    /**
-     * Open an additional account for an existing customer. Also creates a PIN card for this account.
-     *
-     * @param authToken The authentication token, obtained with getAuthToken.
-     * @return A dictionary containing details about the new account.
-     */
     @Override
-    public OpenedAccount openAdditionalAccount(String authToken) throws NotAuthorizedError {
-        long userId = AuthenticationHelper.getUserId(authToken);
-        return this.openBankAccountandCard(userId);
+    public OpenedAccountObject openAdditionalAccount(String authToken) throws NotAuthorizedError {
+        UserBean user = userService.getUserByAuth(authToken);
+        return openAccount(user);
     }
 
-    /**
-     * Close a bank account. Also invalidates the corresponding pin card. If this is the customers
-     * last bank account, it also closes the customer account.
-     *
-     * @param authToken The authentication token, obtained with getAuthToken
-     * @param iBAN      (String) The number of the bank account
-     * @return An empty dictionary if successful
-     * @throws InvalidParamValueError One or more parameter has an invalid value. See message
-     * @throws NotAuthorizedError     The authenticated user is not authorized to perform this action.
-     */
+    private OpenedAccountObject openAccount(UserBean user) {
+        BankAccountBean bankAccount = bankAccountService.newBankAccount(user);
+        IbanBean iban = ibanService.newIban(bankAccount);
+        CardBean card = cardService.newCard(bankAccount, user);
+        return new OpenedAccountObject(iban, card);
+    }
+
     @Override
     public void closeAccount(String authToken, String iBAN) throws InvalidParamValueError, NotAuthorizedError {
-        long userId = AuthenticationHelper.getUserId(authToken);
-
-        IbanBean ibanBean = ibanService.getIbanBean(iBAN);
-
-        // Check if iBAN exists
-        if (ibanBean == null) {
-            throw new InvalidParamValueError("iBAN does not exist");
+        UserBean user = userService.getUserByAuth(authToken);
+        BankAccountBean bankAccount = bankAccountService.getBankAccount(iBAN);
+        userService.checkHolder(bankAccount, user);
+        bankAccountService.deleteBankAccount(bankAccount);
+        if (user.getHolderAccounts().isEmpty()) {
+            userService.deleteUser(user);
         }
-
-        List<BankAccountBean> userBankAccounts = bankAccountService.getOwnerBankAccounts(userId);
-        boolean userMayDeleteAccount = false;
-        for (BankAccountBean userBankAccount : userBankAccounts) {
-            if (userBankAccount.getBankAccountId() == ibanBean.getBankAccountId()) {
-                userMayDeleteAccount = true;
-                break;
-            }
-        }
-
-        if (userMayDeleteAccount) {
-            // Delete bank account
-            bankAccountService.deleteBankAccount(ibanBean.getBankAccountId());
-
-            // Delete user if last bank account
-            if (userBankAccounts.size() == 1) {
-                userService.deleteUser(userId);
-            }
-        } else {
-            throw new NotAuthorizedError("User is not eligible to delete account");
-        }
-    }
-
-    /**
-     * Opens a bank account given a userId, creates an iBAN and adds a card.
-     *
-     * @param userId
-     * @return
-     */
-    private OpenedAccount openBankAccountandCard(long userId) {
-        // Create BankAccount
-        BankAccountBean bankAccountBean = new BankAccountBean();
-        bankAccountBean.setUserId(userId);
-        bankAccountBean = bankAccountService.saveBankAccount(bankAccountBean);
-
-        IbanBean ibanBean = new IbanBean();
-        try {
-            // Lock to avoid duplicate iBAN
-            iBANlock.lock();
-            // Generate iBAN
-            String iBAN = IbanHelper.generateIban(ibanService.getAllIBAN());
-
-            // Connect BankAccountController to iBAN
-            ibanBean.setIban(iBAN);
-            ibanBean.setBankAccountId(bankAccountBean.getBankAccountId());
-            ibanService.saveIbanBean(ibanBean);
-        } finally {
-            // Unlock iBAN
-            iBANlock.unlock();
-        }
-
-        // Create Card
-        CardBean cardBean = new CardBean();
-        try {
-            cardLock.lock();
-            List<Integer> cardList = cardService.getCardNumbers(bankAccountBean.getBankAccountId());
-            Integer cardId = CardHelper.getRandomCardNumber(cardList);
-            cardBean.setBankAccountId(bankAccountBean.getBankAccountId());
-            cardBean.setCardNumber(cardId);
-            cardBean.setExpirationDate(CardHelper.getExpirationDate());
-            cardBean.setUserId(userId);
-            cardBean.setPin(CardHelper.getRandomPin());
-            cardService.saveCardBean(cardBean);
-        } finally {
-            cardLock.unlock();
-        }
-
-        return new OpenedAccount(ibanBean, cardBean);
     }
 }

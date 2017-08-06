@@ -7,6 +7,7 @@ import nl.springbank.exceptions.AuthenticationError;
 import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NotAuthorizedError;
 import nl.springbank.helper.AuthenticationHelper;
+import nl.springbank.helper.DateHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -158,6 +159,37 @@ public class UserService {
         if (!bankAccount.getAccessUsers().contains(user)) {
             throw new NotAuthorizedError("User is not eligible to get access");
         }
+    }
+
+    /**
+     * Creates a new user.
+     *
+     * @param name            Customer name
+     * @param surname         Customer surname
+     * @param initials        Customer initials
+     * @param dob             Customer date of birth
+     * @param ssn             Customer SSN
+     * @param address         Customer address
+     * @param telephoneNumber Customer telephoneNumber
+     * @param email           Customer email
+     * @param username        Customer username
+     * @param password        Customer password
+     * @return the created user
+     * @throws InvalidParamValueError If the user can't be created
+     */
+    public UserBean newUser(String name, String surname, String initials, String dob, String ssn, String address, String telephoneNumber, String email, String username, String password) throws InvalidParamValueError {
+        UserBean user = new UserBean();
+        user.setName(name);
+        user.setSurname(surname);
+        user.setInitials(initials);
+        user.setDateOfBirth(DateHelper.getDateFromString(dob));
+        user.setBsn(ssn);
+        user.setStreetAddress(address);
+        user.setTelephoneNumber(telephoneNumber);
+        user.setEmail(email);
+        user.setUsername(username);
+        user.setPassword(password);
+        return saveUser(user);
     }
 
     /**

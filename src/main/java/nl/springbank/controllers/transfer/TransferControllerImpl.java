@@ -40,7 +40,7 @@ public class TransferControllerImpl implements TransferController {
         BankAccountBean targetAccount = bankAccountService.getBankAccount(iBAN);
         cardService.checkPin(targetAccount, pinCard, pinCode);
         String targetName = UserHelper.getDisplayName(targetAccount.getHolder());
-        transactionService.makeTransaction(sourceAccount, targetAccount, targetName, amount, "PIN transaction");
+        transactionService.newTransaction(sourceAccount, targetAccount, targetName, amount, "PIN transaction");
     }
 
     @Override
@@ -49,7 +49,7 @@ public class TransferControllerImpl implements TransferController {
         cardService.checkPin(sourceAccount, pinCard, pinCode);
         BankAccountBean targetAccount = bankAccountService.getBankAccount(targetIBAN);
         String targetName = UserHelper.getDisplayName(targetAccount.getHolder());
-        transactionService.makeTransaction(sourceAccount, targetAccount, targetName, amount, "PIN transaction");
+        transactionService.newTransaction(sourceAccount, targetAccount, targetName, amount, "PIN transaction");
     }
 
     @Override
@@ -57,6 +57,6 @@ public class TransferControllerImpl implements TransferController {
         BankAccountBean sourceAccount = bankAccountService.getBankAccount(sourceIBAN);
         userService.checkAccess(sourceAccount, authToken);
         BankAccountBean targetAccount = bankAccountService.getBankAccount(targetIBAN);
-        transactionService.makeTransaction(sourceAccount, targetAccount, targetName, amount, description);
+        transactionService.newTransaction(sourceAccount, targetAccount, targetName, amount, description);
     }
 }

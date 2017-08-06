@@ -4,15 +4,15 @@ import nl.springbank.bean.CardBean;
 import nl.springbank.helper.CardHelper;
 
 /**
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
-public class OpenedCard {
+public class OpenedCardObject {
 
     private String pinCard;
 
     private String pinCode;
 
-    public OpenedCard(CardBean cardBean) {
+    public OpenedCardObject(CardBean cardBean) {
         this.pinCard = cardBean.getCardNumber();
         this.pinCode = cardBean.getPin();
     }

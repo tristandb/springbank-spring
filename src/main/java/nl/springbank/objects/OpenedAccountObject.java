@@ -4,12 +4,12 @@ import nl.springbank.bean.CardBean;
 import nl.springbank.bean.IbanBean;
 
 /**
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
-public class OpenedAccount extends OpenedCard {
+public class OpenedAccountObject extends OpenedCardObject {
     private String iBAN;
 
-    public OpenedAccount(IbanBean ibanBean, CardBean cardBean) {
+    public OpenedAccountObject(IbanBean ibanBean, CardBean cardBean) {
         super(cardBean);
         this.iBAN = ibanBean.getIban();
     }

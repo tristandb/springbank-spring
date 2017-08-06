@@ -1,8 +1,10 @@
 package nl.springbank.services;
 
+import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.IbanBean;
 import nl.springbank.dao.IbanDao;
 import nl.springbank.exceptions.InvalidParamValueError;
+import nl.springbank.helper.IbanHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -68,6 +70,19 @@ public class IbanService {
      */
     public List<IbanBean> getIbans() {
         return ibanDao.findAll();
+    }
+
+    /**
+     * Create a new iban for the given bank account.
+     *
+     * @param bankAccount the given bank account
+     * @return the new iban
+     */
+    public synchronized IbanBean newIban(BankAccountBean bankAccount) {
+        IbanBean iban = new IbanBean();
+        iban.setBankAccount(bankAccount);
+        iban.setIban(IbanHelper.generateIban(getIbans()));
+        return saveIban(iban);
     }
 
     /**

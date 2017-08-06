@@ -1,9 +1,12 @@
 package nl.springbank.helper;
 
+import nl.springbank.bean.CardBean;
+
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * @author Tristan de Boer
@@ -14,12 +17,15 @@ public class CardHelper {
     private static final int PIN_NUMBER_SIZE = 4;
 
     /**
-     * Get a random card number that is not in the given list of existing card numbers.
+     * Get a random card number that is not in the given list of existing cards.
      *
-     * @param existingCardNumbers the given list of existig card numbers
+     * @param existingCards the given list of existig cards
      * @return the random card number string
      */
-    public static String getRandomCardNumber(List<String> existingCardNumbers) {
+    public static String getRandomCardNumber(List<CardBean> existingCards) {
+        List<String> existingCardNumbers = existingCards.stream()
+                .map(CardBean::getCardNumber)
+                .collect(Collectors.toList());
         String cardNumber;
         do {
             cardNumber = getRandomNumber(CARD_NUMBER_SIZE);

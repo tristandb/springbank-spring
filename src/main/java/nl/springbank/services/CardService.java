@@ -6,6 +6,7 @@ import nl.springbank.bean.UserBean;
 import nl.springbank.dao.CardDao;
 import nl.springbank.exceptions.InvalidPINError;
 import nl.springbank.exceptions.InvalidParamValueError;
+import nl.springbank.helper.CardHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -101,6 +102,23 @@ public class CardService {
         if (!cardBean.getPin().equals(pinCode)) {
             throw new InvalidPINError("Invalid pin code");
         }
+    }
+
+    /**
+     * Create a new card with the given bank account and user.
+     *
+     * @param bankAccount the given bank account
+     * @param user        the given user
+     * @return the created card
+     */
+    public synchronized CardBean newCard(BankAccountBean bankAccount, UserBean user) {
+        CardBean card = new CardBean();
+        card.setBankAccount(bankAccount);
+        card.setUser(user);
+        card.setCardNumber(CardHelper.getRandomCardNumber(getCards()));
+        card.setPin(CardHelper.getRandomPin());
+        card.setExpirationDate(CardHelper.getExpirationDate());
+        return saveCard(card);
     }
 
     /**
