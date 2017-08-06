@@ -24,11 +24,11 @@ public class CardBean {
     private long cardId;
 
     /** The bank account associated with the card. */
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "bank_account_id", nullable = false)
     private BankAccountBean bankAccount;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private UserBean user;
 

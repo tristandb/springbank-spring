@@ -22,12 +22,12 @@ public class TransactionBean {
     private long transactionId;
 
     /** The source bank account. */
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "source_account_id", nullable = false)
     private BankAccountBean sourceBankAccount;
 
     /** The target bank account. */
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "target_account_id", nullable = false)
     private BankAccountBean targetBankAccount;
 

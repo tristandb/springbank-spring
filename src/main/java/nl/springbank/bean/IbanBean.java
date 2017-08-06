@@ -23,7 +23,7 @@ public class IbanBean {
     private long ibanId;
 
     /** The bank account. */
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "bank_account_id", unique = true, nullable = false)
     private BankAccountBean bankAccount;
 

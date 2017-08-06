@@ -22,7 +22,7 @@ public class BankAccountBean {
     private long bankAccountId;
 
     /** The holder associated with the account. */
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "holder_user_id", nullable = false)
     private UserBean holder;
 
@@ -34,7 +34,7 @@ public class BankAccountBean {
      * Mapped values
      */
     /** The users that have access to this bank account. */
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_bank_account",
             joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "account id", nullable = false),
@@ -43,19 +43,19 @@ public class BankAccountBean {
     private Set<UserBean> accessors;
 
     /** The cards associated with this bank account. */
-    @OneToMany(mappedBy = "card.bank_account_id")
+    @OneToMany(mappedBy = "card.bank_account_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CardBean> cards;
 
     /** The iban associated with this bank account. */
-    @OneToOne(mappedBy = "iban.bank_account_id", optional = false)
+    @OneToOne(mappedBy = "iban.bank_account_id", optional = false, cascade = CascadeType.ALL)
     private IbanBean iban;
 
     /** The transactions with this bank account as the source. */
-    @OneToMany(mappedBy = "transaction.source_account_id")
+    @OneToMany(mappedBy = "transaction.source_account_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TransactionBean> sourceTransactions;
 
     /** The transactions with this bank account as target. */
-    @OneToMany(mappedBy = "transaction.target_account_id")
+    @OneToMany(mappedBy = "transaction.target_account_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TransactionBean> targetTransactions;
 
     /*

@@ -67,11 +67,11 @@ public class UserBean {
      * Mapped values
      */
     /** The accounts this user is the holder of. */
-    @OneToMany(mappedBy = "bank_account.holder_user_id")
+    @OneToMany(mappedBy = "bank_account.holder_user_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<BankAccountBean> holderAccounts;
 
     /** The accounts this user has access to. */
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_bank_account",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false),
@@ -80,7 +80,7 @@ public class UserBean {
     private Set<BankAccountBean> accessAccounts;
 
     /** The cards of the user. */
-    @OneToMany(mappedBy = "card.user_id")
+    @OneToMany(mappedBy = "card.user_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CardBean> cards;
 
     /*
