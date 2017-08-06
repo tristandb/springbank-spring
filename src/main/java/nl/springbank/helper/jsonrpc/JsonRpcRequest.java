@@ -1,4 +1,4 @@
-package nl.springbank.helper;
+package nl.springbank.helper.jsonrpc;
 
 import java.util.ArrayList;
 

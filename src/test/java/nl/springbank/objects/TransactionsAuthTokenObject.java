@@ -1,7 +1,7 @@
 package nl.springbank.objects;
 
 /**
- * @author Sven Konings.
+ * @author Sven Konings
  */
 public class TransactionsAuthTokenObject extends IbanAuthTokenObject {
     private int nrOfTransactions;

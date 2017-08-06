@@ -3,7 +3,7 @@ package nl.springbank.redirect;
 import com.google.gson.Gson;
 import com.googlecode.jsonrpc4j.JsonRpcService;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
-import nl.springbank.helper.JsonRpcRequest;
+import nl.springbank.helper.jsonrpc.JsonRpcRequest;
 import org.apache.hc.client5.http.impl.sync.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.sync.HttpClients;
 import org.apache.hc.client5.http.methods.HttpPost;

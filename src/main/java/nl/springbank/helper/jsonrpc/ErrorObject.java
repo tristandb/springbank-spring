@@ -1,4 +1,4 @@
-package nl.springbank.helper;
+package nl.springbank.helper.jsonrpc;
 
 /**
  * ErrorObject for JSONRpc

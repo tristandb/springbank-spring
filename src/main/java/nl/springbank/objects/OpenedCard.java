@@ -13,8 +13,8 @@ public class OpenedCard {
     private String pinCode;
 
     public OpenedCard(CardBean cardBean) {
-        this.pinCard = CardHelper.convertToString(cardBean.getCardNumber());
-        this.pinCode = CardHelper.convertToString(cardBean.getPin());
+        this.pinCard = cardBean.getCardNumber();
+        this.pinCode = cardBean.getPin();
     }
 
     public String getPinCard() {
