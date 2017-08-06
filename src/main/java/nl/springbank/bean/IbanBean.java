@@ -9,7 +9,9 @@ import javax.persistence.*;
  * @author Sven Konings
  */
 @Entity
-@Table(name = "iban")
+@Table(name = "iban", uniqueConstraints = @UniqueConstraint(columnNames = {
+        "bank_account_id", "iban"
+}))
 public class IbanBean {
     /*
      * Table values

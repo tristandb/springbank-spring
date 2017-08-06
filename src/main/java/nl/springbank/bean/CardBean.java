@@ -28,6 +28,10 @@ public class CardBean {
     @JoinColumn(name = "bank_account_id", nullable = false)
     private BankAccountBean bankAccount;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserBean user;
+
     /** The card number. */
     @Column(name = "card_number", nullable = false)
     private String cardNumber;
@@ -57,6 +61,14 @@ public class CardBean {
 
     public void setBankAccount(BankAccountBean bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    public UserBean getUser() {
+        return user;
+    }
+
+    public void setUser(UserBean user) {
+        this.user = user;
     }
 
     public String getCardNumber() {
@@ -93,6 +105,7 @@ public class CardBean {
         if (cardId != cardBean.cardId) return false;
         if (bankAccount != null ? !bankAccount.equals(cardBean.bankAccount) : cardBean.bankAccount != null)
             return false;
+        if (user != null ? !user.equals(cardBean.user) : cardBean.user != null) return false;
         if (cardNumber != null ? !cardNumber.equals(cardBean.cardNumber) : cardBean.cardNumber != null) return false;
         if (pin != null ? !pin.equals(cardBean.pin) : cardBean.pin != null) return false;
         return expirationDate != null ? expirationDate.equals(cardBean.expirationDate) : cardBean.expirationDate == null;
@@ -102,6 +115,7 @@ public class CardBean {
     public int hashCode() {
         int result = (int) (cardId ^ (cardId >>> 32));
         result = 31 * result + (bankAccount != null ? bankAccount.hashCode() : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
         result = 31 * result + (cardNumber != null ? cardNumber.hashCode() : 0);
         result = 31 * result + (pin != null ? pin.hashCode() : 0);
         result = 31 * result + (expirationDate != null ? expirationDate.hashCode() : 0);
@@ -113,6 +127,7 @@ public class CardBean {
         return "CardBean{" +
                 "cardId=" + cardId +
                 ", bankAccount=" + bankAccount +
+                ", user=" + user +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", pin='" + pin + '\'' +
                 ", expirationDate=" + expirationDate +
