@@ -2,6 +2,9 @@ package nl.springbank.objects;
 
 import nl.springbank.bean.UserBean;
 
+/**
+ * @author Sven Konings
+ */
 public class BankAccountAccessObject {
     private String userName;
 

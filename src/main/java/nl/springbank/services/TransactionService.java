@@ -54,6 +54,7 @@ public class TransactionService {
     public List<TransactionBean> getTransactionsBySourceOrTargetAccount(BankAccountBean sourceAccount, BankAccountBean targetAccount) throws InvalidParamValueError {
         List<TransactionBean> transactions;
         try {
+            // TODO: Sort these by date?
             transactions = transactionDao.findBySourceBankAccountOrTargetBankAccount(sourceAccount, targetAccount);
         } catch (IllegalArgumentException e) {
             throw new InvalidParamValueError(e);

@@ -15,10 +15,10 @@ public class TransactionObject {
     private String description;
 
     public TransactionObject(TransactionBean transactionBean) {
-        this.sourceIBAN = transactionBean.getSourceBankAccountIban();
-        this.targetIBAN = transactionBean.getTargetBankAccountIban();
+        this.sourceIBAN = transactionBean.getSourceBankAccount().getIban().getIban();
+        this.targetIBAN = transactionBean.getTargetBankAccount().getIban().getIban();
         this.targetName = transactionBean.getTargetName();
-        this.date = DateHelper.getCalenderDatefromTimestamp(transactionBean.getDate());
+        this.date = DateHelper.getCalendarDatefromTimestamp(transactionBean.getDate());
         this.amount = transactionBean.getAmount();
         this.description = transactionBean.getMessage();
     }

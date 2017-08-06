@@ -3,7 +3,8 @@ package nl.springbank.objects;
 import nl.springbank.bean.BankAccountBean;
 
 /**
- * @author Tristan de Boer.
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 public class BalanceObject {
     private double balance;

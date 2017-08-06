@@ -1,6 +1,6 @@
 package nl.springbank.objects;
 
-import nl.springbank.bean.UsernameIbanBean;
+import nl.springbank.bean.BankAccountBean;
 
 /**
  * @author Sven Konings
@@ -10,9 +10,9 @@ public class UserAccessObject {
     private String iBAN;
     private String owner;
 
-    public UserAccessObject(UsernameIbanBean usernameIbanBean) {
-        this.iBAN = usernameIbanBean.getiBAN();
-        this.owner = usernameIbanBean.getUsername();
+    public UserAccessObject(BankAccountBean bankAccount) {
+        this.iBAN = bankAccount.getIban().getIban();
+        this.owner = bankAccount.getHolder().getUsername();
     }
 
     public String getiBAN() {
