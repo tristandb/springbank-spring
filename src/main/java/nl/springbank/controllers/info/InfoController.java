@@ -14,7 +14,7 @@ import nl.springbank.objects.UserAccessObject;
 import java.util.List;
 
 /**
- * @author Sven Konings.
+ * @author Sven Konings
  */
 @JsonRpcService("/api/info")
 public interface InfoController {

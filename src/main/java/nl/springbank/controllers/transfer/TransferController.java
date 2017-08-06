@@ -9,7 +9,7 @@ import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NotAuthorizedError;
 
 /**
- * @author Sven Konings.
+ * @author Sven Konings
  */
 @JsonRpcService("/api/transfer")
 public interface TransferController {

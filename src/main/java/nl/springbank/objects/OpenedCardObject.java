@@ -5,6 +5,7 @@ import nl.springbank.helper.CardHelper;
 
 /**
  * @author Tristan de Boer
+ * @author Sven Konings
  */
 public class OpenedCardObject {
 

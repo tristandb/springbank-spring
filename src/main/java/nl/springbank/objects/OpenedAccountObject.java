@@ -5,6 +5,7 @@ import nl.springbank.bean.IbanBean;
 
 /**
  * @author Tristan de Boer
+ * @author Sven Konings
  */
 public class OpenedAccountObject extends OpenedCardObject {
     private String iBAN;

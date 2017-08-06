@@ -15,7 +15,8 @@ import java.util.List;
 /**
  * Service that does all operation regarding Transactions.
  *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 @Service
 public class TransactionService {

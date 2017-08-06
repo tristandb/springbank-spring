@@ -2,6 +2,9 @@ package nl.springbank.helper;
 
 import nl.springbank.bean.UserBean;
 
+/**
+ * @author Sven Konings
+ */
 public class UserHelper {
     /**
      * Get the dislpay name of the given user.
