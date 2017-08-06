@@ -44,10 +44,29 @@ public class IbanBean {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof IbanBean)) return false;
+
+        IbanBean ibanBean = (IbanBean) o;
+
+        if (bankAccount != null ? !bankAccount.equals(ibanBean.bankAccount) : ibanBean.bankAccount != null)
+            return false;
+        return iban != null ? iban.equals(ibanBean.iban) : ibanBean.iban == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = bankAccount != null ? bankAccount.hashCode() : 0;
+        result = 31 * result + (iban != null ? iban.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "IbanBean{" +
                 "bankAccount=" + bankAccount +
-                ", iban='" + iban + "'" +
+                ", iban='" + iban + '\'' +
                 '}';
     }
 }

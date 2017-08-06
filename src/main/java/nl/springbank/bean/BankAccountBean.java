@@ -126,6 +126,40 @@ public class BankAccountBean {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BankAccountBean)) return false;
+
+        BankAccountBean that = (BankAccountBean) o;
+
+        if (bankAccountId != that.bankAccountId) return false;
+        if (Double.compare(that.balance, balance) != 0) return false;
+        if (holder != null ? !holder.equals(that.holder) : that.holder != null) return false;
+        if (accessors != null ? !accessors.equals(that.accessors) : that.accessors != null) return false;
+        if (cards != null ? !cards.equals(that.cards) : that.cards != null) return false;
+        if (iban != null ? !iban.equals(that.iban) : that.iban != null) return false;
+        if (sourceTransactions != null ? !sourceTransactions.equals(that.sourceTransactions) : that.sourceTransactions != null)
+            return false;
+        return targetTransactions != null ? targetTransactions.equals(that.targetTransactions) : that.targetTransactions == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = (int) (bankAccountId ^ (bankAccountId >>> 32));
+        result = 31 * result + (holder != null ? holder.hashCode() : 0);
+        temp = Double.doubleToLongBits(balance);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (accessors != null ? accessors.hashCode() : 0);
+        result = 31 * result + (cards != null ? cards.hashCode() : 0);
+        result = 31 * result + (iban != null ? iban.hashCode() : 0);
+        result = 31 * result + (sourceTransactions != null ? sourceTransactions.hashCode() : 0);
+        result = 31 * result + (targetTransactions != null ? targetTransactions.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "BankAccountBean{" +
                 "bankAccountId=" + bankAccountId +

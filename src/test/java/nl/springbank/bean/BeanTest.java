@@ -36,6 +36,8 @@ public class BeanTest {
         assertThat(beanClass, allOf(
                 hasValidBeanConstructor(),
                 hasValidGettersAndSetters(),
+                hasValidBeanEquals(),
+                hasValidBeanHashCode(),
                 hasValidBeanToString()
         ));
     }
