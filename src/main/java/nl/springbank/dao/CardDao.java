@@ -6,8 +6,6 @@ import nl.springbank.bean.UserBean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 /**
  * CardDao. Communicates with the database and returns objects of type {@link CardBean}.
  *
@@ -16,22 +14,6 @@ import java.util.List;
  */
 @Transactional
 public interface CardDao extends JpaRepository<CardBean, Long> {
-    /**
-     * Get the cards of the given bank account.
-     *
-     * @param bankAccount the given bank account
-     * @return the list of cards
-     */
-    List<CardBean> findByBankAccount(BankAccountBean bankAccount);
-
-    /**
-     * Get the cards of the given user.
-     *
-     * @param user the given user
-     * @return the list of cards
-     */
-    List<CardBean> findByUser(UserBean user);
-
     /**
      * Get the card with the given bank account and card number.
      *

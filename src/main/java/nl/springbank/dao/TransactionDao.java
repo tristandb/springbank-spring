@@ -16,22 +16,6 @@ import java.util.List;
 @Transactional
 public interface TransactionDao extends JpaRepository<TransactionBean, Long> {
     /**
-     * Get the transaction with the given source bank account
-     *
-     * @param sourceAccount the given source bank account
-     * @return the list of transactions
-     */
-    List<TransactionBean> findBySourceBankAccount(BankAccountBean sourceAccount);
-
-    /**
-     * Get the transaction with the given target bank account
-     *
-     * @param targetAccount the given target bank account
-     * @return the list of transactions
-     */
-    List<TransactionBean> findByTargetBankAccount(BankAccountBean targetAccount);
-
-    /**
      * Get the transaction with the given source or target bank account
      *
      * @param sourceAccount the given source bank account

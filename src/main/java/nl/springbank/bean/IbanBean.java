@@ -16,8 +16,13 @@ public class IbanBean {
     /*
      * Table values
      */
-    /** The bank account. */
+    /** Iban identifier. */
     @Id
+    @Column(name = "iban_id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long ibanId;
+
+    /** The bank account. */
     @OneToOne(optional = false)
     @JoinColumn(name = "bank_account_id", unique = true, nullable = false)
     private BankAccountBean bankAccount;
@@ -29,6 +34,15 @@ public class IbanBean {
     /*
      * Bean methods
      */
+
+    public long getIbanId() {
+        return ibanId;
+    }
+
+    public void setIbanId(long ibanId) {
+        this.ibanId = ibanId;
+    }
+
     public BankAccountBean getBankAccount() {
         return bankAccount;
     }
@@ -52,6 +66,7 @@ public class IbanBean {
 
         IbanBean ibanBean = (IbanBean) o;
 
+        if (ibanId != ibanBean.ibanId) return false;
         if (bankAccount != null ? !bankAccount.equals(ibanBean.bankAccount) : ibanBean.bankAccount != null)
             return false;
         return iban != null ? iban.equals(ibanBean.iban) : ibanBean.iban == null;
@@ -59,7 +74,8 @@ public class IbanBean {
 
     @Override
     public int hashCode() {
-        int result = bankAccount != null ? bankAccount.hashCode() : 0;
+        int result = (int) (ibanId ^ (ibanId >>> 32));
+        result = 31 * result + (bankAccount != null ? bankAccount.hashCode() : 0);
         result = 31 * result + (iban != null ? iban.hashCode() : 0);
         return result;
     }
@@ -67,7 +83,8 @@ public class IbanBean {
     @Override
     public String toString() {
         return "IbanBean{" +
-                "bankAccount=" + bankAccount +
+                "ibanId=" + ibanId +
+                ", bankAccount=" + bankAccount +
                 ", iban='" + iban + '\'' +
                 '}';
     }

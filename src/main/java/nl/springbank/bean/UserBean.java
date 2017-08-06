@@ -79,6 +79,10 @@ public class UserBean {
     )
     private Set<BankAccountBean> accessAccounts;
 
+    /** The cards of the user. */
+    @OneToMany(mappedBy = "card.user_id")
+    private Set<CardBean> cards;
+
     /*
      * Bean methods
      */
@@ -186,6 +190,14 @@ public class UserBean {
         this.accessAccounts = accessAccounts;
     }
 
+    public Set<CardBean> getCards() {
+        return cards;
+    }
+
+    public void setCards(Set<CardBean> cards) {
+        this.cards = cards;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -209,7 +221,9 @@ public class UserBean {
         if (email != null ? !email.equals(userBean.email) : userBean.email != null) return false;
         if (holderAccounts != null ? !holderAccounts.equals(userBean.holderAccounts) : userBean.holderAccounts != null)
             return false;
-        return accessAccounts != null ? accessAccounts.equals(userBean.accessAccounts) : userBean.accessAccounts == null;
+        if (accessAccounts != null ? !accessAccounts.equals(userBean.accessAccounts) : userBean.accessAccounts != null)
+            return false;
+        return cards != null ? cards.equals(userBean.cards) : userBean.cards == null;
     }
 
     @Override
@@ -227,6 +241,7 @@ public class UserBean {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (holderAccounts != null ? holderAccounts.hashCode() : 0);
         result = 31 * result + (accessAccounts != null ? accessAccounts.hashCode() : 0);
+        result = 31 * result + (cards != null ? cards.hashCode() : 0);
         return result;
     }
 
@@ -246,6 +261,7 @@ public class UserBean {
                 ", email='" + email + '\'' +
                 ", holderAccounts=" + holderAccounts +
                 ", accessAccounts=" + accessAccounts +
+                ", cards=" + cards +
                 '}';
     }
 }
