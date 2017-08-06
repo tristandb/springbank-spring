@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Configuration for the application.
  *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
 @Configuration
 public class ApplicationConfig {
