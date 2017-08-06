@@ -1,9 +1,9 @@
-package nl.springbank.helper;
+package nl.springbank.objects;
 
 /**
  * Authentication object for testing
  *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
 public class AuthObject {
     private String username;

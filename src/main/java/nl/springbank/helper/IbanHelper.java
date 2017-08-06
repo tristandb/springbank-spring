@@ -8,19 +8,26 @@ import java.util.List;
 /**
  * Generates iBAN keys.
  *
- * @author Tristan de Boer).
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 public class IbanHelper {
-    private static String BANK_CODE = "INGB";
+    private static final String BANK_CODE = "INGB";
 
+    /**
+     * Generate an iban string that is not in the given list of existing ibans.
+     *
+     * @param existingIbans the given list of existing ibans
+     * @return the generated iban
+     */
     public static String generateIban(List<String> existingIbans) {
-        Iban iban = null;
-        while (iban == null || existingIbans.contains(iban.toString())) {
+        String iban;
+        do {
             iban = new Iban.Builder()
                     .countryCode(CountryCode.NL)
                     .bankCode(BANK_CODE)
-                    .buildRandom();
-        }
-        return iban.toString();
+                    .buildRandom().toString();
+        } while (existingIbans.contains(iban));
+        return iban;
     }
 }

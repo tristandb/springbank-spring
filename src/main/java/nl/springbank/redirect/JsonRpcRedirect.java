@@ -3,12 +3,6 @@ package nl.springbank.redirect;
 import com.google.gson.Gson;
 import com.googlecode.jsonrpc4j.JsonRpcService;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
-import nl.springbank.controllers.access.AccessController;
-import nl.springbank.controllers.account.AccountController;
-import nl.springbank.controllers.authentication.AuthenticationController;
-import nl.springbank.controllers.bankaccount.BankAccountController;
-import nl.springbank.controllers.info.InfoController;
-import nl.springbank.controllers.transfer.TransferController;
 import nl.springbank.helper.JsonRpcRequest;
 import org.apache.hc.client5.http.impl.sync.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.sync.HttpClients;
@@ -16,7 +10,6 @@ import org.apache.hc.client5.http.methods.HttpPost;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.entity.ContentType;
 import org.apache.hc.core5.http.entity.StringEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -38,7 +31,7 @@ import java.util.Set;
 /**
  * Ugly hack to redirect request to the corresponding JSON RPC endpoint.
  *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
 @Controller
 public class JsonRpcRedirect {

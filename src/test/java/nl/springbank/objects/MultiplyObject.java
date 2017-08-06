@@ -1,9 +1,9 @@
-package nl.springbank.helper;
+package nl.springbank.objects;
 
 /**
  * Object used for testing.
  *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
 public class MultiplyObject {
     private int a;

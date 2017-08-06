@@ -6,44 +6,53 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Description
- *
- * @author Tristan de Boer).
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 public class CardHelper {
-    private static int cardNumberLowerBound = 0;
-    private static int cardNumberUpperBound = 10000;
+    private static final int CARD_NUMBER_SIZE = 4;
+    private static final int PIN_NUMBER_SIZE = 4;
 
-    private static int pinLowerBound = 0;
-    private static int pinUpperBound = 10000;
+    /**
+     * Get a random card number that is not in the given list of existing card numbers.
+     *
+     * @param existingCardNumbers the given list of existig card numbers
+     * @return the random card number string
+     */
+    public static String getRandomCardNumber(List<String> existingCardNumbers) {
+        String cardNumber;
+        do {
+            cardNumber = getRandomNumber(CARD_NUMBER_SIZE);
+        } while (existingCardNumbers.contains(cardNumber));
+        return cardNumber;
+    }
 
-    public static int getRandomCardNumber(List<Integer> existingCardId) {
+    /**
+     * Get a random pin number.
+     *
+     * @return the random pin number string
+     */
+    public static String getRandomPin() {
+        return getRandomNumber(PIN_NUMBER_SIZE);
+    }
+
+    private static String getRandomNumber(int size) {
+        StringBuilder builder = new StringBuilder(size);
         Random random = new Random();
-        Integer result = null;
-        while (result == null || existingCardId.contains(result)) {
-            result = random.nextInt(cardNumberUpperBound - cardNumberLowerBound) + cardNumberLowerBound;
+        for (int i = 0; i < size; i++) {
+            builder.append(random.nextInt(10));
         }
-        return result;
+        return builder.toString();
     }
 
-    public static int getRandomPin() {
-        Random random = new Random();
-        return random.nextInt(pinUpperBound - pinLowerBound) + pinLowerBound;
-    }
-
+    /**
+     * Get the card expiration date, which is 5 years from the current time
+     *
+     * @return the expiration date
+     */
     public static Date getExpirationDate() {
-        Date sqlDate = new Date(new java.util.Date().getTime());
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(sqlDate);
-        cal.add(Calendar.YEAR, 5);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return new Date(cal.getTimeInMillis());
-    }
-
-    public static String convertToString(int number) {
-        return String.format("%04d", number);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, 5);
+        return new Date(calendar.getTimeInMillis());
     }
 }

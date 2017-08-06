@@ -3,7 +3,7 @@ package nl.springbank.helper;
 /**
  * ErrorObject for JSONRpc
  *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
 public class ErrorObject {
     private int code;

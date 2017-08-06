@@ -1,9 +1,9 @@
-package nl.springbank.helper;
+package nl.springbank.objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProvideAccessObject {

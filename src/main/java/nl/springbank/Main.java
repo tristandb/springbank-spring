@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ImportResource;
 /**
  * Main application of Spring. This file starts all other files.
  *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
 
 @SpringBootApplication

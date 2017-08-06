@@ -3,9 +3,7 @@ package nl.springbank.helper;
 import java.util.ArrayList;
 
 /**
- * Description
- *
- * @author Tristan de Boer).
+ * @author Tristan de Boer
  */
 public class JsonRpcRequest extends JsonRpc {
     public String method;

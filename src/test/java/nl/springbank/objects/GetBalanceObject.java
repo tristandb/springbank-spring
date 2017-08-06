@@ -1,9 +1,7 @@
-package nl.springbank.helper;
+package nl.springbank.objects;
 
 /**
- * Description
- *
- * @author Tristan de Boer).
+ * @author Tristan de Boer
  */
 public class GetBalanceObject {
     private String authToken;

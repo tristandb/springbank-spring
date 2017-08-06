@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Interface for JsonRpc communication. Used for testing purposes.
  *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
 public class JsonRpc {
 

@@ -1,9 +1,7 @@
 package nl.springbank.helper;
 
 /**
- * Description
- *
- * @author Tristan de Boer).
+ * @author Tristan de Boer
  */
 public class JsonRpcResponse extends JsonRpc {
 
