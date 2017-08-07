@@ -37,25 +37,25 @@ public class BankAccountBean {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_bank_account",
-            joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "account id", nullable = false),
+            joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     )
     private Set<UserBean> accessUsers;
 
     /** The cards associated with this bank account. */
-    @OneToMany(mappedBy = "card.bank_account_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CardBean> cards;
 
     /** The iban associated with this bank account. */
-    @OneToOne(mappedBy = "iban.bank_account_id", optional = false, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "bankAccount", optional = false, cascade = CascadeType.ALL)
     private IbanBean iban;
 
     /** The transactions with this bank account as the source. */
-    @OneToMany(mappedBy = "transaction.source_account_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "sourceBankAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TransactionBean> sourceTransactions;
 
     /** The transactions with this bank account as target. */
-    @OneToMany(mappedBy = "transaction.target_account_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "targetBankAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TransactionBean> targetTransactions;
 
     /*
