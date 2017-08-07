@@ -21,7 +21,7 @@ public class TransactionBean {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long transactionId;
 
-    /** The source bank account. */
+    /** The source bank account. Is {@code null} for a deposit. */
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "source_account_id")
     private BankAccountBean sourceBankAccount;
@@ -31,7 +31,7 @@ public class TransactionBean {
     @JoinColumn(name = "target_account_id", nullable = false)
     private BankAccountBean targetBankAccount;
 
-    /** The target name of the transaction */
+    /** The target name of the transaction. Is {@code null} for a deposit. */
     @Column(name = "target_name")
     private String targetName;
 
@@ -43,7 +43,7 @@ public class TransactionBean {
     @Column(name = "amount", nullable = false)
     private double amount;
 
-    /** The message of the transaction */
+    /** The message of the transaction. Is {@code null} for a deposit. */
     @Column(name = "message")
     private String message;
 
