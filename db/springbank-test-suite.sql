@@ -1,23 +1,5 @@
--- phpMyAdmin SQL Dump
--- version 4.5.4.1deb2ubuntu2
--- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Gegenereerd op: 11 jul 2017 om 13:55
--- Serverversie: 5.7.18-0ubuntu0.16.04.1
--- PHP-versie: 7.0.18-0ubuntu0.16.04.1
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `springbank-test-suite`
+-- Database: `springbank_test_suite`
 --
 
 -- --------------------------------------------------------
@@ -26,11 +8,23 @@ SET time_zone = "+00:00";
 -- Tabelstructuur voor tabel `bank_account`
 --
 
-CREATE TABLE `bank_account` (
-  `account_id` int(11) NOT NULL,
-  `holder_user_id` int(11) NOT NULL,
-  `balance` decimal(10,0) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE bank_account
+(
+  account_id     BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  balance        DOUBLE             NOT NULL,
+  holder_user_id BIGINT             NOT NULL
+);
+CREATE INDEX FK8jud4i10ibvbti0xtla8e88h5
+  ON bank_account (holder_user_id);
+
+--
+-- Gegevens worden geëxporteerd voor tabel `bank_account`
+--
+
+INSERT INTO bank_account (account_id, balance, holder_user_id) VALUES
+  (6, 238322, 3),
+  (7, 23, 4),
+  (8, 1000000000, 4);
 
 -- --------------------------------------------------------
 
@@ -38,13 +32,29 @@ CREATE TABLE `bank_account` (
 -- Tabelstructuur voor tabel `card`
 --
 
-CREATE TABLE `card` (
-  `card_id` int(11) NOT NULL,
-  `card_number` int(4) NOT NULL,
-  `bank_account_id` int(11) NOT NULL,
-  `expiration_date` date NOT NULL,
-  `pin` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE card
+(
+  card_id         BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  card_number     VARCHAR(255)       NOT NULL,
+  expiration_date DATE               NOT NULL,
+  pin             VARCHAR(255)       NOT NULL,
+  bank_account_id BIGINT             NOT NULL,
+  user_id         BIGINT             NOT NULL
+);
+CREATE UNIQUE INDEX UK9kj2dtyu7a4w0jh34p95o6yqd
+  ON card (bank_account_id, card_number);
+CREATE INDEX FKl4gbym62l738id056y12rt6q6
+  ON card (user_id);
+
+--
+-- Gegevens worden geëxporteerd voor tabel `card`
+--
+
+INSERT INTO card (card_number, expiration_date, pin, bank_account_id, user_id) VALUES
+  ('0901', '2022-07-05', '5434', 6, 3),
+  ('6095', '2022-07-05', '6957', 7, 4),
+  ('9053', '2022-07-05', '1671', 8, 4),
+  ('5630', '2022-08-08', '3465', 7, 3);
 
 -- --------------------------------------------------------
 
@@ -52,10 +62,27 @@ CREATE TABLE `card` (
 -- Tabelstructuur voor tabel `iban`
 --
 
-CREATE TABLE `iban` (
-  `bank_account_id` int(11) NOT NULL,
-  `iban` varchar(34) NOT NULL COMMENT 'IBAN consists of up to 34 alphanumeric characters'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE iban
+(
+  iban_id         BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  iban            VARCHAR(255)       NOT NULL,
+  bank_account_id BIGINT             NOT NULL
+);
+CREATE UNIQUE INDEX UK_2w6dmssco96gvn3l6b4igkul4
+  ON iban (iban);
+CREATE UNIQUE INDEX UK8abuopppa8rev5cy06ayc82u5
+  ON iban (bank_account_id, iban);
+CREATE UNIQUE INDEX UK_pm6uut04sgelgdkhgb90a0tn7
+  ON iban (bank_account_id);
+
+--
+-- Gegevens worden geëxporteerd voor tabel `iban`
+--
+
+INSERT INTO iban (iban, bank_account_id) VALUES
+  ('NL86SPRI0752582963', 6),
+  ('NL83SPRI0114480386', 7),
+  ('NL15SPRI0749536255', 8);
 
 -- --------------------------------------------------------
 
@@ -63,15 +90,30 @@ CREATE TABLE `iban` (
 -- Tabelstructuur voor tabel `transaction`
 --
 
-CREATE TABLE `transaction` (
-  `transaction_id` int(11) NOT NULL,
-  `source_bank_account_iban` varchar(34) DEFAULT NULL,
-  `target_bank_account_iban` varchar(34) DEFAULT NULL,
-  `target_account_id` int(11) NOT NULL,
-  `source_account_id` int(11) NOT NULL,
-  `amount` decimal(10,0) NOT NULL,
-  `message` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE transaction
+(
+  transaction_id    BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  amount            DOUBLE             NOT NULL,
+  date              DATETIME           NOT NULL,
+  message           VARCHAR(255),
+  target_name       VARCHAR(255),
+  source_account_id BIGINT,
+  target_account_id BIGINT             NOT NULL
+);
+CREATE INDEX FK14pfnxb2ly7iuu3w84q3nhmin
+  ON transaction (source_account_id);
+CREATE INDEX FK4wmdsx0mrxc47wfv1wpi78u1
+  ON transaction (target_account_id);
+
+--
+-- Gegevens worden geëxporteerd voor tabel `transaction`
+--
+
+INSERT INTO transaction (amount, date, message, target_name, source_account_id, target_account_id) VALUES
+  (100, '2017-08-08 00:00:00', 'Hier heb je geld', 'J. Jannes', 7, 6),
+  (10, '2017-08-02 00:00:00', 'Doe er iets leuks mee', 'K. Ham', 6, 7),
+  (50, '2017-07-02 00:00:00', 'cadeau', 'H. Oost', 7, 8),
+  (25, '2017-08-01 00:00:00', 'dinges', 'H. Oost', 6, 8);
 
 -- --------------------------------------------------------
 
@@ -79,26 +121,39 @@ CREATE TABLE `transaction` (
 -- Tabelstructuur voor tabel `user`
 --
 
-CREATE TABLE `user` (
-  `user_id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `surname` varchar(50) NOT NULL,
-  `initials` varchar(10) NOT NULL,
-  `date_of_birth` date NOT NULL,
-  `bsn` varchar(9) NOT NULL COMMENT 'Burger Service Nummer',
-  `street_address` varchar(100) NOT NULL,
-  `telephone_number` varchar(15) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(300) NOT NULL,
-  `email` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE user
+(
+  user_id          BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  bsn              VARCHAR(255)       NOT NULL,
+  date_of_birth    DATE               NOT NULL,
+  email            VARCHAR(255)       NOT NULL,
+  initials         VARCHAR(255)       NOT NULL,
+  name             VARCHAR(255)       NOT NULL,
+  password         VARCHAR(255)       NOT NULL,
+  street_address   VARCHAR(255)       NOT NULL,
+  surname          VARCHAR(255)       NOT NULL,
+  telephone_number VARCHAR(255)       NOT NULL,
+  username         VARCHAR(255)       NOT NULL
+);
+CREATE UNIQUE INDEX UK_e9nea19uafpjcwt3920ksylhf
+  ON user (bsn);
+CREATE UNIQUE INDEX UK_sb8bbouer5wak8vyiiy4pf2bx
+  ON user (username);
 
 --
 -- Gegevens worden geëxporteerd voor tabel `user`
 --
 
-INSERT INTO `user` (`user_id`, `name`, `surname`, `initials`, `date_of_birth`, `bsn`, `street_address`, `telephone_number`, `username`, `password`, `email`) VALUES
-(1, 'Tristan', 'Drijver', 'T.D.', '1970-01-01', '123456789', 'Dorpsstraat 1, Ons Dorp', '0612345678', 'tristan', 'tristan', 'tristan@drijver.tld');
+INSERT INTO user (bsn, date_of_birth, email, initials, name, password, street_address, surname, telephone_number, username)
+VALUES
+  ('32432435', '1954-10-14', 'd@d.nl', 'B.', 'Bernard', 'dd', 'Yffiniac', 'Hinault', '0612345678',
+   'bernard@hinault.fr'),
+  ('123456789', '1970-01-01', 'info@svenkonings.nl', 'S.', 'Sven', 'sven', 'Brink 123, Ons Dorp', 'Konings',
+   '0612345678', 'sven@konings.nl'),
+  ('435456553', '1947-12-01', 'xyz@test.nl', 'D.', 'Dagobert', 'dagdag', 'Pakhuislaan 1, 1234AB Duckstad', 'Duck',
+   '05312312312', 'dagobertduck@gmail.com'),
+  ('571376046', '1954-02-19', 'donald@gmail.com', 'D', 'Duck', 'kwikkwekkwak', '1313 Webfoot Walk, Duckburg', 'Donald',
+   '+316 12345678', 'duckd');
 
 -- --------------------------------------------------------
 
@@ -106,119 +161,21 @@ INSERT INTO `user` (`user_id`, `name`, `surname`, `initials`, `date_of_birth`, `
 -- Tabelstructuur voor tabel `user_bank_account`
 --
 
-CREATE TABLE `user_bank_account` (
-  `user_bank_account_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `bank_account_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Many-to-many relationship between user and bank_account';
+CREATE TABLE user_bank_account
+(
+  user_id    BIGINT NOT NULL,
+  account_id BIGINT NOT NULL,
+  CONSTRAINT `PRIMARY` PRIMARY KEY (account_id, user_id)
+);
+CREATE INDEX FKjn71dv46t5vlrjbqroobqfxcl
+  ON user_bank_account (user_id);
 
 --
--- Indexen voor geëxporteerde tabellen
+-- Gegevens worden geëxporteerd voor tabel `user_bank_account`
 --
 
---
--- Indexen voor tabel `bank_account`
---
-ALTER TABLE `bank_account`
-  ADD PRIMARY KEY (`account_id`),
-  ADD KEY `holder_user_id` (`holder_user_id`),
-  ADD KEY `account_id` (`account_id`);
-
---
--- Indexen voor tabel `card`
---
-ALTER TABLE `card`
-  ADD PRIMARY KEY (`card_id`),
-  ADD KEY `card_id` (`card_id`),
-  ADD KEY `bank_account_id` (`bank_account_id`);
-
---
--- Indexen voor tabel `iban`
---
-ALTER TABLE `iban`
-  ADD PRIMARY KEY (`bank_account_id`),
-  ADD UNIQUE KEY `bankAccountId` (`bank_account_id`);
-
---
--- Indexen voor tabel `transaction`
---
-ALTER TABLE `transaction`
-  ADD PRIMARY KEY (`transaction_id`);
-
---
--- Indexen voor tabel `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`user_id`,`username`),
-  ADD UNIQUE KEY `username` (`username`);
-
---
--- Indexen voor tabel `user_bank_account`
---
-ALTER TABLE `user_bank_account`
-  ADD PRIMARY KEY (`user_bank_account_id`),
-  ADD KEY `FK32bq0igatas1bm9d7cj3emdmn` (`bank_account_id`),
-  ADD KEY `FKjn71dv46t5vlrjbqroobqfxcl` (`user_id`);
-
---
--- AUTO_INCREMENT voor geëxporteerde tabellen
---
-
---
--- AUTO_INCREMENT voor een tabel `bank_account`
---
-ALTER TABLE `bank_account`
-  MODIFY `account_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
---
--- AUTO_INCREMENT voor een tabel `card`
---
-ALTER TABLE `card`
-  MODIFY `card_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
---
--- AUTO_INCREMENT voor een tabel `transaction`
---
-ALTER TABLE `transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT voor een tabel `user`
---
-ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
---
--- AUTO_INCREMENT voor een tabel `user_bank_account`
---
-ALTER TABLE `user_bank_account`
-  MODIFY `user_bank_account_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
---
--- Beperkingen voor geëxporteerde tabellen
---
-
---
--- Beperkingen voor tabel `bank_account`
---
-ALTER TABLE `bank_account`
-  ADD CONSTRAINT `FK8jud4i10ibvbti0xtla8e88h5` FOREIGN KEY (`holder_user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `FKce76ojmu9t1kc6b49nylpa2ho` FOREIGN KEY (`account_id`) REFERENCES `bank_account` (`account_id`);
-
---
--- Beperkingen voor tabel `card`
---
-ALTER TABLE `card`
-  ADD CONSTRAINT `card_ibfk_1` FOREIGN KEY (`bank_account_id`) REFERENCES `bank_account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Beperkingen voor tabel `iban`
---
-ALTER TABLE `iban`
-  ADD CONSTRAINT `iban_ibfk_1` FOREIGN KEY (`bank_account_id`) REFERENCES `bank_account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Beperkingen voor tabel `user_bank_account`
---
-ALTER TABLE `user_bank_account`
-  ADD CONSTRAINT `FK32bq0igatas1bm9d7cj3emdmn` FOREIGN KEY (`bank_account_id`) REFERENCES `bank_account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `FKjn71dv46t5vlrjbqroobqfxcl` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+INSERT INTO user_bank_account (user_id, account_id) VALUES
+  (3, 6),
+  (3, 7),
+  (4, 7),
+  (4, 8);
