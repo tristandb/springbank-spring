@@ -1,7 +1,7 @@
 package nl.springbank.objects;
 
 /**
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
 public class IbanAuthTokenObject extends AuthTokenObject {
     private String iBAN;

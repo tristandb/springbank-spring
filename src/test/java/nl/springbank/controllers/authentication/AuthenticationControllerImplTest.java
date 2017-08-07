@@ -1,8 +1,8 @@
 package nl.springbank.controllers.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.springbank.helper.AuthObject;
-import nl.springbank.helper.JsonRpcRequest;
+import nl.springbank.helper.jsonrpc.JsonRpcRequest;
+import nl.springbank.objects.AuthObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

@@ -7,7 +7,7 @@ import nl.springbank.helper.AuthenticationHelper;
 import java.util.Date;
 
 /**
- * @author Tristan de Boer.
+ * @author Tristan de Boer
  */
 public class AuthTokenObject {
     private String authToken;

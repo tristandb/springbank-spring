@@ -3,9 +3,11 @@ package nl.springbank.controllers.account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import nl.springbank.helper.*;
+import nl.springbank.helper.AuthenticationHelper;
+import nl.springbank.helper.jsonrpc.JsonRpcRequest;
 import nl.springbank.objects.AuthTokenObject;
 import nl.springbank.objects.IbanAuthTokenObject;
+import nl.springbank.objects.OpenAccountObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
-
 import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -52,7 +53,7 @@ public class AccountControllerImplTest {
     @Transactional
     public void openAccount() throws Exception {
         // Object to send with as params
-        OpenAccountObject accountObject = new OpenAccountObject("Duck", "Donald", "D.", "1954-02-19","571376046", "1313 Webfoot Walk, Duckburg",
+        OpenAccountObject accountObject = new OpenAccountObject("Duck", "Donald", "D.", "1954-02-19", "571376046", "1313 Webfoot Walk, Duckburg",
                 "+316 12345678", "donald@gmail.com", "duckd", "kwikkwekkwak");
 
         JsonRpcRequest jsonRpcRequest = new JsonRpcRequest("openAccount", accountObject);

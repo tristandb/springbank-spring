@@ -17,13 +17,13 @@ public class TransactionBean {
      */
     /** Transaction identifier. */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long transactionId;
 
     /** The source bank account. */
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "source_account_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "source_account_id")
     private BankAccountBean sourceBankAccount;
 
     /** The target bank account. */
@@ -32,7 +32,7 @@ public class TransactionBean {
     private BankAccountBean targetBankAccount;
 
     /** The target name of the transaction */
-    @Column(name = "target_name", nullable = false)
+    @Column(name = "target_name")
     private String targetName;
 
     /** The date of the transaction */
@@ -44,7 +44,7 @@ public class TransactionBean {
     private double amount;
 
     /** The message of the transaction */
-    @Column(name = "message", nullable = false)
+    @Column(name = "message")
     private String message;
 
     /*

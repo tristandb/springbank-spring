@@ -91,6 +91,15 @@ public class TransactionService {
         return transactionDao.findAll();
     }
 
+    public synchronized void newDeposit(BankAccountBean bankAccount, double amount) {
+        TransactionBean transaction = new TransactionBean();
+        bankAccount.setBalance(bankAccount.getBalance() + amount);
+        transaction.setTargetBankAccount(bankAccount);
+        transaction.setAmount(amount);
+        transaction.setDate(Timestamp.from(Instant.now()));
+        saveTransaction(transaction);
+    }
+
     /**
      * Makes a new transaction.
      *

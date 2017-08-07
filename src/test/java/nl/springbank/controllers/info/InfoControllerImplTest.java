@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import nl.springbank.helper.AuthenticationHelper;
-import nl.springbank.helper.JsonRpcRequest;
+import nl.springbank.helper.jsonrpc.JsonRpcRequest;
 import nl.springbank.objects.AuthTokenObject;
 import nl.springbank.objects.IbanAuthTokenObject;
 import nl.springbank.objects.TransactionsAuthTokenObject;
@@ -24,7 +24,6 @@ import javax.transaction.Transactional;
 import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**

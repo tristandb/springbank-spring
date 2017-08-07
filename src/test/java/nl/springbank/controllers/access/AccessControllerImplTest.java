@@ -3,8 +3,10 @@ package nl.springbank.controllers.access;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import nl.springbank.helper.*;
+import nl.springbank.helper.AuthenticationHelper;
+import nl.springbank.helper.jsonrpc.JsonRpcRequest;
 import nl.springbank.objects.AuthTokenObject;
+import nl.springbank.objects.ProvideAccessObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,9 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 import java.util.Date;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
