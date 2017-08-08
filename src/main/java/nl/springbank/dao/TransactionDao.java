@@ -22,7 +22,7 @@ public interface TransactionDao extends JpaRepository<TransactionBean, Long> {
      * @param targetAccount the given target bank account
      * @return the list of transactions
      */
-    List<TransactionBean> findBySourceBankAccountOrTargetBankAccount(BankAccountBean sourceAccount, BankAccountBean targetAccount);
+    List<TransactionBean> findBySourceBankAccountOrTargetBankAccountOrderByDateDesc(BankAccountBean sourceAccount, BankAccountBean targetAccount);
 
     /**
      * Get the transaction with the given source and target bank account
@@ -31,5 +31,5 @@ public interface TransactionDao extends JpaRepository<TransactionBean, Long> {
      * @param targetAccount the given target bank account
      * @return the list of transactions
      */
-    List<TransactionBean> findBySourceBankAccountAndTargetBankAccount(BankAccountBean sourceAccount, BankAccountBean targetAccount);
+    List<TransactionBean> findBySourceBankAccountAndTargetBankAccountOrderByDateDesc(BankAccountBean sourceAccount, BankAccountBean targetAccount);
 }

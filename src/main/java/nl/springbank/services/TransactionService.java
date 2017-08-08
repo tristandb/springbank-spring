@@ -57,7 +57,7 @@ public class TransactionService {
     public List<TransactionBean> getTransactionsBySourceOrTargetAccount(BankAccountBean sourceAccount, BankAccountBean targetAccount) throws InvalidParamValueError {
         List<TransactionBean> transactions;
         try {
-            transactions = transactionDao.findBySourceBankAccountOrTargetBankAccount(sourceAccount, targetAccount);
+            transactions = transactionDao.findBySourceBankAccountOrTargetBankAccountOrderByDateDesc(sourceAccount, targetAccount);
         } catch (IllegalArgumentException e) {
             throw new InvalidParamValueError(e);
         }
@@ -75,7 +75,7 @@ public class TransactionService {
     public List<TransactionBean> getTransactionsBySourceAndTargetAccount(BankAccountBean sourceAccount, BankAccountBean targetAccount) throws InvalidParamValueError {
         List<TransactionBean> transactions;
         try {
-            transactions = transactionDao.findBySourceBankAccountAndTargetBankAccount(sourceAccount, targetAccount);
+            transactions = transactionDao.findBySourceBankAccountAndTargetBankAccountOrderByDateDesc(sourceAccount, targetAccount);
         } catch (IllegalArgumentException e) {
             throw new InvalidParamValueError(e);
         }

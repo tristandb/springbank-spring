@@ -49,7 +49,6 @@ public class InfoControllerImpl implements InfoController {
     public List<TransactionObject> getTransactionsOverview(String authToken, String iBAN, int nrOfTransactions) throws InvalidParamValueError, NotAuthorizedError {
         BankAccountBean bankAccount = bankAccountService.getBankAccount(iBAN);
         userService.checkAccess(bankAccount, authToken);
-        // TODO: Sort these by date and limit them when requesting?
         List<TransactionBean> transactions = transactionService.getTransactionsBySourceOrTargetAccount(bankAccount, bankAccount);
         return transactions.stream()
                 .limit(nrOfTransactions)

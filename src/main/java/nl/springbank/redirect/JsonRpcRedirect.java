@@ -3,6 +3,11 @@ package nl.springbank.redirect;
 import com.google.gson.Gson;
 import com.googlecode.jsonrpc4j.JsonRpcService;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
+import nl.springbank.controllers.access.AccessController;
+import nl.springbank.controllers.account.AccountController;
+import nl.springbank.controllers.authentication.AuthenticationController;
+import nl.springbank.controllers.info.InfoController;
+import nl.springbank.controllers.transfer.TransferController;
 import nl.springbank.helper.jsonrpc.JsonRpcRequest;
 import org.apache.hc.client5.http.impl.sync.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.sync.HttpClients;
@@ -10,6 +15,7 @@ import org.apache.hc.client5.http.methods.HttpPost;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.entity.ContentType;
 import org.apache.hc.core5.http.entity.StringEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -38,6 +44,21 @@ public class JsonRpcRedirect {
     private static final String DEFAULT_URL = "http://localhost:8080";
 
     private CloseableHttpClient httpclient = HttpClients.createDefault();
+
+    private final AccessController accessController;
+    private final AccountController accountController;
+    private final AuthenticationController authenticationController;
+    private final InfoController infoController;
+    private final TransferController transferController;
+
+    @Autowired
+    public JsonRpcRedirect(AccessController accessController, AccountController accountController, AuthenticationController authenticationController, InfoController infoController, TransferController transferController) {
+        this.accessController = accessController;
+        this.accountController = accountController;
+        this.authenticationController = authenticationController;
+        this.infoController = infoController;
+        this.transferController = transferController;
+    }
 
     @RequestMapping(value = "/api", method = RequestMethod.POST)
     @ResponseBody

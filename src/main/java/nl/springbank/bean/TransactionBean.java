@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "transaction")
-public class TransactionBean {
+public class TransactionBean implements Comparable<TransactionBean> {
     /*
      * Table values
      */
@@ -117,5 +117,14 @@ public class TransactionBean {
                 ", amount=" + amount +
                 ", message='" + message + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(TransactionBean that) {
+        if (this.getDate() == null || that.getDate() == null) {
+            return 0;
+        }
+        // Reverse date ordering
+        return that.getDate().compareTo(this.getDate());
     }
 }

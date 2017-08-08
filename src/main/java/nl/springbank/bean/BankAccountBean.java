@@ -2,6 +2,7 @@ package nl.springbank.bean;
 
 import javax.persistence.*;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Bean representing the bank_account table. A bank account is associated with a holder.
@@ -52,11 +53,13 @@ public class BankAccountBean {
 
     /** The transactions with this bank account as the source. */
     @OneToMany(mappedBy = "sourceBankAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<TransactionBean> sourceTransactions;
+    @OrderBy("date DESC")
+    private SortedSet<TransactionBean> sourceTransactions;
 
     /** The transactions with this bank account as target. */
     @OneToMany(mappedBy = "targetBankAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<TransactionBean> targetTransactions;
+    @OrderBy("date DESC")
+    private SortedSet<TransactionBean> targetTransactions;
 
     /*
      * Bean methods
@@ -109,19 +112,19 @@ public class BankAccountBean {
         this.cards = cards;
     }
 
-    public Set<TransactionBean> getSourceTransactions() {
+    public SortedSet<TransactionBean> getSourceTransactions() {
         return sourceTransactions;
     }
 
-    public void setSourceTransactions(Set<TransactionBean> sourceTransactions) {
+    public void setSourceTransactions(SortedSet<TransactionBean> sourceTransactions) {
         this.sourceTransactions = sourceTransactions;
     }
 
-    public Set<TransactionBean> getTargetTransactions() {
+    public SortedSet<TransactionBean> getTargetTransactions() {
         return targetTransactions;
     }
 
-    public void setTargetTransactions(Set<TransactionBean> targetTransactions) {
+    public void setTargetTransactions(SortedSet<TransactionBean> targetTransactions) {
         this.targetTransactions = targetTransactions;
     }
 
