@@ -2,8 +2,9 @@ package nl.springbank.objects;
 
 /**
  * @author Tristan de Boer
+ * @author Sven Konings
  */
-public class OpenAccountObject {
+public class OpenAccountObject extends AuthObject {
     private String name;
     private String surname;
     private String initials;
@@ -12,10 +13,9 @@ public class OpenAccountObject {
     private String address;
     private String telephoneNumber;
     private String email;
-    private String username;
-    private String password;
 
     public OpenAccountObject(String name, String surname, String initials, String dob, String ssn, String address, String telephoneNumber, String email, String username, String password) {
+        super(username, password);
         this.name = name;
         this.surname = surname;
         this.initials = initials;
@@ -24,8 +24,6 @@ public class OpenAccountObject {
         this.address = address;
         this.telephoneNumber = telephoneNumber;
         this.email = email;
-        this.username = username;
-        this.password = password;
     }
 
     public String getName() {
@@ -90,21 +88,5 @@ public class OpenAccountObject {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

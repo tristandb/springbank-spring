@@ -81,7 +81,7 @@ public class UserService {
      * @param username The given username
      * @param password The given password
      * @return the user
-     * @throws NotAuthorizedError if an error occurred or the user doesn't exist
+     * @throws AuthenticationError if an error occurred or the user doesn't exist
      */
     public UserBean authUser(String username, String password) throws AuthenticationError {
         UserBean user;

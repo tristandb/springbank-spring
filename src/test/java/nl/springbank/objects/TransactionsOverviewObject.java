@@ -3,11 +3,11 @@ package nl.springbank.objects;
 /**
  * @author Sven Konings
  */
-public class TransactionsAuthTokenObject extends IbanAuthTokenObject {
+public class TransactionsOverviewObject extends IbanAuthTokenObject {
     private int nrOfTransactions;
 
-    public TransactionsAuthTokenObject(String authToken, String iBAN, int nrOfTransactions) {
-        super(authToken, iBAN);
+    public TransactionsOverviewObject(int userId, String iBAN, int nrOfTransactions) {
+        super(userId, iBAN);
         this.nrOfTransactions = nrOfTransactions;
     }
 

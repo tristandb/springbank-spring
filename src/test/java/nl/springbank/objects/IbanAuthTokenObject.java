@@ -2,12 +2,13 @@ package nl.springbank.objects;
 
 /**
  * @author Tristan de Boer
+ * @author Sven Konings
  */
 public class IbanAuthTokenObject extends AuthTokenObject {
     private String iBAN;
 
-    public IbanAuthTokenObject(String authToken, String iBAN) {
-        super(authToken);
+    public IbanAuthTokenObject(int userId, String iBAN) {
+        super(userId);
         this.iBAN = iBAN;
     }
 

@@ -81,14 +81,11 @@ public class CardService {
      * @param bankAccount the given bank account
      * @param cardNumber  the given card number
      * @param pinCode     the pin code
-     * @throws InvalidPINError if the pin code is incorrect
+     * @throws InvalidParamValueError if the bank account-card number combination is incorrect
+     * @throws InvalidPINError        if the pin code is incorrect
      */
-    public void checkPin(BankAccountBean bankAccount, String cardNumber, String pinCode) throws InvalidPINError {
-        try {
-            checkPin(getCard(bankAccount, cardNumber), pinCode);
-        } catch (InvalidParamValueError e) {
-            throw new InvalidPINError(e);
-        }
+    public void checkPin(BankAccountBean bankAccount, String cardNumber, String pinCode) throws InvalidParamValueError, InvalidPINError {
+        checkPin(getCard(bankAccount, cardNumber), pinCode);
     }
 
     /**
