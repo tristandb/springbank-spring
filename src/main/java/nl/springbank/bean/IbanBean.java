@@ -34,7 +34,6 @@ public class IbanBean {
     /*
      * Bean methods
      */
-
     public long getIbanId() {
         return ibanId;
     }
@@ -57,27 +56,6 @@ public class IbanBean {
 
     public void setIban(String iban) {
         this.iban = iban;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof IbanBean)) return false;
-
-        IbanBean ibanBean = (IbanBean) o;
-
-        if (ibanId != ibanBean.ibanId) return false;
-        if (bankAccount != null ? !bankAccount.equals(ibanBean.bankAccount) : ibanBean.bankAccount != null)
-            return false;
-        return iban != null ? iban.equals(ibanBean.iban) : ibanBean.iban == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (ibanId ^ (ibanId >>> 32));
-        result = 31 * result + (bankAccount != null ? bankAccount.hashCode() : 0);
-        result = 31 * result + (iban != null ? iban.hashCode() : 0);
-        return result;
     }
 
     @Override

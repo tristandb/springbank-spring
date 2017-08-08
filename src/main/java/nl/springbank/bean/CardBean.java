@@ -96,33 +96,6 @@ public class CardBean {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CardBean)) return false;
-
-        CardBean cardBean = (CardBean) o;
-
-        if (cardId != cardBean.cardId) return false;
-        if (bankAccount != null ? !bankAccount.equals(cardBean.bankAccount) : cardBean.bankAccount != null)
-            return false;
-        if (user != null ? !user.equals(cardBean.user) : cardBean.user != null) return false;
-        if (cardNumber != null ? !cardNumber.equals(cardBean.cardNumber) : cardBean.cardNumber != null) return false;
-        if (pin != null ? !pin.equals(cardBean.pin) : cardBean.pin != null) return false;
-        return expirationDate != null ? expirationDate.equals(cardBean.expirationDate) : cardBean.expirationDate == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (cardId ^ (cardId >>> 32));
-        result = 31 * result + (bankAccount != null ? bankAccount.hashCode() : 0);
-        result = 31 * result + (user != null ? user.hashCode() : 0);
-        result = 31 * result + (cardNumber != null ? cardNumber.hashCode() : 0);
-        result = 31 * result + (pin != null ? pin.hashCode() : 0);
-        result = 31 * result + (expirationDate != null ? expirationDate.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public String toString() {
         return "CardBean{" +
                 "cardId=" + cardId +

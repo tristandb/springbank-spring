@@ -2,7 +2,8 @@ package nl.springbank.bean;
 
 import org.junit.Test;
 
-import static com.google.code.beanmatchers.BeanMatchers.*;
+import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
+import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
 import static org.hamcrest.Matchers.allOf;
 import static org.junit.Assert.assertThat;
 
@@ -35,10 +36,7 @@ public class BeanTest {
     private void testBean(Class<?> beanClass) {
         assertThat(beanClass, allOf(
                 hasValidBeanConstructor(),
-                hasValidGettersAndSetters(),
-                hasValidBeanEquals(),
-                hasValidBeanHashCode(),
-                hasValidBeanToString()
+                hasValidGettersAndSetters()
         ));
     }
 }

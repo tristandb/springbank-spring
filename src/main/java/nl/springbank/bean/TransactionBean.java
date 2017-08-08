@@ -107,39 +107,6 @@ public class TransactionBean {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TransactionBean)) return false;
-
-        TransactionBean that = (TransactionBean) o;
-
-        if (transactionId != that.transactionId) return false;
-        if (Double.compare(that.amount, amount) != 0) return false;
-        if (sourceBankAccount != null ? !sourceBankAccount.equals(that.sourceBankAccount) : that.sourceBankAccount != null)
-            return false;
-        if (targetBankAccount != null ? !targetBankAccount.equals(that.targetBankAccount) : that.targetBankAccount != null)
-            return false;
-        if (targetName != null ? !targetName.equals(that.targetName) : that.targetName != null) return false;
-        if (date != null ? !date.equals(that.date) : that.date != null) return false;
-        return message != null ? message.equals(that.message) : that.message == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = (int) (transactionId ^ (transactionId >>> 32));
-        result = 31 * result + (sourceBankAccount != null ? sourceBankAccount.hashCode() : 0);
-        result = 31 * result + (targetBankAccount != null ? targetBankAccount.hashCode() : 0);
-        result = 31 * result + (targetName != null ? targetName.hashCode() : 0);
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        temp = Double.doubleToLongBits(amount);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public String toString() {
         return "TransactionBean{" +
                 "transactionId=" + transactionId +
