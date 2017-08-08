@@ -17,18 +17,18 @@ public class TransactionBean implements Comparable<TransactionBean> {
      */
     /** Transaction identifier. */
     @Id
-    @Column(name = "transaction_id", unique = true, nullable = false)
+    @Column(name = "transaction_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long transactionId;
 
     /** The source bank account. Is {@code null} for a deposit. */
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "source_account_id")
     private BankAccountBean sourceBankAccount;
 
     /** The target bank account. */
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "target_account_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "target_account_id")
     private BankAccountBean targetBankAccount;
 
     /** The target name of the transaction. Is {@code null} for a deposit. */
@@ -36,11 +36,11 @@ public class TransactionBean implements Comparable<TransactionBean> {
     private String targetName;
 
     /** The date of the transaction */
-    @Column(name = "date", nullable = false)
+    @Column(name = "date")
     private Timestamp date;
 
     /** The amount of the transaction */
-    @Column(name = "amount", nullable = false)
+    @Column(name = "amount")
     private double amount;
 
     /** The message of the transaction. Is {@code null} for a deposit. */

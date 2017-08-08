@@ -9,26 +9,24 @@ import javax.persistence.*;
  * @author Sven Konings
  */
 @Entity
-@Table(name = "iban", uniqueConstraints = @UniqueConstraint(columnNames = {
-        "bank_account_id", "iban"
-}))
+@Table(name = "iban")
 public class IbanBean {
     /*
      * Table values
      */
     /** Iban identifier. */
     @Id
-    @Column(name = "iban_id", unique = true, nullable = false)
+    @Column(name = "iban_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long ibanId;
 
     /** The bank account. */
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "bank_account_id", unique = true, nullable = false)
+    @OneToOne
+    @JoinColumn(name = "bank_account_id", unique = true)
     private BankAccountBean bankAccount;
 
     /** The iban associated with the account. */
-    @Column(name = "iban", unique = true, nullable = false)
+    @Column(name = "iban", unique = true)
     private String iban;
 
     /*

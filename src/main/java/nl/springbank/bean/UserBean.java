@@ -18,55 +18,55 @@ public class UserBean {
      */
     /** User identifier. */
     @Id
-    @Column(name = "user_id", unique = true, nullable = false)
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long userId;
 
     /** The name of the user. */
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     /** The surname of the user. */
-    @Column(name = "surname", nullable = false)
+    @Column(name = "surname")
     private String surname;
 
     /** The initials of the user. */
-    @Column(name = "initials", nullable = false)
+    @Column(name = "initials")
     private String initials;
 
     /** The date of birth of the user. */
-    @Column(name = "date_of_birth", nullable = false)
+    @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
     /** The BSN of the user. */
-    @Column(name = "bsn", unique = true, nullable = false)
+    @Column(name = "bsn", unique = true)
     private String bsn;
 
     /** The street address of the user. */
-    @Column(name = "street_address", nullable = false)
+    @Column(name = "street_address")
     private String streetAddress;
 
     /** The telephone number of the user. */
-    @Column(name = "telephone_number", nullable = false)
+    @Column(name = "telephone_number")
     private String telephoneNumber;
 
     /** The username of the user. */
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "username", unique = true)
     private String username;
 
     /** The password of the user. */
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     /** The email of the user. */
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
     /*
      * Mapped values
      */
     /** The accounts this user is the holder of. */
-    @OneToMany(mappedBy = "holder", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "holder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<BankAccountBean> holderAccounts;
 
     /** The accounts this user has access to. */
@@ -74,7 +74,7 @@ public class UserBean {
     private Set<BankAccountBean> accessAccounts;
 
     /** The cards of the user. */
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<CardBean> cards;
 
     /*

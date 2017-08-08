@@ -19,29 +19,29 @@ public class CardBean {
      */
     /** Card identifier. */
     @Id
-    @Column(name = "card_id", unique = true, nullable = false)
+    @Column(name = "card_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long cardId;
 
     /** The bank account associated with the card. */
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "bank_account_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "bank_account_id")
     private BankAccountBean bankAccount;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private UserBean user;
 
     /** The card number. */
-    @Column(name = "card_number", nullable = false)
+    @Column(name = "card_number")
     private String cardNumber;
 
     /** The pin code of the card. */
-    @Column(name = "pin", nullable = false)
+    @Column(name = "pin")
     private String pin;
 
     /** The expiration date of the card. */
-    @Column(name = "expiration_date", nullable = false)
+    @Column(name = "expiration_date")
     private Date expirationDate;
 
     /*

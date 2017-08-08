@@ -18,46 +18,46 @@ public class BankAccountBean {
      */
     /** Account identifier. */
     @Id
-    @Column(name = "account_id", unique = true, nullable = false)
+    @Column(name = "account_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long bankAccountId;
 
     /** The holder associated with the account. */
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "holder_user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "holder_user_id")
     private UserBean holder;
 
     /** The balance on the account. */
-    @Column(name = "balance", nullable = false)
+    @Column(name = "balance")
     private double balance;
 
     /*
      * Mapped values
      */
     /** The iban associated with this bank account. */
-    @OneToOne(mappedBy = "bankAccount", optional = false, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "bankAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private IbanBean iban;
 
     /** The users that have access to this bank account. */
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_bank_account",
-            joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+            joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     )
     private Set<UserBean> accessUsers;
 
     /** The cards associated with this bank account. */
-    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<CardBean> cards;
 
     /** The transactions with this bank account as the source. */
-    @OneToMany(mappedBy = "sourceBankAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "sourceBankAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @OrderBy("date DESC")
     private SortedSet<TransactionBean> sourceTransactions;
 
     /** The transactions with this bank account as target. */
-    @OneToMany(mappedBy = "targetBankAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "targetBankAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @OrderBy("date DESC")
     private SortedSet<TransactionBean> targetTransactions;
 
