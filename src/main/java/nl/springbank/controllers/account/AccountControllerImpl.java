@@ -13,6 +13,7 @@ import nl.springbank.services.CardService;
 import nl.springbank.services.IbanService;
 import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -39,7 +40,11 @@ public class AccountControllerImpl implements AccountController {
     @Override
     public OpenedAccountObject openAccount(String name, String surname, String initials, String dob, String ssn, String address, String telephoneNumber, String email, String username, String password) throws InvalidParamValueError {
         UserBean user = userService.newUser(name, surname, initials, dob, ssn, address, telephoneNumber, email, username, password);
-        return openAccount(user);
+        try {
+            return openAccount(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new InvalidParamValueError(e);
+        }
     }
 
     @Override
