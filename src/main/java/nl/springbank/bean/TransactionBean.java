@@ -21,7 +21,7 @@ public class TransactionBean implements Comparable<TransactionBean> {
     @Id
     @Column(name = "transaction_id")
     @GeneratedValue(strategy = AUTO)
-    private long transactionId;
+    private Long transactionId;
 
     /** The source bank account. Is {@code null} for a deposit or when the source account has been closed. */
     @ManyToOne
@@ -43,7 +43,7 @@ public class TransactionBean implements Comparable<TransactionBean> {
 
     /** The amount of the transaction */
     @Column(name = "amount")
-    private double amount;
+    private Double amount;
 
     /** The message of the transaction. Is {@code null} for a deposit. */
     @Column(name = "message")
@@ -52,11 +52,11 @@ public class TransactionBean implements Comparable<TransactionBean> {
     /*
      * Bean methods
      */
-    public long getTransactionId() {
+    public Long getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(long transactionId) {
+    public void setTransactionId(Long transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -92,11 +92,11 @@ public class TransactionBean implements Comparable<TransactionBean> {
         this.date = date;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

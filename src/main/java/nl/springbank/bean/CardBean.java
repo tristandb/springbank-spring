@@ -23,7 +23,7 @@ public class CardBean {
     @Id
     @Column(name = "card_id")
     @GeneratedValue(strategy = AUTO)
-    private long cardId;
+    private Long cardId;
 
     /** The bank account associated with the card. */
     @ManyToOne
@@ -49,11 +49,11 @@ public class CardBean {
     /*
      * Bean methods
      */
-    public long getCardId() {
+    public Long getCardId() {
         return cardId;
     }
 
-    public void setCardId(long cardId) {
+    public void setCardId(Long cardId) {
         this.cardId = cardId;
     }
 

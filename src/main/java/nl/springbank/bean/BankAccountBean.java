@@ -1,6 +1,7 @@
 package nl.springbank.bean;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -23,7 +24,7 @@ public class BankAccountBean {
     @Id
     @Column(name = "account_id")
     @GeneratedValue(strategy = AUTO)
-    private long bankAccountId;
+    private Long bankAccountId;
 
     /** The holder associated with the account. */
     @ManyToOne
@@ -32,7 +33,7 @@ public class BankAccountBean {
 
     /** The balance on the account. */
     @Column(name = "balance")
-    private double balance;
+    private Double balance;
 
     /*
      * Mapped values
@@ -48,30 +49,30 @@ public class BankAccountBean {
             joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     )
-    private Set<UserBean> accessUsers;
+    private Set<UserBean> accessUsers = Collections.emptySet();
 
     /** The cards associated with this bank account. */
     @OneToMany(mappedBy = "bankAccount", cascade = ALL, orphanRemoval = true)
-    private Set<CardBean> cards;
+    private Set<CardBean> cards = Collections.emptySet();
 
     /** The transactions with this bank account as the source. */
     @OneToMany(mappedBy = "sourceBankAccount", cascade = ALL)
     @OrderBy("date DESC")
-    private SortedSet<TransactionBean> sourceTransactions;
+    private SortedSet<TransactionBean> sourceTransactions = Collections.emptySortedSet();
 
     /** The transactions with this bank account as target. */
     @OneToMany(mappedBy = "targetBankAccount", cascade = ALL)
     @OrderBy("date DESC")
-    private SortedSet<TransactionBean> targetTransactions;
+    private SortedSet<TransactionBean> targetTransactions = Collections.emptySortedSet();
 
     /*
      * Bean methods
      */
-    public long getBankAccountId() {
+    public Long getBankAccountId() {
         return bankAccountId;
     }
 
-    public void setBankAccountId(long bankAccountId) {
+    public void setBankAccountId(Long bankAccountId) {
         this.bankAccountId = bankAccountId;
     }
 
@@ -79,15 +80,15 @@ public class BankAccountBean {
         return holder;
     }
 
-    public void setHolder(UserBean userBean) {
-        this.holder = userBean;
+    public void setHolder(UserBean holder) {
+        this.holder = holder;
     }
 
-    public double getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 

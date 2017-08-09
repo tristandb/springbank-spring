@@ -20,7 +20,7 @@ public class IbanBean {
     @Id
     @Column(name = "iban_id")
     @GeneratedValue(strategy = AUTO)
-    private long ibanId;
+    private Long ibanId;
 
     /** The bank account. */
     @OneToOne
@@ -34,11 +34,11 @@ public class IbanBean {
     /*
      * Bean methods
      */
-    public long getIbanId() {
+    public Long getIbanId() {
         return ibanId;
     }
 
-    public void setIbanId(long ibanId) {
+    public void setIbanId(Long ibanId) {
         this.ibanId = ibanId;
     }
 

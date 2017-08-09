@@ -2,6 +2,7 @@ package nl.springbank.bean;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Collections;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
@@ -23,7 +24,7 @@ public class UserBean {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = AUTO)
-    private long userId;
+    private Long userId;
 
     /** The name of the user. */
     @Column(name = "name")
@@ -70,24 +71,24 @@ public class UserBean {
      */
     /** The accounts this user is the holder of. */
     @OneToMany(mappedBy = "holder", cascade = ALL, orphanRemoval = true)
-    private Set<BankAccountBean> holderAccounts;
+    private Set<BankAccountBean> holderAccounts = Collections.emptySet();
 
     /** The accounts this user has access to. */
     @ManyToMany(mappedBy = "accessUsers", cascade = ALL)
-    private Set<BankAccountBean> accessAccounts;
+    private Set<BankAccountBean> accessAccounts = Collections.emptySet();
 
     /** The cards of the user. */
     @OneToMany(mappedBy = "user", cascade = ALL, orphanRemoval = true)
-    private Set<CardBean> cards;
+    private Set<CardBean> cards = Collections.emptySet();
 
     /*
      * Bean methods
      */
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

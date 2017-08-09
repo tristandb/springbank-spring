@@ -82,7 +82,7 @@ public class BankAccountService {
         BankAccountBean bankAccount = new BankAccountBean();
         bankAccount.setHolder(user);
         bankAccount.setAccessUsers(Collections.singleton(user));
-        bankAccount.setBalance(0);
+        bankAccount.setBalance(0.0);
         return saveBankAccount(bankAccount);
     }
 
