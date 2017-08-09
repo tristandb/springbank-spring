@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.util.Set;
 import java.util.SortedSet;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.GenerationType.AUTO;
+
 /**
  * Bean representing the bank_account table. A bank account is associated with a holder.
  *
@@ -19,7 +22,7 @@ public class BankAccountBean {
     /** Account identifier. */
     @Id
     @Column(name = "account_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = AUTO)
     private long bankAccountId;
 
     /** The holder associated with the account. */
@@ -35,11 +38,11 @@ public class BankAccountBean {
      * Mapped values
      */
     /** The iban associated with this bank account. */
-    @OneToOne(mappedBy = "bankAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "bankAccount", cascade = ALL, orphanRemoval = true)
     private IbanBean iban;
 
     /** The users that have access to this bank account. */
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = ALL)
     @JoinTable(
             name = "user_bank_account",
             joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "account_id"),
@@ -48,16 +51,16 @@ public class BankAccountBean {
     private Set<UserBean> accessUsers;
 
     /** The cards associated with this bank account. */
-    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "bankAccount", cascade = ALL, orphanRemoval = true)
     private Set<CardBean> cards;
 
     /** The transactions with this bank account as the source. */
-    @OneToMany(mappedBy = "sourceBankAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "sourceBankAccount", cascade = ALL)
     @OrderBy("date DESC")
     private SortedSet<TransactionBean> sourceTransactions;
 
     /** The transactions with this bank account as target. */
-    @OneToMany(mappedBy = "targetBankAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "targetBankAccount", cascade = ALL)
     @OrderBy("date DESC")
     private SortedSet<TransactionBean> targetTransactions;
 

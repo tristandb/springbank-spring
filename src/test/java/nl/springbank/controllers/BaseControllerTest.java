@@ -2,6 +2,7 @@ package nl.springbank.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.springbank.helper.jsonrpc.JsonRpcRequest;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,6 +32,10 @@ public class BaseControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Test
+    public void stubTest() throws Exception {
+    }
 
     protected ResultActions postObject(String endPoint, String methodName, Object object) throws Exception {
         JsonRpcRequest jsonRpcRequest = new JsonRpcRequest(methodName, object);

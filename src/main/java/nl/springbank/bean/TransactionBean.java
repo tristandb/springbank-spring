@@ -3,6 +3,8 @@ package nl.springbank.bean;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+import static javax.persistence.GenerationType.AUTO;
+
 /**
  * Bean representing the transaction table. A transaction is associated with a source and a target bank account.
  *
@@ -18,15 +20,15 @@ public class TransactionBean implements Comparable<TransactionBean> {
     /** Transaction identifier. */
     @Id
     @Column(name = "transaction_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = AUTO)
     private long transactionId;
 
-    /** The source bank account. Is {@code null} for a deposit. */
+    /** The source bank account. Is {@code null} for a deposit or when the source account has been closed. */
     @ManyToOne
     @JoinColumn(name = "source_account_id")
     private BankAccountBean sourceBankAccount;
 
-    /** The target bank account. */
+    /** The target bank account. Is {@code null} if the target account has been closed. */
     @ManyToOne
     @JoinColumn(name = "target_account_id")
     private BankAccountBean targetBankAccount;

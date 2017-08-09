@@ -3,6 +3,8 @@ package nl.springbank.bean;
 import javax.persistence.*;
 import java.sql.Date;
 
+import static javax.persistence.GenerationType.AUTO;
+
 /**
  * Bean representing the card table. A card is associated with a bank account.
  *
@@ -20,7 +22,7 @@ public class CardBean {
     /** Card identifier. */
     @Id
     @Column(name = "card_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = AUTO)
     private long cardId;
 
     /** The bank account associated with the card. */

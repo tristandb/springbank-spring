@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.Set;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.GenerationType.AUTO;
+
 /**
  * Bean representing the bank_account table.
  *
@@ -19,7 +22,7 @@ public class UserBean {
     /** User identifier. */
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = AUTO)
     private long userId;
 
     /** The name of the user. */
@@ -66,15 +69,15 @@ public class UserBean {
      * Mapped values
      */
     /** The accounts this user is the holder of. */
-    @OneToMany(mappedBy = "holder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "holder", cascade = ALL, orphanRemoval = true)
     private Set<BankAccountBean> holderAccounts;
 
     /** The accounts this user has access to. */
-    @ManyToMany(mappedBy = "accessUsers", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "accessUsers", cascade = ALL)
     private Set<BankAccountBean> accessAccounts;
 
     /** The cards of the user. */
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = ALL, orphanRemoval = true)
     private Set<CardBean> cards;
 
     /*

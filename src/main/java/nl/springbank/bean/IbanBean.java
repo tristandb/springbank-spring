@@ -2,6 +2,8 @@ package nl.springbank.bean;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.AUTO;
+
 /**
  * Bean representing the iban table. Associates each bank account with an iban.
  *
@@ -17,7 +19,7 @@ public class IbanBean {
     /** Iban identifier. */
     @Id
     @Column(name = "iban_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = AUTO)
     private long ibanId;
 
     /** The bank account. */
