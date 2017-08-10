@@ -66,6 +66,7 @@ public class AccountControllerImpl implements AccountController {
         BankAccountBean bankAccount = bankAccountService.getBankAccount(iBAN);
         userService.checkHolder(bankAccount, user);
         bankAccountService.deleteBankAccount(bankAccount);
+        user = userService.getUserByAuth(authToken);
         if (user.getHolderAccounts().isEmpty()) {
             userService.deleteUser(user);
         }
