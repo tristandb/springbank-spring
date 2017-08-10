@@ -168,7 +168,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'32432435','1954-10-14','d@d.nl','B.','Bernard','dd','Yffiniac','Hinault','0612345678','bernard@hinault.fr'),(2,'123456789','1970-01-01','info@svenkonings.nl','S.','Sven','sven','Brink 123, Ons Dorp','Konings','0612345678','sven@konings.nl'),(3,'435456553','1947-12-01','xyz@test.nl','D.','Dagobert','dagdag','Pakhuislaan 1, 1234AB Duckstad','Duck','05312312312','dagobertduck@gmail.com'),(4,'571376046','1954-02-19','donald@gmail.com','D','Duck','kwikkwekkwak','1313 Webfoot Walk, Duckburg','Donald','+316 12345678','duckd');
+INSERT INTO `user` VALUES (1,'32432435','1954-10-14','d@d.nl','B.','Bernard','dd','Yffiniac','Hinault','0612345678','bernard@hinault.fr'),(2,'123456789','1970-01-01','info@svenkonings.nl','S.','Sven','sven','Brink 123, Ons Dorp','Konings','0612345678','sven@konings.nl'),(3,'435456553','1947-12-01','xyz@test.nl','D.','Dagobert','dagdag','Pakhuislaan 1, 1234AB Duckstad','Duck','05312312312','dagobertduck@gmail.com'),(4,'640673175','1954-02-19','donald@gmail.com','D','Duck','kwikkwekkwak','1313 Webfoot Walk, Duckburg','Donald','+316 12345678','fakeduckd');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 

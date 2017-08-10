@@ -39,7 +39,7 @@ public class AccessControllerTest extends BaseControllerTest {
 
     @Test
     public void provideAccessAlreadyGivenOwner() throws Exception {
-        ProvideAccessObject provideAccessObject = new ProvideAccessObject(4, "NL83SPRI0114480386", "duckd");
+        ProvideAccessObject provideAccessObject = new ProvideAccessObject(4, "NL83SPRI0114480386", "fakeduckd");
         postObject("/api/access", "provideAccess", provideAccessObject)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.error.code").value(420));
