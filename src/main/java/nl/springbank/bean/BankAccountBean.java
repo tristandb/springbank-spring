@@ -43,7 +43,7 @@ public class BankAccountBean {
     private IbanBean iban;
 
     /** The users that have access to this bank account. */
-    @ManyToMany(cascade = ALL)
+    @ManyToMany
     @JoinTable(
             name = "user_bank_account",
             joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "account_id"),

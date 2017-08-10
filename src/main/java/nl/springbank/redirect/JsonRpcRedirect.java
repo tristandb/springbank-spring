@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -38,6 +40,7 @@ import java.util.Set;
  * Ugly hack to redirect request to the corresponding JSON RPC endpoint.
  *
  * @author Tristan de Boer
+ * @author Sven Konings
  */
 @Controller
 public class JsonRpcRedirect {
@@ -67,20 +70,19 @@ public class JsonRpcRedirect {
         JsonRpcRequest jsonRequest = gson.fromJson(json, JsonRpcRequest.class);
         String result = null;
 
-        ClassPathScanningCandidateComponentProvider provider = new
-                ClassPathScanningCandidateComponentProvider(false);
+        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter(new AnnotationTypeFilter(AutoJsonRpcServiceImpl.class));
         Set<BeanDefinition> beans = provider.findCandidateComponents("nl.springbank");
         for (BeanDefinition bd : beans) {
-            Class<?> bean = null;
+            Class<?> bean;
             try {
                 bean = Class.forName(bd.getBeanClassName());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
+                continue;
             }
-
             for (Method method : bean.getMethods()) {
-                if (method.getName().equals(jsonRequest.getMethod())) {
+                if (method.getName().equals(jsonRequest.getMethod()) && method.getParameterCount() == ((Map<?, ?>) jsonRequest.getParams()).size()) {
                     // Method found in bd
                     for (Field field : getClass().getDeclaredFields()) {
                         if (field.getType().isAssignableFrom(bean)) {
