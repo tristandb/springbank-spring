@@ -1,84 +1,241 @@
 package nl.springbank.services;
 
-import javassist.NotFoundException;
-import nl.springbank.bean.IbanBean;
+import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.UserBean;
-import nl.springbank.dao.IbanDao;
 import nl.springbank.dao.UserDao;
+import nl.springbank.exceptions.AuthenticationError;
+import nl.springbank.exceptions.InvalidParamValueError;
+import nl.springbank.exceptions.NotAuthorizedError;
+import nl.springbank.helper.AuthenticationHelper;
+import nl.springbank.helper.DateHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
+import java.util.List;
 
 /**
  * Service that does all operation regarding Users.
  *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 @Service
 public class UserService {
 
     private final UserDao userDao;
 
-    private final IbanDao ibanDao;
-
-    private final String SUPER_SECRET_KEY = "kaas";
-
-    /**
-     * Autowire <code>nl.springbank.bean.UserDao</code>
-     */
-    public UserService(UserDao userDao, IbanDao ibanDao) {
+    @Autowired
+    public UserService(UserDao userDao) {
         this.userDao = userDao;
-        this.ibanDao = ibanDao;
     }
 
     /**
-     * Returns a list of <code>nl.springbank.bean.UserBean</code>.
+     * Get the user with the given user id.
+     *
+     * @param userId the given user id
+     * @return the user
+     * @throws InvalidParamValueError if an error occurred or the user doesn't exist
      */
-    public Iterable<UserBean> getAllUsers() {
+    public UserBean getUser(long userId) throws InvalidParamValueError {
+        UserBean user;
+        try {
+            user = userDao.findOne(userId);
+            Assert.notNull(user, "User not found");
+        } catch (IllegalArgumentException e) {
+            throw new InvalidParamValueError(e);
+        }
+        return user;
+    }
+
+    /**
+     * Get the user with the given username.
+     *
+     * @param username the given username
+     * @return the user
+     * @throws InvalidParamValueError if an error occurred or the user doesn't exist
+     */
+    public UserBean getUser(String username) throws InvalidParamValueError {
+        UserBean user;
+        try {
+            user = userDao.findByUsername(username);
+            Assert.notNull(user, "User not found");
+        } catch (IllegalArgumentException e) {
+            throw new InvalidParamValueError(e);
+        }
+        return user;
+    }
+
+    /**
+     * Get all users.
+     *
+     * @return the list of users
+     */
+    public List<UserBean> getUsers() {
         return userDao.findAll();
     }
 
     /**
-     * Returns a <code>nl.springbank.bean.UserBean</code> having provided an userId.
+     * Get the user with the given username and password.
+     *
+     * @param username The given username
+     * @param password The given password
+     * @return the user
+     * @throws AuthenticationError if an error occurred or the user doesn't exist
      */
-    public UserBean getUser(long userId) {
-        return userDao.findOne(userId);
+    public UserBean authUser(String username, String password) throws AuthenticationError {
+        UserBean user;
+        try {
+            user = userDao.findByUsernameAndPassword(username, password);
+            Assert.notNull(user, "User not found");
+        } catch (IllegalArgumentException e) {
+            throw new AuthenticationError(e);
+        }
+        return user;
     }
 
     /**
-     * Creates a new entry for <code>nl.springbank.bean.UserBean</code>.
+     * Get the user that belongs to the given authentication token.
+     *
+     * @param authToken the given authentication token
+     * @return the user
+     * @throws NotAuthorizedError if an error occurred or the user doesn't exist
      */
-    public UserBean saveUser(UserBean userBean) {
-        return userDao.save(userBean);
+    public UserBean getUserByAuth(String authToken) throws NotAuthorizedError {
+        long userId = AuthenticationHelper.getUserId(authToken);
+        UserBean userBean;
+        try {
+            userBean = userDao.findOne(userId);
+            Assert.notNull(userBean, "User not found");
+        } catch (IllegalArgumentException e) {
+            throw new NotAuthorizedError(e);
+        }
+        return userBean;
     }
 
     /**
-     * Deletes a entry of <code>nl.springbank.bean.UserBean</code> given a userId.
+     * Check if the user that belongs to the given authentication token is the holder of the given bank account.
+     *
+     * @param bankAccount the given bank account
+     * @param authToken   the given authentication token
+     * @throws NotAuthorizedError if the user is not the holder of the given bank account
+     */
+    public void checkHolder(BankAccountBean bankAccount, String authToken) throws NotAuthorizedError {
+        checkHolder(bankAccount, getUserByAuth(authToken));
+    }
+
+    /**
+     * Check if the given user is the holder of the given bank account.
+     *
+     * @param bankAccount the given bank account
+     * @param user        the given user
+     * @throws NotAuthorizedError if the user is not the holder of the given bank account
+     */
+    public void checkHolder(BankAccountBean bankAccount, UserBean user) throws NotAuthorizedError {
+        if (!bankAccount.getHolder().equals(user)) {
+            throw new NotAuthorizedError("User is not eligible to get access");
+        }
+    }
+
+    /**
+     * Check if the user that belongs to the given authentication token is allowed to access the given bank account.
+     *
+     * @param bankAccount the given bank account
+     * @param authToken   the given authentication token
+     * @throws NotAuthorizedError if the user is not allowed to access the given bank account
+     */
+    public void checkAccess(BankAccountBean bankAccount, String authToken) throws NotAuthorizedError {
+        checkAccess(bankAccount, getUserByAuth(authToken));
+    }
+
+    /**
+     * Check if the given user is allowed to access the given bank account.
+     *
+     * @param bankAccount the given bank account
+     * @param user        the given user
+     * @throws NotAuthorizedError if the user is not allowed to access the given bank account
+     */
+    public void checkAccess(BankAccountBean bankAccount, UserBean user) throws NotAuthorizedError {
+        if (!bankAccount.getAccessUsers().contains(user)) {
+            throw new NotAuthorizedError("User is not eligible to get access");
+        }
+    }
+
+    /**
+     * Creates a new user.
+     *
+     * @param name            Customer name
+     * @param surname         Customer surname
+     * @param initials        Customer initials
+     * @param dob             Customer date of birth
+     * @param ssn             Customer SSN
+     * @param address         Customer address
+     * @param telephoneNumber Customer telephoneNumber
+     * @param email           Customer email
+     * @param username        Customer username
+     * @param password        Customer password
+     * @return the created user
+     * @throws InvalidParamValueError If the user can't be created
+     */
+    public UserBean newUser(String name, String surname, String initials, String dob, String ssn, String address, String telephoneNumber, String email, String username, String password) throws InvalidParamValueError {
+        UserBean user = new UserBean();
+        user.setName(name);
+        user.setSurname(surname);
+        user.setInitials(initials);
+        user.setDateOfBirth(DateHelper.getDateFromString(dob));
+        user.setBsn(ssn);
+        user.setStreetAddress(address);
+        user.setTelephoneNumber(telephoneNumber);
+        user.setEmail(email);
+        user.setUsername(username);
+        user.setPassword(password);
+        return saveUser(user);
+    }
+
+    /**
+     * Save the given user.
+     *
+     * @param user the given user
+     * @return the saved user
+     */
+    public UserBean saveUser(UserBean user) {
+        return userDao.save(user);
+    }
+
+    /**
+     * Save the given users.
+     *
+     * @param users the given users
+     * @return the list of saved users
+     */
+    public List<UserBean> saveUsers(Iterable<UserBean> users) {
+        return userDao.save(users);
+    }
+
+    /**
+     * Delete the user with the given user id.
+     *
+     * @param userId the given user id
      */
     public void deleteUser(long userId) {
         userDao.delete(userId);
     }
 
     /**
-     * Returns a user given an email.
+     * Delete the given user.
      *
-     * @param email The email to use.
+     * @param user the given user
      */
-    public UserBean getUserByEmail(String email) {
-        return userDao.findByEmail(email);
+    public void deleteUser(UserBean user) {
+        userDao.delete(user);
     }
 
     /**
-     * Checks if the user exists in the database.
-     * Returns a key if the user exists.
+     * Delete the given users.
      *
-     * @param iban The IBAN to check for.
-     * @return
+     * @param users the given users
      */
-    public String authenticateUser(String iban) throws NotFoundException {
-        IbanBean ibanBean = ibanDao.findByIban(iban);
-        if (ibanBean != null) {
-            return SUPER_SECRET_KEY;
-        } else {
-            throw new NotFoundException("IBAN not found");
-        }
+    public void deleteUsers(Iterable<UserBean> users) {
+        userDao.delete(users);
     }
 }

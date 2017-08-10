@@ -1,100 +1,135 @@
 package nl.springbank.services;
 
 import nl.springbank.bean.BankAccountBean;
-import nl.springbank.bean.IbanBean;
-import nl.springbank.bean.UserBankAccountBean;
-import nl.springbank.bean.UserIbanBean;
+import nl.springbank.bean.UserBean;
 import nl.springbank.dao.BankAccountDao;
-import nl.springbank.dao.IbanDao;
-import nl.springbank.dao.UserBankAccountDao;
+import nl.springbank.exceptions.InvalidParamValueError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
- * Service that does all operation regarding BankAccounts.
+ * Service that does all operations regarding BankAccounts.
  *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 @Service
 public class BankAccountService {
 
     private final BankAccountDao bankAccountDao;
 
-    private final IbanDao ibanDao;
-
-    private final UserBankAccountDao userBankAccountDao;
-
     @Autowired
-    public BankAccountService(BankAccountDao bankAccountDao, IbanDao ibanDao, UserBankAccountDao userBankAccountDao) {
+    public BankAccountService(BankAccountDao bankAccountDao) {
         this.bankAccountDao = bankAccountDao;
-        this.ibanDao = ibanDao;
-        this.userBankAccountDao = userBankAccountDao;
     }
 
     /**
-     * Returns a list of bank accounts
+     * Get the bank account with the given bank account id.
      *
-     * @return
+     * @param bankAccountId the given bank account id
+     * @return the bank account
+     * @throws InvalidParamValueError if an error occurred or the account doesn't exist
      */
-    public Iterable<BankAccountBean> getBankAccounts() {
+    public BankAccountBean getBankAccount(long bankAccountId) throws InvalidParamValueError {
+        BankAccountBean bankAccount;
+        try {
+            bankAccount = bankAccountDao.findOne(bankAccountId);
+            Assert.notNull(bankAccount, "Bank account not found");
+        } catch (IllegalArgumentException e) {
+            throw new InvalidParamValueError(e);
+        }
+        return bankAccount;
+    }
+
+    /**
+     * Get the bank account with the given iban.
+     *
+     * @param iban the given iban
+     * @return the bank account
+     * @throws InvalidParamValueError if an error occurred or the account doesn't exist
+     */
+    public BankAccountBean getBankAccount(String iban) throws InvalidParamValueError {
+        BankAccountBean bankAccount;
+        try {
+            bankAccount = bankAccountDao.findByIban_Iban(iban);
+            Assert.notNull(bankAccount, "Bank account not found");
+        } catch (IllegalArgumentException e) {
+            throw new InvalidParamValueError(e);
+        }
+        return bankAccount;
+    }
+
+    /**
+     * Get all bank accounts.
+     *
+     * @return the list of bank accounts
+     */
+    public List<BankAccountBean> getBankAccounts() {
         return bankAccountDao.findAll();
     }
 
     /**
-     * Return a bank account given a bankAccountId.
+     * Creates a new bank account for the given user.
      *
-     * @param bankAccount The bankAccountId
-     * @return
+     * @param user the given user
+     * @return the created bank account
      */
-    public BankAccountBean getBankAccount(long bankAccount) {
-        return bankAccountDao.findOne(bankAccount);
+    public BankAccountBean newBankAccount(UserBean user) {
+        BankAccountBean bankAccount = new BankAccountBean();
+        bankAccount.setHolder(user);
+        bankAccount.setAccessUsers(Collections.singleton(user));
+        bankAccount.setBalance(0.0);
+        return saveBankAccount(bankAccount);
     }
 
     /**
-     * Create a new BankAccount in the database.
+     * Save the given bank account in the database.
      *
-     * @param bankAccountBean
-     * @return
+     * @param bankAccount the given bank account
+     * @return the saved bank account
      */
-    public BankAccountBean saveBankAccount(BankAccountBean bankAccountBean) {
-        return bankAccountDao.save(bankAccountBean);
+    public BankAccountBean saveBankAccount(BankAccountBean bankAccount) {
+        return bankAccountDao.save(bankAccount);
     }
 
     /**
-     * Deletes a BankAccount.
+     * Save the given bank accounts in the database.
      *
-     * @param bankAccountId The BankAccount to delete
+     * @param bankAccounts the given bank accounts
+     * @return the list of saved bank accounts
+     */
+    public List<BankAccountBean> saveBankAccounts(Iterable<BankAccountBean> bankAccounts) {
+        return bankAccountDao.save(bankAccounts);
+    }
+
+    /**
+     * Delete the bank account with the given id.
+     *
+     * @param bankAccountId the given id
      */
     public void deleteBankAccount(long bankAccountId) {
         bankAccountDao.delete(bankAccountId);
     }
 
     /**
-     * Save <code>nl.springbank.bean.UserBankAccountBean</code>
+     * Delete the given bank account.
      *
-     * @param userBankAccountBean The object to save.
-     * @return
+     * @param bankAccount the given bank account
      */
-    public UserBankAccountBean connectUser(UserBankAccountBean userBankAccountBean) {
-        // Save the UserBankAccountBean
-        return userBankAccountDao.save(userBankAccountBean);
+    public void deleteBankAccount(BankAccountBean bankAccount) {
+        bankAccountDao.delete(bankAccount);
     }
 
-
     /**
-     * Connects a user given an IBAN and a userID.
+     * Delete the given bank accounts.
      *
-     * @param userIbanBean The IBAN and userId
-     * @return
+     * @param bankAccounts the given bank accounts
      */
-    public UserBankAccountBean connectUserByIban(UserIbanBean userIbanBean) {
-        // Search for IBAN
-        IbanBean ibanBean = ibanDao.findByIban(userIbanBean.getIban());
-
-        // Create a new UserBankAccountBean
-        UserBankAccountBean userBankAccountBean = new UserBankAccountBean(userIbanBean.getUserId(), ibanBean.getBankAccountId());
-
-        // Call a function to save the relationship to the database
-        return this.connectUser(userBankAccountBean);
+    public void deleteBankAccounts(Iterable<BankAccountBean> bankAccounts) {
+        bankAccountDao.delete(bankAccounts);
     }
 }

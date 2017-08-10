@@ -4,9 +4,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Description
- *
- * @author Tristan de Boer).
+ * @author Tristan de Boer
  */
 @Configuration
 @ComponentScan

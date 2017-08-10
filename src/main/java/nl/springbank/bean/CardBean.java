@@ -1,68 +1,92 @@
 package nl.springbank.bean;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
+import static javax.persistence.GenerationType.AUTO;
+
 /**
- * CardBean. Consists of a card.
+ * Bean representing the card table. A card is associated with a bank account.
  *
- * @author Tristan de Boer).
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 @Entity
-@Table(name = "card")
+@Table(name = "card", uniqueConstraints = @UniqueConstraint(columnNames = {
+        "bank_account_id", "card_number"
+}))
 public class CardBean {
     /*
-        Private methods
+     * Table values
      */
-    // Card identifier
+    /** Card identifier. */
     @Id
     @Column(name = "card_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long cardId;
+    @GeneratedValue(strategy = AUTO)
+    private Long cardId;
 
-    // The cards number
-    @NotNull
-    private int cardNumber;
+    /** The bank account associated with the card. */
+    @ManyToOne
+    @JoinColumn(name = "bank_account_id")
+    private BankAccountBean bankAccount;
 
-    // The cards corresponding bank_account_id
-    @Column(name = "bank_account_id")
-    private int bankAccountId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserBean user;
 
-    // The cards expiration date
+    /** The card number. */
+    @Column(name = "card_number")
+    private String cardNumber;
+
+    /** The pin code of the card. */
+    @Column(name = "pin")
+    private String pin;
+
+    /** The expiration date of the card. */
     @Column(name = "expiration_date")
     private Date expirationDate;
 
     /*
-        Public methods
+     * Bean methods
      */
-
-    public CardBean() {
-
-    }
-
-    public long getCardId() {
+    public Long getCardId() {
         return cardId;
     }
 
-    public void setCardId(long cardId) {
+    public void setCardId(Long cardId) {
         this.cardId = cardId;
     }
 
-    public int getCardNumber() {
+    public BankAccountBean getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(BankAccountBean bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+    public UserBean getUser() {
+        return user;
+    }
+
+    public void setUser(UserBean user) {
+        this.user = user;
+    }
+
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(int cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
-    public int getBankAccountId() {
-        return bankAccountId;
+    public String getPin() {
+        return pin;
     }
 
-    public void setBankAccountId(int bankAccountId) {
-        this.bankAccountId = bankAccountId;
+    public void setPin(String pin) {
+        this.pin = pin;
     }
 
     public Date getExpirationDate() {
@@ -77,8 +101,10 @@ public class CardBean {
     public String toString() {
         return "CardBean{" +
                 "cardId=" + cardId +
-                ", cardNumber=" + cardNumber +
-                ", bankAccountId=" + bankAccountId +
+                ", bankAccount=" + bankAccount +
+                ", user=" + user +
+                ", cardNumber='" + cardNumber + '\'' +
+                ", pin='" + pin + '\'' +
                 ", expirationDate=" + expirationDate +
                 '}';
     }

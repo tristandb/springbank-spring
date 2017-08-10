@@ -1,33 +1,35 @@
 package nl.springbank.dao;
 
+import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.TransactionBean;
-import org.springframework.data.repository.CrudRepository;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
- * TransactionDao.
- * Communicates with the database and returns objects of type <code>nl.springbank.bean.TransactionBean</code>
+ * TransactionDao. Communicates with the database and returns objects of type {@link TransactionBean}
  *
- * @author Tristan de Boer.
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 @Transactional
-public interface TransactionDao extends CrudRepository<TransactionBean, Long> {
+public interface TransactionDao extends JpaRepository<TransactionBean, Long> {
     /**
-     * Finds all TransactionBeans when a IBAN is provided.
+     * Get the transaction with the given source or target bank account
      *
-     * @param iban
-     * @return
+     * @param sourceAccount the given source bank account
+     * @param targetAccount the given target bank account
+     * @return the list of transactions
      */
-    Iterable<TransactionBean> findBySourceBankAccountIban(String iban);
+    List<TransactionBean> findBySourceBankAccountOrTargetBankAccountOrderByDateDesc(BankAccountBean sourceAccount, BankAccountBean targetAccount);
 
     /**
-     * Finds all TransactionBeans (source and target) when a AccountId is provided.
+     * Get the transaction with the given source and target bank account
+     *
+     * @param sourceAccount the given source bank account
+     * @param targetAccount the given target bank account
+     * @return the list of transactions
      */
-    Iterable<TransactionBean> findBySourceBankAccountOrTargetBankAccount(long sourceAccountId, long targetAccountId);
-
-    /**
-     * Finds all TransactionBeans (source and target) when a AccountId and Iban is provided.
-     */
-    Iterable<TransactionBean> findBySourceBankAccountOrTargetBankAccountOrSourceBankAccountIbanOrTargetBankAccountIban(long sourceAccountId, long targetAccountId, String sourceAccountIdIban, String targetAccountIdIban);
+    List<TransactionBean> findBySourceBankAccountAndTargetBankAccountOrderByDateDesc(BankAccountBean sourceAccount, BankAccountBean targetAccount);
 }

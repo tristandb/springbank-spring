@@ -1,58 +1,57 @@
 package nl.springbank.bean;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+
+import static javax.persistence.GenerationType.AUTO;
 
 /**
- * TransactionBean.
+ * Bean representing the transaction table. A transaction is associated with a source and a target bank account.
  *
- * @author Tristan de Boer).
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 @Entity
 @Table(name = "transaction")
-public class TransactionBean {
+public class TransactionBean implements Comparable<TransactionBean> {
     /*
-        Private methods
+     * Table values
      */
-    // Transaction identifier
+    /** Transaction identifier. */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "transaction_id", nullable = false, unique = true)
+    @Column(name = "transaction_id")
+    @GeneratedValue(strategy = AUTO)
     private Long transactionId;
 
-    // source bank account iban
-    @Column(name = "source_bank_account_iban")
-    private String sourceBankAccountIban;
+    /** The source bank account. Is {@code null} for a deposit or when the source account has been closed. */
+    @ManyToOne
+    @JoinColumn(name = "source_account_id")
+    private BankAccountBean sourceBankAccount;
 
-    // target bank account iban
-    @Column(name = "target_bank_account_iban")
-    private String targetBankAccountIban;
+    /** The target bank account. Is {@code null} if the target account has been closed. */
+    @ManyToOne
+    @JoinColumn(name = "target_account_id")
+    private BankAccountBean targetBankAccount;
 
-    // source bank account
-    @Column(name = "source_account_id")
-    private long sourceBankAccount;
+    /** The target name of the transaction. Is {@code null} for a deposit. */
+    @Column(name = "target_name")
+    private String targetName;
 
-    // target bank account
-    @Column(name = "target_account_id")
-    private long targetBankAccount;
+    /** The date of the transaction */
+    @Column(name = "date")
+    private Timestamp date;
 
-    // Amount transferred
-    @NotNull
-    private double amount;
+    /** The amount of the transaction */
+    @Column(name = "amount")
+    private Double amount;
 
-    // Message as specified by the transfer
+    /** The message of the transaction. Is {@code null} for a deposit. */
+    @Column(name = "message")
     private String message;
 
     /*
-        Public methods
+     * Bean methods
      */
-
-    public TransactionBean() {
-    }
-
     public Long getTransactionId() {
         return transactionId;
     }
@@ -61,43 +60,43 @@ public class TransactionBean {
         this.transactionId = transactionId;
     }
 
-    public String getSourceBankAccountIban() {
-        return sourceBankAccountIban;
-    }
-
-    public void setSourceBankAccountIban(String sourceBankAccountIban) {
-        this.sourceBankAccountIban = sourceBankAccountIban;
-    }
-
-    public String getTargetBankAccountIban() {
-        return targetBankAccountIban;
-    }
-
-    public void setTargetBankAccountIban(String targetBankAccountIban) {
-        this.targetBankAccountIban = targetBankAccountIban;
-    }
-
-    public long getSourceBankAccount() {
+    public BankAccountBean getSourceBankAccount() {
         return sourceBankAccount;
     }
 
-    public void setSourceBankAccount(long sourceBankAccount) {
+    public void setSourceBankAccount(BankAccountBean sourceBankAccount) {
         this.sourceBankAccount = sourceBankAccount;
     }
 
-    public long getTargetBankAccount() {
+    public BankAccountBean getTargetBankAccount() {
         return targetBankAccount;
     }
 
-    public void setTargetBankAccount(long targetBankAccount) {
+    public void setTargetBankAccount(BankAccountBean targetBankAccount) {
         this.targetBankAccount = targetBankAccount;
     }
 
-    public double getAmount() {
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
+    }
+
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -113,12 +112,21 @@ public class TransactionBean {
     public String toString() {
         return "TransactionBean{" +
                 "transactionId=" + transactionId +
-                ", sourceBankAccountIban='" + sourceBankAccountIban + '\'' +
-                ", targetBankAccountIban='" + targetBankAccountIban + '\'' +
                 ", sourceBankAccount=" + sourceBankAccount +
                 ", targetBankAccount=" + targetBankAccount +
+                ", targetName='" + targetName + '\'' +
+                ", date=" + date +
                 ", amount=" + amount +
                 ", message='" + message + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(TransactionBean that) {
+        if (this.getDate() == null || that.getDate() == null) {
+            return 0;
+        }
+        // Reverse date ordering
+        return that.getDate().compareTo(this.getDate());
     }
 }

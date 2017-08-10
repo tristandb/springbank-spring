@@ -1,54 +1,53 @@
 package nl.springbank.bean;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+
+import static javax.persistence.GenerationType.AUTO;
 
 /**
- * Description
+ * Bean representing the iban table. Associates each bank account with an iban.
  *
- * @author Tristan de Boer).
+ * @author Tristan de Boer
+ * @author Sven Konings
  */
 @Entity
 @Table(name = "iban")
 public class IbanBean {
     /*
-        Private methods
+     * Table values
      */
+    /** Iban identifier. */
     @Id
-    @Column(name = "bank_account_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long bankAccountId;
+    @Column(name = "iban_id")
+    @GeneratedValue(strategy = AUTO)
+    private Long ibanId;
 
-    // The IBAN of the account
-    @NotNull
+    /** The bank account. */
+    @OneToOne
+    @JoinColumn(name = "bank_account_id", unique = true)
+    private BankAccountBean bankAccount;
+
+    /** The iban associated with the account. */
+    @Column(name = "iban", unique = true)
     private String iban;
 
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
-    @JsonBackReference
-    private BankAccountBean bankAccountBean;
-
-
-    public IbanBean() {
+    /*
+     * Bean methods
+     */
+    public Long getIbanId() {
+        return ibanId;
     }
 
-    public BankAccountBean getBankAccountBean() {
-        return bankAccountBean;
+    public void setIbanId(Long ibanId) {
+        this.ibanId = ibanId;
     }
 
-    public long getBankAccountId() {
-        return bankAccountId;
+    public BankAccountBean getBankAccount() {
+        return bankAccount;
     }
 
-    public void setBankAccountId(long bankAccountId) {
-        this.bankAccountId = bankAccountId;
-    }
-
-    public void setBankAccountBean(BankAccountBean bankAccountBean) {
-        this.bankAccountBean = bankAccountBean;
+    public void setBankAccount(BankAccountBean bankAccount) {
+        this.bankAccount = bankAccount;
     }
 
     public String getIban() {
@@ -62,9 +61,9 @@ public class IbanBean {
     @Override
     public String toString() {
         return "IbanBean{" +
-                "bankAccountId=" + bankAccountId +
+                "ibanId=" + ibanId +
+                ", bankAccount=" + bankAccount +
                 ", iban='" + iban + '\'' +
-                ", bankAccountBean=" + bankAccountBean +
                 '}';
     }
 }
