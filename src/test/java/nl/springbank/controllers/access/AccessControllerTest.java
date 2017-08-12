@@ -1,6 +1,7 @@
 package nl.springbank.controllers.access;
 
 import nl.springbank.controllers.BaseControllerTest;
+import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.objects.ProvideAccessObject;
 import org.junit.Test;
 
@@ -35,14 +36,6 @@ public class AccessControllerTest extends BaseControllerTest {
         postObject("/api/access", "provideAccess", provideAccessObject)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.error.code").value(418));
-    }
-
-    @Test
-    public void provideAccessAlreadyGivenOwner() throws Exception {
-        ProvideAccessObject provideAccessObject = new ProvideAccessObject(4, "NL83SPRI0114480386", "fakeduckd");
-        postObject("/api/access", "provideAccess", provideAccessObject)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.error.code").value(420));
     }
 
     @Test

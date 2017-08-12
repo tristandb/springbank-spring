@@ -6,6 +6,8 @@ import nl.springbank.bean.UserBean;
 import nl.springbank.dao.CardDao;
 import nl.springbank.exceptions.InvalidPINError;
 import nl.springbank.exceptions.InvalidParamValueError;
+import nl.springbank.exceptions.NoEffectError;
+import nl.springbank.exceptions.NotAuthorizedError;
 import nl.springbank.helper.CardHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ import java.util.List;
 public class CardService {
 
     private final CardDao cardDao;
+    
+    public static final Integer INVALID_LOGIN_THRESHOLD = 3;
 
     @Autowired
     public CardService(CardDao cardDao) {
@@ -84,7 +88,7 @@ public class CardService {
      * @throws InvalidParamValueError if the bank account-card number combination is incorrect
      * @throws InvalidPINError        if the pin code is incorrect
      */
-    public void checkPin(BankAccountBean bankAccount, String cardNumber, String pinCode) throws InvalidParamValueError, InvalidPINError {
+    public void checkPin(BankAccountBean bankAccount, String cardNumber, String pinCode) throws InvalidParamValueError, InvalidPINError, NotAuthorizedError {
         checkPin(getCard(bankAccount, cardNumber), pinCode);
     }
 
@@ -95,9 +99,18 @@ public class CardService {
      * @param pinCode  the pin code
      * @throws InvalidPINError if the pin code is incorrect
      */
-    public void checkPin(CardBean cardBean, String pinCode) throws InvalidPINError {
-        if (!cardBean.getPin().equals(pinCode)) {
+    public void checkPin(CardBean cardBean, String pinCode) throws InvalidPINError, NotAuthorizedError {
+        // Check if login_errors >= INVALID_LOGIN_THRESHOLD
+        System.out.println(cardBean.getLoginErrors());
+        if (cardBean.getLoginErrors() >= INVALID_LOGIN_THRESHOLD) {
+            throw new NotAuthorizedError("Card is blocked");
+        } else if (!cardBean.getPin().equals(pinCode)) {
+            // Increment login_errors
+            cardDao.incrementInvalidErrors(cardBean.getCardId());
             throw new InvalidPINError("Invalid pin code");
+        } else {
+            // User is authenticated, reset login_errors
+            cardDao.resetInvalidLoginErrors(cardBean.getCardId());
         }
     }
 
@@ -174,4 +187,19 @@ public class CardService {
     public void deleteCards(Iterable<CardBean> cards) {
         cardDao.delete(cards);
     }
+
+    /**
+     * Unblock a pinCard.
+     * @param bankAccount The BankAccount
+     * @param cardNumber The CardNumber
+     */
+    public void unblockCard(BankAccountBean bankAccount, String cardNumber) throws NoEffectError {
+        CardBean card = cardDao.findByBankAccountAndCardNumber(bankAccount, cardNumber);
+        if (card.getLoginErrors() >= INVALID_LOGIN_THRESHOLD) {
+            cardDao.resetInvalidLoginErrors(card.getCardId());
+        } else {
+            throw new NoEffectError("Card is not blocked");
+        }
+    }
+
 }

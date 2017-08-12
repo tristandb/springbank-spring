@@ -34,14 +34,14 @@ public class TransferControllerImpl implements TransferController {
     }
 
     @Override
-    public void depositIntoAccount(String iBAN, String pinCard, String pinCode, double amount) throws InvalidParamValueError, InvalidPINError {
+    public void depositIntoAccount(String iBAN, String pinCard, String pinCode, double amount) throws InvalidParamValueError, InvalidPINError, NotAuthorizedError {
         BankAccountBean bankAccount = bankAccountService.getBankAccount(iBAN);
         cardService.checkPin(bankAccount, pinCard, pinCode);
         transactionService.newDeposit(bankAccount, amount);
     }
 
     @Override
-    public void payFromAccount(String sourceIBAN, String targetIBAN, String pinCard, String pinCode, double amount) throws InvalidParamValueError, InvalidPINError {
+    public void payFromAccount(String sourceIBAN, String targetIBAN, String pinCard, String pinCode, double amount) throws InvalidParamValueError, InvalidPINError, NotAuthorizedError {
         BankAccountBean sourceAccount = bankAccountService.getBankAccount(sourceIBAN);
         cardService.checkPin(sourceAccount, pinCard, pinCode);
         BankAccountBean targetAccount = bankAccountService.getBankAccount(targetIBAN);

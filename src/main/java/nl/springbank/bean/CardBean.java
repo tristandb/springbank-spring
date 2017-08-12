@@ -46,6 +46,11 @@ public class CardBean {
     @Column(name = "expiration_date")
     private Date expirationDate;
 
+
+    /** The amount of invalid authentication trials */
+    @Column(name = "login_errors")
+    private Integer loginErrors = 0;
+
     /*
      * Bean methods
      */
@@ -105,7 +110,16 @@ public class CardBean {
                 ", user=" + user +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", pin='" + pin + '\'' +
-                ", expirationDate=" + expirationDate +
+                ", expirationDate=" + expirationDate + '\'' +
+                ", loginErrors=" + loginErrors +
                 '}';
+    }
+
+    public Integer getLoginErrors() {
+        return loginErrors;
+    }
+
+    public void setLoginErrors(Integer loginErrors) {
+        this.loginErrors = loginErrors;
     }
 }

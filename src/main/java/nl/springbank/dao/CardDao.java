@@ -4,6 +4,9 @@ import nl.springbank.bean.BankAccountBean;
 import nl.springbank.bean.CardBean;
 import nl.springbank.bean.UserBean;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -30,4 +33,22 @@ public interface CardDao extends JpaRepository<CardBean, Long> {
      * @param user        the given user
      */
     void deleteByBankAccountAndUser(BankAccountBean bankAccount, UserBean user);
+
+    /**
+     * Increment invalid login_errors by a user by 1.
+     *
+     * @param cardId The cardId of the user.
+     */
+    @Modifying
+    @Query(value = "UPDATE card c set c.login_errors = c.login_errors + 1 WHERE c.card_id = :cardId", nativeQuery = true)
+    void incrementInvalidErrors(@Param("cardId") Long cardId);
+
+    /**
+     * Reset invalid login_errors of a card.
+     *
+     * @param cardId The cardId to reset.
+     */
+    @Modifying
+    @Query(value = "Update card c SET c.login_errors = 0 WHERE c.card_id = :cardId", nativeQuery = true)
+    void resetInvalidLoginErrors(@Param("cardId") Long cardId);
 }

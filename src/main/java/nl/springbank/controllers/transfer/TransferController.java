@@ -32,7 +32,7 @@ public interface TransferController {
             @JsonRpcParam("pinCard") String pinCard,
             @JsonRpcParam("pinCode") String pinCode,
             @JsonRpcParam("amount") double amount
-    ) throws InvalidParamValueError, InvalidPINError;
+    ) throws InvalidParamValueError, InvalidPINError, NotAuthorizedError;
 
     /**
      * Pay from bank account.
@@ -55,7 +55,7 @@ public interface TransferController {
             @JsonRpcParam("pinCard") String pinCard,
             @JsonRpcParam("pinCode") String pinCode,
             @JsonRpcParam("amount") double amount
-    ) throws InvalidParamValueError, InvalidPINError;
+    ) throws InvalidParamValueError, InvalidPINError, NotAuthorizedError;
 
     /**
      * Transfer money between two bank accounts.
