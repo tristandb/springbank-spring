@@ -98,6 +98,7 @@ public class CardService {
      * @param cardBean the given card
      * @param pinCode  the pin code
      * @throws InvalidPINError if the pin code is incorrect
+     *
      */
     public void checkPin(CardBean cardBean, String pinCode) throws InvalidPINError, NotAuthorizedError {
         // Check if login_errors >= INVALID_LOGIN_THRESHOLD
