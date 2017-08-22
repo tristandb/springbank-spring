@@ -108,42 +108,14 @@ public class CardService {
      * @param user        the given user
      * @return the created card
      */
-    public CardBean newCard(BankAccountBean bankAccount, UserBean user) {
-        return newCard(bankAccount, user, CardHelper.getRandomPin());
-    }
-
-    /**
-     * Create a new card with the given bank account, user and pin.
-     *
-     * @param bankAccount the given bank account
-     * @param user        the given user
-     * @param pin         the given pin
-     * @return the created card
-     */
-    public synchronized CardBean newCard(BankAccountBean bankAccount, UserBean user, String pin) {
+    public synchronized CardBean newCard(BankAccountBean bankAccount, UserBean user) {
         CardBean card = new CardBean();
         card.setBankAccount(bankAccount);
         card.setUser(user);
         card.setCardNumber(CardHelper.getRandomCardNumber(getCards()));
-        card.setPin(pin);
+        card.setPin(CardHelper.getRandomPin());
         card.setExpirationDate(CardHelper.getExpirationDate());
         return saveCard(card);
-    }
-
-    /**
-     * Invalidates the given card and creates a new one.
-     *
-     * @param card   the given card
-     * @param newPin whether the pin should be changed
-     * @return the new card
-     */
-    public synchronized CardBean invalidateCard(CardBean card, boolean newPin) {
-        deleteCard(card);
-        if (newPin) {
-            return newCard(card.getBankAccount(), card.getUser());
-        } else {
-            return newCard(card.getBankAccount(), card.getUser(), card.getPin());
-        }
     }
 
     /**

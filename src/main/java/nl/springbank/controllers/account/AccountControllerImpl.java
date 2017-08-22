@@ -8,8 +8,10 @@ import nl.springbank.bean.UserBean;
 import nl.springbank.exceptions.InvalidParamValueError;
 import nl.springbank.exceptions.NotAuthorizedError;
 import nl.springbank.objects.OpenedAccountObject;
-import nl.springbank.objects.OpenedCardObject;
-import nl.springbank.services.*;
+import nl.springbank.services.BankAccountService;
+import nl.springbank.services.CardService;
+import nl.springbank.services.IbanService;
+import nl.springbank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -26,15 +28,13 @@ public class AccountControllerImpl implements AccountController {
     private final BankAccountService bankAccountService;
     private final IbanService ibanService;
     private final CardService cardService;
-    private final TransactionService transactionService;
 
     @Autowired
-    public AccountControllerImpl(UserService userService, BankAccountService bankAccountService, IbanService ibanService, CardService cardService, TransactionService transactionService) {
+    public AccountControllerImpl(UserService userService, BankAccountService bankAccountService, IbanService ibanService, CardService cardService) {
         this.userService = userService;
         this.bankAccountService = bankAccountService;
         this.ibanService = ibanService;
         this.cardService = cardService;
-        this.transactionService = transactionService;
     }
 
     @Override
@@ -70,15 +70,5 @@ public class AccountControllerImpl implements AccountController {
         if (user.getHolderAccounts().isEmpty()) {
             userService.deleteUser(user);
         }
-    }
-
-    @Override
-    public OpenedCardObject invalidateCard(String authToken, String iBAN, String pinCard, boolean newPin) throws InvalidParamValueError, NotAuthorizedError {
-        BankAccountBean bankAccount = bankAccountService.getBankAccount(iBAN);
-        CardBean card = cardService.getCard(bankAccount, pinCard);
-        userService.checkCardOwner(card, authToken);
-        transactionService.newWithdrawal(bankAccount, 7.5);
-        CardBean newCard = cardService.invalidateCard(card, newPin);
-        return new OpenedCardObject(newCard, newPin);
     }
 }
